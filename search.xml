@@ -4,63 +4,11 @@
   
     
     <entry>
-      <title>blog</title>
-      <link href="/2023/02/21/blog/"/>
-      <url>/2023/02/21/blog/</url>
+      <title>我的博客搭建</title>
+      <link href="/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/</url>
       
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>new article</title>
-      <link href="/2023/02/20/new-article/"/>
-      <url>/2023/02/20/new-article/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Myfirstblog2</title>
-      <link href="/2022/09/17/Myfirstblog2/"/>
-      <url>/2022/09/17/Myfirstblog2/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Myfirstblog</title>
-      <link href="/2022/09/17/Myfirstblog/"/>
-      <url>/2022/09/17/Myfirstblog/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2022/09/17/hello-world/"/>
-      <url>/2022/09/17/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+        <content type="html"><![CDATA[<h1 id="这是这个站点的第一篇文章"><a href="#这是这个站点的第一篇文章" class="headerlink" title="这是这个站点的第一篇文章"></a>这是这个站点的第一篇文章</h1><p>​    其实也算不上啥网站吧，这个站点只是我利用的<code>Github page</code>服务搭建的一个博客站，使用的博客框架是<code>hexo</code>，主题采用的其中的<code>hexo-theme-matery</code>。看很多博客作者都宣传hexo这个框架，说用它搭建网站很简洁、快速和高效，我想说的是：“千万别信”，一些配置啥的十分麻烦，非常蛋疼，主要是因为hexo基于的是nodejs，没有后台可以进行编辑，全程都是在命令行和整个配置文件中对整个博客进行编辑、发布和测试，导致搭建的过程很繁琐。不过也可能是因为我的水平有限,连照着配置都不会吧<span class="github-emoji"><span>😭</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f62d.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></p><p>​    主要还是不愿意自己花钱去买一些vps来搭建，一是更麻烦，二是贵。我也考虑过国外的一些服务器提供商，比如<code>Racknerd</code>、<code>vultr</code>之流，虽然是便宜，但是安全性、稳定性上又不是靠谱。等我以后赚米了要狠狠的买个配置好的高档服务器:laughing。现在先将就着，利用免费的Github page服务了解了解基本的博客搭建方法。</p><p>​    接下来如果有时间会陆续发一些技术文章或是日常小记分享给大家(如果有人看的话)，当然也得我有空，hh<span class="github-emoji"><span>😆</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f606.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>。</p><p>​    </p>]]></content>
       
       
       
