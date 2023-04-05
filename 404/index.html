@@ -313,9 +313,10 @@
     <style type="text/css">
     /* don't remove. */
     .about-cover {
-        height: 90.2vh;
+        height: 75vh;
     }
 </style>
+
 <div class="bg-cover pd-header about-cover">
     <div class="container">
         <div class="row">
@@ -325,7 +326,7 @@
                         404
                     </div>
                     <div class="description center-align">
-                        Oops～，我崩溃了！找不到你想要的页面了
+                        Oops～，我崩溃了！找不到你想要的页面 :(
                     </div>
                 </div>
             </div>
@@ -335,8 +336,9 @@
 
 <script>
     // 每天切换 banner 图.  Switch banner image every day.
-    $('.bg-cover').css('background-image', 'url(https://cdn.jsdelivr.net/gh/Yafine/cdn@3.3.1/source/medias/banner/' + new Date().getDay() + '.jpg)');
+    $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay() + '.jpg)');
 </script>
+
 
     <footer class="page-footer bg-color">
     
