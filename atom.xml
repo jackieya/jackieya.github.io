@@ -6,7 +6,7 @@
   <link href="https://jackieya.github.io/atom.xml" rel="self"/>
   
   <link href="https://jackieya.github.io/"/>
-  <updated>2023-04-05T15:16:15.413Z</updated>
+  <updated>2023-04-06T04:58:39.668Z</updated>
   <id>https://jackieya.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://jackieya.github.io/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
     <id>https://jackieya.github.io/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/</id>
     <published>2023-04-05T14:42:32.000Z</published>
-    <updated>2023-04-05T15:16:15.413Z</updated>
+    <updated>2023-04-06T04:58:39.668Z</updated>
     
     
       
@@ -29,6 +29,27 @@
         
         
     <summary type="html">&lt;h1 id=&quot;这是这个站点的第一篇文章&quot;&gt;&lt;a href=&quot;#这是这个站点的第一篇文章&quot; class=&quot;headerlink&quot; title=&quot;这是这个站点的第一篇文章&quot;&gt;&lt;/a&gt;这是这个站点的第一篇文章&lt;/h1&gt;&lt;p&gt;​   </summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>DNSLog注入</title>
+    <link href="https://jackieya.github.io/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"/>
+    <id>https://jackieya.github.io/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/</id>
+    <published>2022-04-10T15:22:20.000Z</published>
+    <updated>2023-04-06T07:02:28.234Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x01-什么是DNSlog注入&quot;&gt;&lt;a href=&quot;#0x01-什么是DNSlog注入&quot; class=&quot;headerlink&quot; title=&quot;0x01 什么是DNSlog注入&quot;&gt;&lt;/a&gt;0x01</summary>
         
       
     
