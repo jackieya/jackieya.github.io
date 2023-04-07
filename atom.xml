@@ -18,8 +18,8 @@
   
   <entry>
     <title>我的博客搭建</title>
-    <link href="https://jackieya.github.io/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
-    <id>https://jackieya.github.io/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/</id>
+    <link href="https://jackieya.github.io/2023/04/05/wo-de-bo-ke/"/>
+    <id>https://jackieya.github.io/2023/04/05/wo-de-bo-ke/</id>
     <published>2023-04-05T14:42:32.000Z</published>
     <updated>2023-04-06T10:17:28.484Z</updated>
     
@@ -42,11 +42,11 @@
   </entry>
   
   <entry>
-    <title>DNSLog注入</title>
-    <link href="https://jackieya.github.io/2022/04/20/NFS%E9%83%A8%E7%BD%B2/"/>
-    <id>https://jackieya.github.io/2022/04/20/NFS%E9%83%A8%E7%BD%B2/</id>
+    <title>NFS部署</title>
+    <link href="https://jackieya.github.io/2022/04/20/nfs-bu-shu/"/>
+    <id>https://jackieya.github.io/2022/04/20/nfs-bu-shu/</id>
     <published>2022-04-20T15:22:20.000Z</published>
-    <updated>2023-04-07T04:03:54.933Z</updated>
+    <updated>2023-04-07T07:37:26.481Z</updated>
     
     
       
@@ -69,8 +69,8 @@
   
   <entry>
     <title>DNSLog注入</title>
-    <link href="https://jackieya.github.io/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"/>
-    <id>https://jackieya.github.io/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/</id>
+    <link href="https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/"/>
+    <id>https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/</id>
     <published>2022-04-10T15:22:20.000Z</published>
     <updated>2023-04-06T10:20:42.246Z</updated>
     

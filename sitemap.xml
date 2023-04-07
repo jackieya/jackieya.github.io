@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://jackieya.github.io/2022/04/20/NFS%E9%83%A8%E7%BD%B2/</loc>
+    <loc>https://jackieya.github.io/2022/04/20/nfs-bu-shu/</loc>
     
     <lastmod>2023-04-07</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/</loc>
+    <loc>https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/</loc>
     
     <lastmod>2023-04-06</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/2023/04/05/%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/</loc>
+    <loc>https://jackieya.github.io/2023/04/05/wo-de-bo-ke/</loc>
     
     <lastmod>2023-04-06</lastmod>
     
@@ -99,14 +99,14 @@
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/tags/DNSLog/</loc>
+    <loc>https://jackieya.github.io/tags/NFS/</loc>
     <lastmod>2023-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/tags/NFS/</loc>
+    <loc>https://jackieya.github.io/tags/DNSLog/</loc>
     <lastmod>2023-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -122,14 +122,14 @@
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/categories/Web%E5%AE%89%E5%85%A8/</loc>
+    <loc>https://jackieya.github.io/categories/%E8%BF%90%E7%BB%B4/</loc>
     <lastmod>2023-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://jackieya.github.io/categories/%E8%BF%90%E7%BB%B4/</loc>
+    <loc>https://jackieya.github.io/categories/Web%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2023-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
