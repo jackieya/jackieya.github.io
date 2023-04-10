@@ -467,7 +467,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-04-06
+                    2023-04-10
                 </div>
                 
 
@@ -513,7 +513,7 @@
 </li>
 <li><p>这时<code>load_file()</code>就可以发起请求，那么这一条带有数据库查询结果的域名就被提交到DNS服务器进行解析</p>
 </li>
-<li><p>此时，如果我们可以查看DNS服务器上的Dnslog就可以得到SQL注入结果。那么我们如何获得这条DNS查询记录呢？注意注入语句中的**<code>ceye.io</code>**，这其实是一个开放的Dnslog平台（具体用法在官网可见），在<a target="_blank" rel="noopener" href="http://ceye.io上我们可以获取到有关`ceye.io`的dns查询信息.实际上在域名解析的过程中,是由顶级域名向下逐级解析的,我们构造的攻击语句也是如此,当它发现域名中存在`ceye.io`时,它会将这条域名信息转到相应的ns服务器上,而通过http//ceye.io%E6%88%91%E4%BB%AC%E5%B0%B1%E5%8F%AF%E4%BB%A5%E6%9F%A5%E8%AF%A2%E5%88%B0%E8%BF%99%E6%9D%A1DNS%E8%A7%A3%E6%9E%90%E8%AE%B0%E5%BD%95%E3%80%82">http://ceye.io上我们可以获取到有关`ceye.io`的DNS查询信息。实际上在域名解析的过程中，是由顶级域名向下逐级解析的，我们构造的攻击语句也是如此，当它发现域名中存在`ceye.io`时，它会将这条域名信息转到相应的NS服务器上，而通过http://ceye.io我们就可以查询到这条DNS解析记录。</a></p>
+<li><p>此时，如果我们可以查看DNS服务器上的Dnslog就可以得到SQL注入结果。那么我们如何获得这条DNS查询记录呢？注意注入语句中的<code>ceye.io</code>，这其实是一个开放的Dnslog平台（具体用法在官网可见），在<code>ceye.io</code>上我们可以获取到有关<code>ceye.io</code>的DNS查询信息。实际上在域名解析的过程中，是由顶级域名向下逐级解析的，我们构造的攻击语句也是如此，当它发现域名中存在<code>ceye.io</code>时，它会将这条域名信息转到相应的NS服务器上，而通过<a target="_blank" rel="noopener" href="http://ceye.io我们就可以查询到这条dns解析记录./">http://ceye.io我们就可以查询到这条DNS解析记录。</a></p>
 <p>当然还有其他可以使用的DNSlog平台，如<a target="_blank" rel="noopener" href="http://www.dnslog.cn/%E3%80%82">http://www.dnslog.cn/。</a></p>
 <p>这里我就使用<a target="_blank" rel="noopener" href="http://ceye.io/">http://ceye.io</a>, 它是一个免费的记录dnslog的平台，注册后到Profile页面会给你一个二级域名：xxx.ceye.io,当我们把注入信息放到三级域名那里，后台的日志会记录下来。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410183310635-1680762880370-6.png" alt="http://ceye.io用户界面"></p>
