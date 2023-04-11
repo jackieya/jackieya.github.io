@@ -6,7 +6,7 @@
   <link href="https://jackieya.github.io/atom.xml" rel="self"/>
   
   <link href="https://jackieya.github.io/"/>
-  <updated>2023-04-06T10:17:28.484Z</updated>
+  <updated>2023-04-11T15:02:28.779Z</updated>
   <id>https://jackieya.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>php最短一句话</title>
+    <link href="https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/"/>
+    <id>https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/</id>
+    <published>2023-04-11T15:02:20.000Z</published>
+    <updated>2023-04-11T15:02:28.779Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;php最短一句话如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight php&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    <category term="小记" scheme="https://jackieya.github.io/categories/%E5%B0%8F%E8%AE%B0/"/>
+    
+    
+    <category term="一句话" scheme="https://jackieya.github.io/tags/%E4%B8%80%E5%8F%A5%E8%AF%9D/"/>
+    
+  </entry>
   
   <entry>
     <title>我的博客搭建</title>

