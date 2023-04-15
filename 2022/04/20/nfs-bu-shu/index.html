@@ -469,7 +469,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-04-07
+                    2023-04-15
                 </div>
                 
 
@@ -523,28 +523,28 @@
 <ol start="2">
 <li>启动nfs,并将其设置为开机启动（作为服务器，应保证服务在每次重启之后都能迅速提供服务）</li>
 </ol>
-<pre><code>systemctl start nfs
+<pre class=" language-shell"><code class="language-shell">systemctl start nfs
 systemctl enable nfs
 </code></pre>
 <p>这里不需要先启动rpc服务，使用<code>ps -ef|grep rpcbind</code>发现启动nfs之后rpcbind已经启动了。</p>
 <ol start="3">
 <li>设置共享目录,并修改其权限</li>
 </ol>
-<pre><code>mkdir /data
+<pre class=" language-shell"><code class="language-shell">mkdir /data
 chmod 755 /data
 </code></pre>
 <ol start="4">
 <li>修改服务端配置文件(安装完nfs-utils后，会自动生成 /etc/exports这个文件，这是nfs主要的配置文件)</li>
 </ol>
-<pre><code>vi /etc/exports
+<pre class=" language-shell"><code class="language-shell">vi /etc/exports
 </code></pre>
 <p>按<code>i </code>插入如下内容：</p>
-<pre><code>/data/        192.168.35.0/24(rw,sync,no_root_sqush,no_all_squash)
+<pre class=" language-shell"><code class="language-shell">/data/        192.168.35.0/24(rw,sync,no_root_sqush,no_all_squash)
 </code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412204843970.png" alt="配置修改"></p>
 <p>配置相应主机对于这个共享文件夹所拥有的权限等内容，</p>
 <p>/etc/exports具体文件内容格式如下</p>
-<pre><code>&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他）]
+<pre class=" language-tex"><code class="language-tex"><输出目录> [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他）]
 </code></pre>
 <p>a. 输出目录：</p>
 <p>输出目录是指NFS系统中需要共享给客户机使用的目录；</p>
@@ -589,37 +589,37 @@ chmod 755 /data
 </ul>
 </blockquote>
 <p>配置好后还需要重启nfs服务</p>
-<pre><code>systemctl restart nfs
+<pre class=" language-shell"><code class="language-shell">systemctl restart nfs
 </code></pre>
 <ol start="6">
 <li>查看挂载</li>
 </ol>
-<pre><code>showmount -e localhost 
+<pre class=" language-shell"><code class="language-shell">showmount -e localhost 
 </code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412210221004.png" alt="查看挂载"></p>
 <p>发现共享文件挂载成功</p>
 <p>最后需要关闭防火墙</p>
-<pre><code>systemctl stop firewalld
+<pre class=" language-shell"><code class="language-shell">systemctl stop firewalld
 setenforce 0
 </code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412212613980.png" alt="关闭防火墙"></p>
 <p>如果不关闭防火墙，客户端无法看到服务端的共享文件夹</p>
 <h3 id="客户端部署-ubuntu"><a href="#客户端部署-ubuntu" class="headerlink" title="客户端部署(ubuntu)"></a>客户端部署(ubuntu)</h3><p>ubuntu上部署与在centos上部署不太一样</p>
 <p>首先安装nfs-common包</p>
-<pre><code>apt-get install nfs-common
+<pre class=" language-shell"><code class="language-shell">apt-get install nfs-common
 </code></pre>
 <p>同样的，也会自动安装rpcbind包</p>
 <p>需要启动rpcbind</p>
-<pre><code>systemctl start rpcbind
+<pre class=" language-shell"><code class="language-shell">systemctl start rpcbind
 </code></pre>
 <p>查看远端服务器的共享目录</p>
-<pre><code>showmount -e 192.168.35.135
+<pre class=" language-shell"><code class="language-shell">showmount -e 192.168.35.135
 </code></pre>
 <p>客户端创建挂载目录</p>
-<pre><code>mkdir /data
+<pre class=" language-shell"><code class="language-shell">mkdir /data
 </code></pre>
 <p>挂载共享目录</p>
-<pre><code>mount -t nfs 192.168.35.135:/data /data
+<pre class=" language-shell"><code class="language-shell">mount -t nfs 192.168.35.135:/data /data
 </code></pre>
 <p>使用df查看磁盘情况可以看到挂载成功</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
@@ -628,7 +628,7 @@ setenforce 0
 <li><p>在配置过程中经常出现如下错误</p>
 </li>
 </ul>
-<pre><code>clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)
+<pre class=" language-shell"><code class="language-shell">clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)
 </code></pre>
 <p>说明服务端防火墙没有关闭，没有关闭的话客户端是无法通过网络连接到服务器那端的。服务端部署的最后一步一定要执行。</p>
 <ul>
