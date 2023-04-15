@@ -29,9 +29,11 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="generator" content="Hexo 4.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 <link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 
@@ -498,12 +500,19 @@
         
 
         
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这几天突然对python的GUI编程产生兴趣，尤其是tkinter这个模块，第一次上手就感受到它的简洁，只需三行代码，即可搭建一个python程序的窗体：</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tkinter <span class="comment"># 导入tkinter模块</span></span><br><span class="line">root=tkinter.Tk() <span class="comment"># 实例化一个窗体对象</span></span><br><span class="line">root.mainloop() <span class="comment"># 进入消息循环，维持窗体</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> tkinter <span class="token comment" spellcheck="true"># 导入tkinter模块</span>
+root<span class="token operator">=</span>tkinter<span class="token punctuation">.</span>Tk<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 实例化一个窗体对象</span>
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 进入消息循环，维持窗体</span>
+</code></pre>
 <blockquote>
 <p>也许有小伙伴不太了解什么是消息循环，在我看来，<code>mainloop()</code>的作用就是维持这个窗体，使它一直存在并显示着，直到用户关闭这个窗体。</p>
 </blockquote>
@@ -512,40 +521,62 @@
 <p>是不是感觉特别简洁？</p>
 <p>当然，创建一个窗体只是GUI编程的开始，在接下几天我会抽空学习python的tkinter模块。</p>
 <p>我所使用的环境：</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tkinter</span><br><span class="line"><span class="built_in">print</span>(tkinter.TkVersion)</span><br></pre></td></tr></tbody></table></figure>
-
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8.6</span><br></pre></td></tr></tbody></table></figure>
-
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> tkinter
+<span class="token keyword">print</span><span class="token punctuation">(</span>tkinter<span class="token punctuation">.</span>TkVersion<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>8.6
+</code></pre>
 <p>我使用的是tkinter8.6版本</p>
 <h2 id="模块导入"><a href="#模块导入" class="headerlink" title="模块导入"></a>模块导入</h2><p>导入tkinter模块常用的三种方法</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tkinter  <span class="comment"># 直接把包导入</span></span><br><span class="line">root=tkinter.Tk()</span><br><span class="line">root.mainloop()</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *  <span class="comment"># 把tkinter中所有的控件导入,这种导入方式的好处在于，一些tkinter中的规定的特殊字符可以直接使用，比如BOTTOM，TOP等等</span></span><br><span class="line">root=Tk()  </span><br><span class="line">root.mainloop()</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tkinter <span class="keyword">as</span> tk  <span class="comment"># 取别名</span></span><br><span class="line">root=tk.Tk()</span><br><span class="line">root.mainloop()</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-
-
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> tkinter  <span class="token comment" spellcheck="true"># 直接把包导入</span>
+root<span class="token operator">=</span>tkinter<span class="token punctuation">.</span>Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>  <span class="token comment" spellcheck="true"># 把tkinter中所有的控件导入,这种导入方式的好处在于，一些tkinter中的规定的特殊字符可以直接使用，比如BOTTOM，TOP等等</span>
+root<span class="token operator">=</span>Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>  
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> tkinter <span class="token keyword">as</span> tk  <span class="token comment" spellcheck="true"># 取别名</span>
+root<span class="token operator">=</span>tk<span class="token punctuation">.</span>Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
 <h2 id="自定义窗体"><a href="#自定义窗体" class="headerlink" title="自定义窗体"></a>自定义窗体</h2><p>上述的三行代码窗体属性设置都是默认的，我们还需要根据开发的不同场景来自定义窗体，调整窗体的设置。</p>
 <p>下面我将用注释+代码进行说明</p>
 <p><em>以下是我觉得经常会用到的：</em></p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tkinter</span><br><span class="line">root = tkinter.Tk()</span><br><span class="line"><span class="comment"># 自定义窗体的标题</span></span><br><span class="line">root.title(<span class="string">'我的第一个窗口'</span>)</span><br><span class="line"><span class="comment"># 自定义窗体的图标（注意，这里的图标只能是ico结尾的图标文件,需自己事先创建图标，括号中写入图标的路径）</span></span><br><span class="line">root.iconbitmap(<span class="string">'./resources/ai.ico'</span>) </span><br><span class="line"><span class="comment"># 设置窗体大小及位置 窗体大小格式为"300x150",表示宽度300，高度150，中间必须是小写字母x；窗体在屏幕中显示的位置为"+800+200"，+800表示窗体距离左边界800，+200表示距离屏幕最上边为200。格式只能如上所述，否则会报错</span></span><br><span class="line">root.geometry(<span class="string">'300x150+800+200'</span>)</span><br><span class="line"><span class="comment"># root.resizable()是限制调节窗体的大小，第一个参数为False表示窗体宽度不能调节，第二个参数为False表示窗体高度不能调节。默认都为True,表示长宽都可调节</span></span><br><span class="line">root.resizable(<span class="literal">False</span>,<span class="literal">False</span>) <span class="comment"># 禁止调节窗体高度和宽度</span></span><br><span class="line">root.mainloop()</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-
-
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> tkinter
+root <span class="token operator">=</span> tkinter<span class="token punctuation">.</span>Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 自定义窗体的标题</span>
+root<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">'我的第一个窗口'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># 自定义窗体的图标（注意，这里的图标只能是ico结尾的图标文件,需自己事先创建图标，括号中写入图标的路径）</span>
+root<span class="token punctuation">.</span>iconbitmap<span class="token punctuation">(</span><span class="token string">'./resources/ai.ico'</span><span class="token punctuation">)</span> 
+<span class="token comment" spellcheck="true"># 设置窗体大小及位置 窗体大小格式为"300x150",表示宽度300，高度150，中间必须是小写字母x；窗体在屏幕中显示的位置为"+800+200"，+800表示窗体距离左边界800，+200表示距离屏幕最上边为200。格式只能如上所述，否则会报错</span>
+root<span class="token punctuation">.</span>geometry<span class="token punctuation">(</span><span class="token string">'300x150+800+200'</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># root.resizable()是限制调节窗体的大小，第一个参数为False表示窗体宽度不能调节，第二个参数为False表示窗体高度不能调节。默认都为True,表示长宽都可调节</span>
+root<span class="token punctuation">.</span>resizable<span class="token punctuation">(</span><span class="token boolean">False</span><span class="token punctuation">,</span><span class="token boolean">False</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 禁止调节窗体高度和宽度</span>
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
 <p><em>窗体最大化，最小化以及隐藏设置：</em></p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">root = Tk()</span><br><span class="line">root.minsize(<span class="number">200</span>, <span class="number">260</span>)  <span class="comment"># 设置窗口的最小尺寸（不带参数时获取最大值）</span></span><br><span class="line"><span class="comment"># root.maxsize(750, 650)  # 设置窗口的最大尺寸 （不带参数时获取最小值）</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">这里窗口状态函数state 有三个状态，分别为</span></span><br><span class="line"><span class="string">+ "zoomed"-窗口最大化</span></span><br><span class="line"><span class="string">+ "normal"-窗口正常化显示,默认为normal</span></span><br><span class="line"><span class="string">+ "icon" -窗口最小化</span></span><br><span class="line"><span class="string">注意: 只在windows系统上适用</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">root.state(<span class="string">'zoomed'</span>)  <span class="comment"># 最大化窗口</span></span><br><span class="line"><span class="comment"># root.state('icon')  # 最小化窗口</span></span><br><span class="line"><span class="comment"># root.iconify()  # 也可以最小化窗口</span></span><br><span class="line"><span class="comment"># root.attributes('-fullscreen', True)  # 全屏，没有标题栏,注意使用全屏时设置的最大尺寸(maxsize())不能过小</span></span><br><span class="line"><span class="comment"># root.withdraw()  # 隐藏窗体(任务栏中也不会显示)</span></span><br><span class="line"><span class="comment"># root.deiconify()  # 让隐藏或最小化的窗体再次显示或还原</span></span><br><span class="line">root.mainloop()</span><br></pre></td></tr></tbody></table></figure>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>
 
+root <span class="token operator">=</span> Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+root<span class="token punctuation">.</span>minsize<span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">260</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 设置窗口的最小尺寸（不带参数时获取最大值）</span>
+<span class="token comment" spellcheck="true"># root.maxsize(750, 650)  # 设置窗口的最大尺寸 （不带参数时获取最小值）</span>
 
-
+<span class="token triple-quoted-string string">"""
+这里窗口状态函数state 有三个状态，分别为
++ "zoomed"-窗口最大化
++ "normal"-窗口正常化显示,默认为normal
++ "icon" -窗口最小化
+注意: 只在windows系统上适用
+"""</span>
+root<span class="token punctuation">.</span>state<span class="token punctuation">(</span><span class="token string">'zoomed'</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 最大化窗口</span>
+<span class="token comment" spellcheck="true"># root.state('icon')  # 最小化窗口</span>
+<span class="token comment" spellcheck="true"># root.iconify()  # 也可以最小化窗口</span>
+<span class="token comment" spellcheck="true"># root.attributes('-fullscreen', True)  # 全屏，没有标题栏,注意使用全屏时设置的最大尺寸(maxsize())不能过小</span>
+<span class="token comment" spellcheck="true"># root.withdraw()  # 隐藏窗体(任务栏中也不会显示)</span>
+<span class="token comment" spellcheck="true"># root.deiconify()  # 让隐藏或最小化的窗体再次显示或还原</span>
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
 <p><em>其他的设置：</em></p>
 <p><code>root.quite()</code>      退出窗口</p>
 <p><code>root.update() </code>刷新窗口</p>
@@ -561,7 +592,7 @@
 <p>这只是窗体，tkinter还有一些控件（widgets）等待我去学习。</p>
 <p>哎，平时比较忙，只能偶尔抽空去学习这些我感兴趣的内容了。</p>
 <p>附上我借鉴的一个学习tkinter模块的博客地址：</p>
-<p><a target="_blank" rel="noopener" href="http://www.wb98.com/">http://www.wb98.com</a></p>
+<p><a href="http://www.wb98.com/" target="_blank" rel="noopener">http://www.wb98.com</a></p>
 
                 
             </div>
@@ -809,13 +840,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/04/05/wo-de-bo-ke/">
+                <a href="/2022/06/04/tkinter-de-button-kong-jian/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="我的博客搭建">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="tkinter的Button控件">
                         
-                        <span class="card-title">我的博客搭建</span>
+                        <span class="card-title">tkinter的Button控件</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -826,14 +857,14 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-04-05
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-04
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%85%B6%E4%BB%96/" class="post-category">
-                                    其他
+                            <a href="/categories/python/" class="post-category">
+                                    python
                                 </a>
                             
                             
@@ -843,8 +874,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%89%8D%E8%A8%80/">
-                        <span class="chip bg-color">前言</span>
+                    <a href="/tags/tkinter/">
+                        <span class="chip bg-color">tkinter</span>
                     </a>
                     
                 </div>
@@ -1133,7 +1164,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.8k</span>&nbsp;字
+                class="white-color">6.5k</span>&nbsp;字
             
             
             

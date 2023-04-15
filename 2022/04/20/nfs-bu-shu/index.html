@@ -29,9 +29,11 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="generator" content="Hexo 4.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 <link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 
@@ -498,11 +500,16 @@
         
 
         
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="什么是NFS"><a href="#什么是NFS" class="headerlink" title="什么是NFS"></a>什么是NFS</h2><blockquote>
-<p>NFS,  网络文件系统，英文Network File System，是由<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/SUN/69463">SUN</a>公司研制的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/UNIX/219943">UNIX</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%A1%A8%E7%A4%BA%E5%B1%82/4329716">表示层</a>协议(presentation layer protocol)，能使使用者访问网络上别处的文件就像在使用自己的计算机一样。</p>
+<p>NFS,  网络文件系统，英文Network File System，是由<a href="https://baike.baidu.com/item/SUN/69463" target="_blank" rel="noopener">SUN</a>公司研制的<a href="https://baike.baidu.com/item/UNIX/219943" target="_blank" rel="noopener">UNIX</a><a href="https://baike.baidu.com/item/%E8%A1%A8%E7%A4%BA%E5%B1%82/4329716" target="_blank" rel="noopener">表示层</a>协议(presentation layer protocol)，能使使用者访问网络上别处的文件就像在使用自己的计算机一样。</p>
 </blockquote>
 <p>NFS可以让服务端跟客户端通过网络共享主机磁盘上的一些数据，主要是在unix和linux系统上实现的一种文件共享方式。</p>
 <p>我们可以简单的将NFS看做是一个文件服务器 (file server) 。这个 NFS 服务器可以让你的 PC 来将网络远程的 NFS  服务器分享的目录，挂载到本地端的机器当中， 在本地端的机器看起来，那个远程主机的目录就好像是自己的一个磁盘分区一样 (partition)。</p>
@@ -516,29 +523,29 @@
 <ol start="2">
 <li>启动nfs,并将其设置为开机启动（作为服务器，应保证服务在每次重启之后都能迅速提供服务）</li>
 </ol>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start nfs</span><br><span class="line">systemctl enable nfs</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>systemctl start nfs
+systemctl enable nfs
+</code></pre>
 <p>这里不需要先启动rpc服务，使用<code>ps -ef|grep rpcbind</code>发现启动nfs之后rpcbind已经启动了。</p>
 <ol start="3">
 <li>设置共享目录,并修改其权限</li>
 </ol>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /data</span><br><span class="line">chmod 755 /data</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code>mkdir /data
+chmod 755 /data
+</code></pre>
 <ol start="4">
 <li>修改服务端配置文件(安装完nfs-utils后，会自动生成 /etc/exports这个文件，这是nfs主要的配置文件)</li>
 </ol>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/exports</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>vi /etc/exports
+</code></pre>
 <p>按<code>i </code>插入如下内容：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/data/        192.168.35.0/24(rw,sync,no_root_sqush,no_all_squash)</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>/data/        192.168.35.0/24(rw,sync,no_root_sqush,no_all_squash)
+</code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412204843970.png" alt="配置修改"></p>
 <p>配置相应主机对于这个共享文件夹所拥有的权限等内容，</p>
 <p>/etc/exports具体文件内容格式如下</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他）]</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他）]
+</code></pre>
 <p>a. 输出目录：</p>
 <p>输出目录是指NFS系统中需要共享给客户机使用的目录；</p>
 <p>b. 客户端：</p>
@@ -582,37 +589,38 @@
 </ul>
 </blockquote>
 <p>配置好后还需要重启nfs服务</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nfs</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>systemctl restart nfs
+</code></pre>
 <ol start="6">
 <li>查看挂载</li>
 </ol>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e localhost </span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>showmount -e localhost 
+</code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412210221004.png" alt="查看挂载"></p>
 <p>发现共享文件挂载成功</p>
 <p>最后需要关闭防火墙</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">setenforce 0</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>systemctl stop firewalld
+setenforce 0
+</code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220412212613980.png" alt="关闭防火墙"></p>
 <p>如果不关闭防火墙，客户端无法看到服务端的共享文件夹</p>
 <h3 id="客户端部署-ubuntu"><a href="#客户端部署-ubuntu" class="headerlink" title="客户端部署(ubuntu)"></a>客户端部署(ubuntu)</h3><p>ubuntu上部署与在centos上部署不太一样</p>
 <p>首先安装nfs-common包</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install nfs-common</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>apt-get install nfs-common
+</code></pre>
 <p>同样的，也会自动安装rpcbind包</p>
 <p>需要启动rpcbind</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start rpcbind</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>systemctl start rpcbind
+</code></pre>
 <p>查看远端服务器的共享目录</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e 192.168.35.135</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>showmount -e 192.168.35.135
+</code></pre>
 <p>客户端创建挂载目录</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /data</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>mkdir /data
+</code></pre>
 <p>挂载共享目录</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs 192.168.35.135:/data /data</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>mount -t nfs 192.168.35.135:/data /data
+</code></pre>
 <p>使用df查看磁盘情况可以看到挂载成功</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p>当然NFS适用于不同系统、不同类型主机之间进行文件共享，不止局限于ubuntu，centos，甚至windows平台也可以配置NFS。</p>
@@ -620,8 +628,8 @@
 <li><p>在配置过程中经常出现如下错误</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code>clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)
+</code></pre>
 <p>说明服务端防火墙没有关闭，没有关闭的话客户端是无法通过网络连接到服务器那端的。服务端部署的最后一步一定要执行。</p>
 <ul>
 <li><p>可能有人会问，为什么NFS部署的过程中为什么会涉及到rpcbind包? </p>
@@ -629,7 +637,7 @@
 </li>
 </ul>
 <p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mchina/archive/2013/01/03/2840040.html">https://www.cnblogs.com/mchina/archive/2013/01/03/2840040.html</a></p>
+<p><a href="https://www.cnblogs.com/mchina/archive/2013/01/03/2840040.html" target="_blank" rel="noopener">https://www.cnblogs.com/mchina/archive/2013/01/03/2840040.html</a></p>
 
                 
             </div>
@@ -1201,7 +1209,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.8k</span>&nbsp;字
+                class="white-color">6.5k</span>&nbsp;字
             
             
             

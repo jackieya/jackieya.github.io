@@ -6,7 +6,7 @@
   <link href="https://jackieya.github.io/atom.xml" rel="self"/>
   
   <link href="https://jackieya.github.io/"/>
-  <updated>2023-04-11T15:02:28.779Z</updated>
+  <updated>2023-04-11T15:05:46.464Z</updated>
   <id>https://jackieya.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/"/>
     <id>https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/</id>
     <published>2023-04-11T15:02:20.000Z</published>
-    <updated>2023-04-11T15:02:28.779Z</updated>
+    <updated>2023-04-11T15:05:46.464Z</updated>
     
     
       
@@ -29,7 +29,7 @@
         
         
     <summary type="html">&lt;p&gt;php最短一句话如下:&lt;/p&gt;
-&lt;figure class=&quot;highlight php&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td</summary>
+&lt;pre class=&quot; language-php&quot;&gt;&lt;code class=&quot;language-php&quot;&gt;&lt;span class=&quot;token delimiter&quot;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&quot;token</summary>
         
       
     
@@ -64,6 +64,31 @@
     
     
     <category term="前言" scheme="https://jackieya.github.io/tags/%E5%89%8D%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tkinter的Button控件</title>
+    <link href="https://jackieya.github.io/2022/06/04/tkinter-de-button-kong-jian/"/>
+    <id>https://jackieya.github.io/2022/06/04/tkinter-de-button-kong-jian/</id>
+    <published>2022-06-04T07:00:23.000Z</published>
+    <updated>2023-04-15T12:20:13.164Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Button是tkinter中的按钮控件,是用这个按钮可以实现程序与用户的交互，用户如果点击按钮,程序会执行相应规定好的事件函数,</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://jackieya.github.io/categories/python/"/>
+    
+    
+    <category term="tkinter" scheme="https://jackieya.github.io/tags/tkinter/"/>
     
   </entry>
   
