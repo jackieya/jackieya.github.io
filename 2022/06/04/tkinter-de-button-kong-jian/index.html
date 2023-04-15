@@ -725,39 +725,39 @@ mainloop<span class="token punctuation">(</span><span class="token punctuation">
 <p>点击后：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220430231828412.png" alt="点击后"></p>
 <h3 id="3"><a href="#3" class="headerlink" title="3)"></a>3)</h3><p>按钮中的内容可以为文本，也可以为图片，也可以图片和文字混合。</p>
-<pre><code>from tkinter import *
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>
 
-root = Tk()
-root.geometry('400x400')
-image = PhotoImage(file='./resources/button.png')
-Button(root, image=image, compound=LEFT, text='点我退出窗口',
-       command=root.quit).pack()  # command设置的事件函数为窗口的quit函数,可以实现用按钮关闭窗口的作用
+root <span class="token operator">=</span> Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+root<span class="token punctuation">.</span>geometry<span class="token punctuation">(</span><span class="token string">'400x400'</span><span class="token punctuation">)</span>
+image <span class="token operator">=</span> PhotoImage<span class="token punctuation">(</span>file<span class="token operator">=</span><span class="token string">'./resources/button.png'</span><span class="token punctuation">)</span>
+Button<span class="token punctuation">(</span>root<span class="token punctuation">,</span> image<span class="token operator">=</span>image<span class="token punctuation">,</span> compound<span class="token operator">=</span>LEFT<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">'点我退出窗口'</span><span class="token punctuation">,</span>
+       command<span class="token operator">=</span>root<span class="token punctuation">.</span>quit<span class="token punctuation">)</span><span class="token punctuation">.</span>pack<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># command设置的事件函数为窗口的quit函数,可以实现用按钮关闭窗口的作用</span>
 
-mainloop()
+mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220430233017535.png" alt="效果图"></p>
 <p>点击按钮，触发窗口退出函数，会退出窗口。</p>
 <h3 id="4）"><a href="#4）" class="headerlink" title="4）"></a>4）</h3><p>这里需要对command参数说明一下，command所配置的值是函数名，不能加括号，加了括号虽然有时不报错，但是这样窗体一运行对应的函数就会立刻执行。但是在一些场景中我们可能需要往事件函数中添加一些参数，这里就可以使用lambda匿名函数，具体如下:</p>
-<pre><code>from tkinter import *
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>
 
 
-def change_var(string):
-    global var
-    var.set(string)
+<span class="token keyword">def</span> <span class="token function">change_var</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">global</span> var
+    var<span class="token punctuation">.</span>set<span class="token punctuation">(</span>string<span class="token punctuation">)</span>
 
 
-root = Tk()
-root.geometry('200x200')
-var = StringVar()
-var.set('')
-Label(root, text="你选择的是").grid(row=1, column=1)
-Label(root, textvariable=var, bg='lightblue').grid(row=1, column=2)
-Button(root, text='A', command=lambda: change_var('A')).grid(row=2, column=2)
-Button(root, text='B', command=lambda: change_var('B')).grid(row=2, column=3)
-Button(root, text='C', command=lambda: change_var('C')).grid(row=2, column=4)
-Button(root, text='D', command=lambda: change_var('D')).grid(row=2, column=5)
+root <span class="token operator">=</span> Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+root<span class="token punctuation">.</span>geometry<span class="token punctuation">(</span><span class="token string">'200x200'</span><span class="token punctuation">)</span>
+var <span class="token operator">=</span> StringVar<span class="token punctuation">(</span><span class="token punctuation">)</span>
+var<span class="token punctuation">.</span>set<span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+Label<span class="token punctuation">(</span>root<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">"你选择的是"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+Label<span class="token punctuation">(</span>root<span class="token punctuation">,</span> textvariable<span class="token operator">=</span>var<span class="token punctuation">,</span> bg<span class="token operator">=</span><span class="token string">'lightblue'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+Button<span class="token punctuation">(</span>root<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">'A'</span><span class="token punctuation">,</span> command<span class="token operator">=</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> change_var<span class="token punctuation">(</span><span class="token string">'A'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+Button<span class="token punctuation">(</span>root<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">'B'</span><span class="token punctuation">,</span> command<span class="token operator">=</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> change_var<span class="token punctuation">(</span><span class="token string">'B'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span>
+Button<span class="token punctuation">(</span>root<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">'C'</span><span class="token punctuation">,</span> command<span class="token operator">=</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> change_var<span class="token punctuation">(</span><span class="token string">'C'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">)</span>
+Button<span class="token punctuation">(</span>root<span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">'D'</span><span class="token punctuation">,</span> command<span class="token operator">=</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> change_var<span class="token punctuation">(</span><span class="token string">'D'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> column<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span>
 
-root.mainloop()
+root<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220501000558173.png" alt="效果图"></p>
 <p>点击对应的按钮，标签lb2上就会出现对应的选项。</p>
