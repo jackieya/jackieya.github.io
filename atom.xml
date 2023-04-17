@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>杰同学的自留地</title>
+  
+  <subtitle>杰的个人自留地</subtitle>
+  <link href="https://jackieya.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://jackieya.github.io/"/>
+  <updated>2023-04-11T15:05:46.464Z</updated>
+  <id>https://jackieya.github.io/</id>
+  
+  <author>
+    <name>jackieya</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>php最短一句话</title>
+    <link href="https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/"/>
+    <id>https://jackieya.github.io/2023/04/11/php-zui-duan-yi-ju-hua/</id>
+    <published>2023-04-11T15:02:20.000Z</published>
+    <updated>2023-04-11T15:05:46.464Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;php最短一句话如下:&lt;/p&gt;
+&lt;pre class=&quot; language-php&quot;&gt;&lt;code class=&quot;language-php&quot;&gt;&lt;span class=&quot;token delimiter&quot;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&quot;token</summary>
+        
+      
+    
+    
+    
+    <category term="小记" scheme="https://jackieya.github.io/categories/%E5%B0%8F%E8%AE%B0/"/>
+    
+    
+    <category term="一句话" scheme="https://jackieya.github.io/tags/%E4%B8%80%E5%8F%A5%E8%AF%9D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的博客搭建</title>
+    <link href="https://jackieya.github.io/2023/04/05/wo-de-bo-ke/"/>
+    <id>https://jackieya.github.io/2023/04/05/wo-de-bo-ke/</id>
+    <published>2023-04-05T14:42:32.000Z</published>
+    <updated>2023-04-06T10:17:28.484Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;这是这个站点的第一篇文章&quot;&gt;&lt;a href=&quot;#这是这个站点的第一篇文章&quot; class=&quot;headerlink&quot; title=&quot;这是这个站点的第一篇文章&quot;&gt;&lt;/a&gt;这是这个站点的第一篇文章&lt;/h1&gt;&lt;p&gt;​   </summary>
+        
+      
+    
+    
+    
+    <category term="其他" scheme="https://jackieya.github.io/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+    <category term="前言" scheme="https://jackieya.github.io/tags/%E5%89%8D%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ceWL工具介绍</title>
+    <link href="https://jackieya.github.io/2022/07/10/cewl-gong-ju-shi-yong/"/>
+    <id>https://jackieya.github.io/2022/07/10/cewl-gong-ju-shi-yong/</id>
+    <published>2022-07-10T11:22:20.000Z</published>
+    <updated>2023-04-17T09:46:20.410Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x01-前言&quot;&gt;&lt;a href=&quot;#0x01-前言&quot; class=&quot;headerlink&quot; title=&quot;0x01 前言&quot;&gt;&lt;/a&gt;0x01</summary>
+        
+      
+    
+    
+    
+    <category term="web安全" scheme="https://jackieya.github.io/categories/web%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="渗透测试工具" scheme="https://jackieya.github.io/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tkinter的Button控件</title>
+    <link href="https://jackieya.github.io/2022/06/04/tkinter-de-button-kong-jian/"/>
+    <id>https://jackieya.github.io/2022/06/04/tkinter-de-button-kong-jian/</id>
+    <published>2022-06-04T07:00:23.000Z</published>
+    <updated>2023-04-15T12:24:48.924Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Button是tkinter中的按钮控件,是用这个按钮可以实现程序与用户的交互，用户如果点击按钮,程序会执行相应规定好的事件函数,</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://jackieya.github.io/categories/python/"/>
+    
+    
+    <category term="tkinter" scheme="https://jackieya.github.io/tags/tkinter/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PythonGUI编程之tkinter</title>
+    <link href="https://jackieya.github.io/2022/05/31/pythongui-bian-cheng-zhi-tkinter-mo-kuai-chuang-ti/"/>
+    <id>https://jackieya.github.io/2022/05/31/pythongui-bian-cheng-zhi-tkinter-mo-kuai-chuang-ti/</id>
+    <published>2022-05-31T15:22:20.000Z</published>
+    <updated>2023-04-08T01:18:05.919Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="python" scheme="https://jackieya.github.io/categories/python/"/>
+    
+    
+    <category term="tkinter" scheme="https://jackieya.github.io/tags/tkinter/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NFS部署</title>
+    <link href="https://jackieya.github.io/2022/04/20/nfs-bu-shu/"/>
+    <id>https://jackieya.github.io/2022/04/20/nfs-bu-shu/</id>
+    <published>2022-04-20T15:22:20.000Z</published>
+    <updated>2023-04-15T12:28:25.461Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;什么是NFS&quot;&gt;&lt;a href=&quot;#什么是NFS&quot; class=&quot;headerlink&quot; title=&quot;什么是NFS&quot;&gt;&lt;/a&gt;什么是NFS&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;NFS,  网络文件系统，英文Network File System，是由&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="运维" scheme="https://jackieya.github.io/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="NFS" scheme="https://jackieya.github.io/tags/NFS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DNSLog注入</title>
+    <link href="https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/"/>
+    <id>https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/</id>
+    <published>2022-04-10T15:22:20.000Z</published>
+    <updated>2023-04-15T12:30:06.904Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x01-什么是DNSlog注入&quot;&gt;&lt;a href=&quot;#0x01-什么是DNSlog注入&quot; class=&quot;headerlink&quot; title=&quot;0x01 什么是DNSlog注入&quot;&gt;&lt;/a&gt;0x01</summary>
+        
+      
+    
+    
+    
+    <category term="Web安全" scheme="https://jackieya.github.io/categories/Web%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="DNSLog" scheme="https://jackieya.github.io/tags/DNSLog/"/>
+    
+  </entry>
+  
+</feed>
