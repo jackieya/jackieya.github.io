@@ -54,6 +54,31 @@
     
     
     <entry>
+      <title>记一个有关utools工具的小坑</title>
+      <link href="/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/"/>
+      <url>/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/</url>
+      
+        <content type="html"><![CDATA[<p>utools是大多数人都会使用的工具，它可以大大提高我们的生产效率。可是今天在安装工具，并配置环境变量的时候不小心被它给坑了。。。</p><p>我配置环境变量的时候，非常依赖于utools，在它那边输入<code>hj</code>后，就可以立刻帮我调出环境变量配置界面。配置完成后，当我再次快捷键调出utool并且通过它调出cmd验证自己刚才的工具安装是否成功时，给我的回应如下：</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20230428172644181.png" alt="image-20230428172644181"></p><p>我以为是自己配置错误，导致命令没能加载出来，进行多次尝试，依旧未果。</p><p>当我在想问题到底出在哪里时，我随手通过<code>win</code>+<code>R</code>快捷键调出新的cmd，再次运行该工具，发现成功！</p><p>难不成真的是utools的问题？</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 小记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 小事 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ICS Windows v2.0</title>
       <link href="/2022/09/10/ics-windows/"/>
       <url>/2022/09/10/ics-windows/</url>

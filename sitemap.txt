@@ -1,3 +1,4 @@
+https://jackieya.github.io/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/
 https://jackieya.github.io/2022/07/10/cewl-gong-ju-shi-yong/
 https://jackieya.github.io/2022/09/10/ics-windows/
 https://jackieya.github.io/2022/04/10/dnslog-zhu-ru/
@@ -20,6 +21,7 @@ https://jackieya.github.io/tags/DNSLog/
 https://jackieya.github.io/tags/%E4%B8%80%E5%8F%A5%E8%AF%9D/
 https://jackieya.github.io/tags/tkinter/
 https://jackieya.github.io/tags/%E5%89%8D%E8%A8%80/
+https://jackieya.github.io/tags/%E5%B0%8F%E4%BA%8B/
 https://jackieya.github.io/categories/Web%E5%AE%89%E5%85%A8/
 https://jackieya.github.io/categories/%E8%BF%90%E7%BB%B4/
 https://jackieya.github.io/categories/%E5%B0%8F%E8%AE%B0/
