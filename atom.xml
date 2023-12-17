@@ -6,7 +6,7 @@
   <link href="https://jackieya.github.io/atom.xml" rel="self"/>
   
   <link href="https://jackieya.github.io/"/>
-  <updated>2023-12-17T08:19:47.163Z</updated>
+  <updated>2023-12-17T08:36:29.176Z</updated>
   <id>https://jackieya.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>云渗透之AK/SK泄露利用</title>
+    <link href="https://jackieya.github.io/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/"/>
+    <id>https://jackieya.github.io/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/</id>
+    <published>2023-12-17T08:20:55.000Z</published>
+    <updated>2023-12-17T08:36:29.176Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;相关概念&quot;&gt;&lt;a href=&quot;#相关概念&quot; class=&quot;headerlink&quot; title=&quot;相关概念&quot;&gt;&lt;/a&gt;相关概念&lt;/h2&gt;&lt;h3 id=&quot;云概念&quot;&gt;&lt;a href=&quot;#云概念&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="Web安全" scheme="https://jackieya.github.io/categories/Web%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="云渗透" scheme="https://jackieya.github.io/tags/%E4%BA%91%E6%B8%97%E9%80%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>计划任务详解</title>

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="ICS Windows v2.0, 博客">
+    <meta name="keywords" content="云渗透之AK/SK泄露利用, 博客">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>ICS Windows v2.0 | 杰同学的自留地</title>
+    <title>云渗透之AK/SK泄露利用 | 杰同学的自留地</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -316,12 +316,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ICS Windows v2.0</h1>
+                    <h1 class="description center-align post-title">云渗透之AK/SK泄露利用</h1>
                 </div>
             </div>
         </div>
@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%B0%8F%E8%AE%B0/">
-                                <span class="chip bg-color">小记</span>
+                            <a href="/tags/%E4%BA%91%E6%B8%97%E9%80%8F/">
+                                <span class="chip bg-color">云渗透</span>
                             </a>
                         
                     </div>
@@ -462,7 +462,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-09-10
+                    2023-12-17
                 </div>
                 
 
@@ -476,14 +476,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    67
+                    1.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    6 分
                 </div>
                 
 
@@ -508,11 +508,83 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="ICS-Windows-v2-0介绍"><a href="#ICS-Windows-v2-0介绍" class="headerlink" title="ICS Windows v2.0介绍"></a>ICS Windows v2.0介绍</h2><p>ICS Windows v2.0是IRTeam基于windows系统打造的kali工具集。也就是说使用该系统就相当于在windows上使用kali。</p>
-<p>项目地址如下：</p>
-<p><a href="https://github.com/jiansiting/ICS-windows#ics-windows-v20" target="_blank" rel="noopener">https://github.com/jiansiting/ICS-windows#ics-windows-v20</a></p>
-<h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p><a href="https://pan.baidu.com/s/1znkAD4i3v0qyw3zytAYPQA" target="_blank" rel="noopener">https://pan.baidu.com/s/1znkAD4i3v0qyw3zytAYPQA</a> </p>
-<p>提取码：6diu </p>
+                <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="云概念"><a href="#云概念" class="headerlink" title="云概念"></a>云概念</h3><p>   “云”的概念涉及到云计算，云计算的基本概念是将计算机处理和存储能力从本地环境（如个人电脑或本地服务器）转移到远程的服务器集群上，这些服务器通过互联网连接在一起。用户可以通过互联网访问这些服务器上的应用程序、数据和服务，而无需担心管理和维护底层的基础设施。</p>
+<p>​    在我看来，自己购买服务器或租用服务器，成本高、不安全，频繁面临ddos等攻击的风险，而云平台成本更低，可扩展性强，安全性，方便管理，同时提供更好的数据备份和容灾能力，这也就是为什么越来越多的中小企业选择云平台的原因。</p>
+<p>​    说白了，就是将机子部署到云端。所以云端的渗透的思路本质上和常规渗透思路没有太大区别，也是基本的渗透测试流程，只是多了一些新的概念，除了常规的渗透测试方式，也多了些新的可以利用的漏洞。本文涉及的是AK/SK泄露利用，其实就是敏感配置信息泄露的后续利用方式。</p>
+<h3 id="云的相关术语"><a href="#云的相关术语" class="headerlink" title="云的相关术语"></a>云的相关术语</h3><h4 id="RDS"><a href="#RDS" class="headerlink" title="RDS"></a>RDS</h4><ul>
+<li>关系型数据库服务（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。</li>
+<li>RDS 采用即开即用方式，兼容 MySQL、 SQL Server 两种关系型数据库，并提供数据库在线扩容、备份回滚、性能监测 及分析功能。</li>
+<li>RDS 与云服务器搭配使用 I/O 性能倍增，内网互通避免网络瓶颈。</li>
+</ul>
+<h4 id="对象存储-OSS（理解为网盘）"><a href="#对象存储-OSS（理解为网盘）" class="headerlink" title="对象存储 OSS（理解为网盘）"></a>对象存储 OSS（理解为网盘）</h4><p>   OSS 是对象存储服务（Object Storage Service）的缩写，是阿里云（Alibaba Cloud）提供的一种高度可扩展的云存储服务。对象存储是一种用于存储和检索大量非结构化数据的技术，例如图片、视频、文档、备份文件等。</p>
+<p>OSS存在如下的访问控制机制：</p>
+<ul>
+<li><p>对 OSS 的资源访问分为拥有者访问、第三方用户访问。这里的拥有者指的是 Bucket 的拥有者，也称为开发者。</p>
+</li>
+<li><p>第三方用户是指访问 Bucket 里资源的用户。 访问又分为匿名访问和带签名访问。</p>
+</li>
+<li><p>对于 OSS 来说，如果请求中没有携带任何和身份相关的信息即为匿名访问。</p>
+</li>
+<li><p>带签名访问指的是按照 OSS API 文档中 规定的在请求头部或者在请求 URL 中携带签名的相关信息。</p>
+</li>
+<li><p>OSS 提供 Bucket 和 Object 的权限访问控制。 </p>
+</li>
+</ul>
+<p>关于oss的相关概念，比如Bucket和Object，具体可以看阿里云的说明文档：<a href="https://help.aliyun.com/zh/oss/product-overview/terms-2" target="_blank" rel="noopener">OSS产品中涉及的基本概念_对象存储 OSS(OSS)-阿里云帮助中心</a></p>
+<h4 id="ECS"><a href="#ECS" class="headerlink" title="ECS"></a>ECS</h4><ul>
+<li>云服务器（Elastic Compute Service，简称ECS）</li>
+</ul>
+<h4 id="安全组"><a href="#安全组" class="headerlink" title="安全组"></a>安全组</h4><ul>
+<li>安全组是一种虚拟防火墙，具备状态检测和数据包过滤功能，用于在云端划分安全域。</li>
+<li>同一安全组内的ECS实例之间默认内网网络互通。</li>
+</ul>
+<h4 id="AK-SK"><a href="#AK-SK" class="headerlink" title="AK/SK"></a>AK/SK</h4><p>   云主机通过使用Access Key Id / Secret Access Key加密的方法来验证某个请求的发送者身份。Access Key Id（AK）用于标示用户，Secret Access Key（SK）是用户用于加密认证字符串和云厂商用来验证认证字符串的密钥，其中SK必须保密。 AK/SK原理使用对称加解密。</p>
+<p>   云主机接收到用户的请求后，系统将使用AK对应的相同的SK和同样的认证机制生成认证字符串，并与用户请求中包含的认证字符串进行比对。如果认证字符串相同，系统认为用户拥有指定的操作权限，并执行相关操作；如果认证字符串不同，系统将忽略该操作并返回错误码。</p>
+<p>   大部分云厂商都支持AK/SK的认证方式</p>
+<p><strong>以阿里云为例：</strong></p>
+<p>​      阿里云用户可以在管理控制台里自行创建 Access Key，Access Key是由AccessKey ID 和 AccessKey Secret 组成（即AK和SK）。</p>
+<p>其中 ID 是公开的，用于标识用户身份，Secret 是秘密的，用于用户鉴别</p>
+<p>当用户向 OSS 发送请求时，需要首先将发送的请求按照 OSS 指定的格式生成签名字符串；然后使用 AccessKey Secret 对签名字符串进行加密（基于HMAC 算法）产生验证码（验证码带时间戳，以防止重放攻击）。OSS 收到请求以后，通过 AccessKey ID 找到对应的 AccessKey Secret，以同样的方法提取签名字符串和验证码，如果计算出来的验证码和提供的一样即认为该请求是有效的；否则，OSS 将拒绝处理这次请求，并返回 HTTP 403 错误。</p>
+<h2 id="AK-SK泄露利用"><a href="#AK-SK泄露利用" class="headerlink" title="AK/SK泄露利用"></a>AK/SK泄露利用</h2><h3 id="漏洞产生原因"><a href="#漏洞产生原因" class="headerlink" title="漏洞产生原因"></a>漏洞产生原因</h3><p>​       由于开发的不规范或者配置不当，以及一些其它漏洞，可能会导致AccessKey泄露，进而导致攻击者通过AKSK接管云主机。</p>
+<p><strong>常见的渗透场景如下:</strong></p>
+<ul>
+<li><strong>APK文件中存放Access Key；</strong></li>
+<li><strong>Web页面/JS文件等存在Access Key泄露</strong></li>
+<li><strong>Github查找目标关键字发现Access Key与AccessKey Secret；</strong></li>
+<li><strong>拥有WebShell低权限的情况下搜集阿里云Access Key利用；</strong></li>
+</ul>
+<h3 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h3><p>常见的利用工具如下：</p>
+<ul>
+<li>OSS Browser</li>
+<li>OSSUTIL</li>
+<li>IDEA中的Big Data Tools插件</li>
+<li>API Explorer</li>
+<li>第三方平台 (如行云管家)</li>
+</ul>
+<p>其中OSS Browser、OSSUTIL、Big Data Tools只能对于OSS进行操作，API调试或者第三方写好的工具可以操控ECS。</p>
+<p>连接oss时除了AK和SK，还需要OSS外网地址，格式一般如下：</p>
+<pre class=" language-shell"><code class="language-shell">https://[Bucket名称].oss-区域.aliyuns.com  
+比如：https://xxxx.oss-cn-beijing.aliyuncs.com 
+</code></pre>
+<p>下面放一个真实案例：</p>
+<p>拿到一个web服务器的shell，在其中翻找一些有用的配置文件，找到某个 .propertiespei配置文件，里面发现如下内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793195694-80bf1b11-a860-462f-873d-ce5dc1458bb4.png" alt="配置文件泄露信息"></p>
+<p>刚开始看到oss的url地址后，只想到了用oss连接的相关工具，但是连接oss只能对oss进行操作，除了看有没有敏感信息，没有多大用处。后来才发现oss的key也是AKSK形式，可以直接通过连接AKSK接管对应的云主机的，所以直接尝试用行云管家连接, 附上地址：<a href="https://yun.cloudbility.com/%E3%80%82" target="_blank" rel="noopener">https://yun.cloudbility.com/。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793996910-6d1b3a00-c7e0-4bba-a3f3-9d052ee36b37.png" alt="指定云厂商"></p>
+<p>直接选择阿里云,点击下一步，输入Api凭证，即拿到的AK和SK，即可连接</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image.png" alt="输入Api凭证"></p>
+<p>可以看到能够接管如下很多主机实例：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702794405737-13f922f6-0d83-4ade-b4c3-6a7779cbc11f.png" alt="所有主机实例"></p>
+<p>添加后进入管理界面，尝试选择ssh连接云主机，发现还是需要密码的：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794666313-d49d4e2d-4c9e-4d60-9b15-1290d5af0d63.png" alt="ssh连接需要密码"></p>
+<p>但是可以进行重置操作系统密码和管理终端密码的操作（得确保取得客户授权后才能操作）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794576659-954c0b52-7ecc-4c2d-8362-16e78b066650.png" alt="重置操作"></p>
+<p>除了用行云管家进行接管，还可以使用阿里云官方的api，达到执行命令的效果，具体可以参考下面这个链接：<a href="https://api.aliyun.com/#/?product=Ecs" target="_blank" rel="noopener">阿里云OpenAPI开发者门户</a>，之前测试时没有留下截图，这里就不再次尝试了。</p>
+<h3 id="自动化利用工具"><a href="#自动化利用工具" class="headerlink" title="自动化利用工具"></a>自动化利用工具</h3><p>在看其他人文章的时候，发现居然早就有佬已经写了阿里云api的利用工具，链接地址如下：</p>
+<p><a href="https://github.com/iiiusky/alicloud-tools" target="_blank" rel="noopener">GitHub - iiiusky/alicloud-tools: 阿里云ECS、策略组辅助小工具</a></p>
+<p>通过该工具，利用获得的AKSK即可自动化执行上述的所有操作，包括查看所有实例信息、执行命令等等操作。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.moonsec.com/1098.html" target="_blank" rel="noopener">云渗透思路</a></p>
+<p><a href="https://www.freebuf.com/articles/web/337129.html" target="_blank" rel="noopener">云主机AKSK泄露利用 - FreeBuf网络安全行业门户</a></p>
 
                 
             </div>
@@ -529,7 +601,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="/about" rel="external nofollow noreferrer">anch0r</a>
+                    <a href="/about" rel="external nofollow noreferrer">Anch0r</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -539,7 +611,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://jackieya.github.io/2022/09/10/ics-windows/">https://jackieya.github.io/2022/09/10/ics-windows/</a>
+                    <a href="https://jackieya.github.io/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/">https://jackieya.github.io/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -552,7 +624,7 @@
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="/about" target="_blank">anch0r</a>
+                    <a href="/about" target="_blank">Anch0r</a>
                     !
                 </span>
             </div>
@@ -577,8 +649,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%B0%8F%E8%AE%B0/">
-                                    <span class="chip bg-color">小记</span>
+                                <a href="/tags/%E4%BA%91%E6%B8%97%E9%80%8F/">
+                                    <span class="chip bg-color">云渗透</span>
                                 </a>
                             
                         </div>
@@ -756,17 +828,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/">
+                <a href="/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="记一个有关utools工具的小坑">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="云渗透之AK/SK泄露利用">
                         
-                        <span class="card-title">记一个有关utools工具的小坑</span>
+                        <span class="card-title">云渗透之AK/SK泄露利用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -776,26 +849,27 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-10-30
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-17
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%B0%8F%E8%AE%B0/" class="post-category">
-                                    小记
+                            <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="post-category">
+                                    Web安全
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B0%8F%E4%BA%8B/">
-                        <span class="chip bg-color">小事</span>
+                    <a href="/tags/%E4%BA%91%E6%B8%97%E9%80%8F/">
+                        <span class="chip bg-color">云渗透</span>
                     </a>
                     
                 </div>
@@ -809,13 +883,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/07/10/cewl-gong-ju-shi-yong/">
+                <a href="/2023/12/17/ji-hua-ren-wu-xiang-jie/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="ceWL工具介绍">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="计划任务详解">
                         
-                        <span class="card-title">ceWL工具介绍</span>
+                        <span class="card-title">计划任务详解</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -826,7 +900,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-17
                             </span>
                         <span class="publish-author">
                             
@@ -843,8 +917,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/">
-                        <span class="chip bg-color">渗透测试工具</span>
+                    <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/">
+                        <span class="chip bg-color">计划任务</span>
                     </a>
                     
                 </div>
