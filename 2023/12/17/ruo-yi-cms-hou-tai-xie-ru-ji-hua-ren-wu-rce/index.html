@@ -29,9 +29,9 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
@@ -516,25 +516,25 @@
 <p>这里我在本地搭建的环境为版本v4.6.1的，在影响版本范围内。</p>
 <p>需要下载redis服务，在本地6379开启redis服务。具体搭建细节可以参考这个博客：<a href="https://blog.csdn.net/qq_41607217/article/details/118904019" target="_blank" rel="noopener">https://blog.csdn.net/qq_41607217/article/details/118904019</a></p>
 <p>搭建完成后，运行项目，即可通过浏览器访问对应端口，得到如下后台登录页面：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430541928-e54d8b72-f80a-4132-9d38-0cba3d692824.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430541928-e54d8b72-f80a-4132-9d38-0cba3d692824.png" alt="若依后台登录界面"></p>
 <p>默认用户名和密码输入admin:admin123,即可登录后台</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430655019-172909c0-0c46-4063-ba0a-a8daee3e5213.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430655019-172909c0-0c46-4063-ba0a-a8daee3e5213.png" alt="进入后台"></p>
 <h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>漏洞产生处是系统监控模块中的定时任务，在其中调用目标字符串中填入恶意的payload，即可利用计划任务进行rce</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430697066-a8c45b6e-12df-46e1-99d3-cd602289ceb0.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430697066-a8c45b6e-12df-46e1-99d3-cd602289ceb0.png" alt="漏洞点"></p>
 <p>关于payload，有大佬已经在github上写好了，地址如下：<a href="https://github.com/artsploit/yaml-payload" target="_blank" rel="noopener">https://github.com/artsploit/yaml-payload</a></p>
 <p>下载下来后，需要将  AwesomeScriptEngineFactory.java 文件中的命令执行语句改成自己要执行的命令，如下图：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702477603911-cf8635b1-f775-4be6-8923-c8094fbaa5bd.png" alt="6f503dce133098200a033870cc83a612.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702477603911-cf8635b1-f775-4be6-8923-c8094fbaa5bd.png" alt="修改payload"></p>
 <p>注：这里我利用的 dnslog进行验证，使用的是<a href="http://ceye.io/%E8%BF%99%E4%B8%AA" target="_blank" rel="noopener">http://ceye.io/这个</a> dnslog平台。</p>
 <p>然后在src所在目录下打开cmd运行如下语句，将该项目编译成jar</p>
 <p>最后得到yaml-payload.jar文件，将其丢到自己的vps上，然后在vps上开启http服务，这里我利用python开启个简易的文件下载http服务</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702431475550-6c8aa773-7f9f-40a1-940a-a4c68604300a.png" alt="image.png"></p>
 <p>然后在刚刚登陆的若依cms后台，添加定时任务，这里构造的调用目标字符串如下：</p>
 <p>其中cron表达式 0/10 * * * * ? 意思是每10秒执行一次调用目标字符串的任务，这里就不详细说明了,留到下一篇笔记记录学习。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702432332419-07db0a0c-561d-41ee-a5bf-8f52bddedd42.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702432332419-07db0a0c-561d-41ee-a5bf-8f52bddedd42.png" alt="写入计划任务"></p>
 <p>这里我写入后，点击任务状态下的那个按钮，启动定时任务，但是发现最后一直没执行成功，点开上面日志后才发现运行失败了（下图），后来猜测是我搭建平台的问题，想到windows平台不存在类似cron表达式的计划任务形式，索性我就直接改成macos平台测试了，和linux差不多的计划任务方式。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702433690487-06cbfbaa-b10b-4cae-b760-28a471987821.png" alt="image.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1.png" alt="执行失败"></p>
 <p>换成 mac后（mac 系统和 linux 系统相近，也有计划任务），搭建相同的环境，再次利用，终于看到回显结果（我 mac 电脑主机名是 jackielee）：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702478318713-de879e25-53f0-47be-bd24-62beb169f5d7.png" alt="c56601fd01eb59f2230bed88e4ea49b4.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702478318713-de879e25-53f0-47be-bd24-62beb169f5d7.png" alt="成功得到回显结果"></p>
 <p> 漏洞产生原因 </p>
 <p>若依后台管理系统使用了snakeyaml 的jar包，snakeyaml是用来解析yaml的格式，可用于Java对象的序列化、反序列化。而若依后台管理系统可以通过定时任务功能构造payload远程调用jar包，从而导致 RCE。</p>
 <p>当然还可以尝试下面两种打法：</p>
