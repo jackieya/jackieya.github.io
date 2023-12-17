@@ -697,7 +697,7 @@ cp redis.conf /etc/redis.conf
 <h3 id="漏洞产生原因"><a href="#漏洞产生原因" class="headerlink" title="漏洞产生原因"></a>漏洞产生原因</h3><p>主要是因为配置不当，将Redis服务绑定到公共接口，甚至没有密码身份验证。</p>
 <p>在ubuntu中查看redis配置文件/etc/redis.conf，如果bind 127.0.0.1 那行被注释了，当前redis就是被绑定在了0.0.0.0:6379，如果也没有设置requirepass的配置字段，防火墙也没有限定可以连接的源ip，那么就很可能存在redis未授权访问，</p>
 <p>kali端通过redis-cli即可直接连接到redis服务器上。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702785943797-c1c4a239-9763-4b07-baa5-4813a1a0e0d8.png" alt="kali通过redis-cli直接连接到redis服务器"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702785943797-c1c4a239-9763-4b07-baa5-4813a1a0e0d8.png" alt="kali通过redis-cli直接连接到redis服务器"></p>
 <h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>redis未授权访问一共三种利用方式：</p>
 <ol>
 <li><p>确定webshell路径后，写入webshell</p>
@@ -715,7 +715,7 @@ cp redis.conf /etc/redis.conf
 <p>接着设置以root用户的身份执行该任务</p>
 <p><code>config set dbfilename root</code></p>
 <p>最后输入 <code>save</code>命令保存</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702786057207-e425186b-eb69-40be-bf94-2099e00f7a86.png" alt="写入计划任务"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702786057207-e425186b-eb69-40be-bf94-2099e00f7a86.png" alt="写入计划任务"></p>
 <p>显示<code>ok</code>表示计划任务写入成功。</p>
 <p>注意：服务端的redis-server需要在root权限下运行，否则在攻击机上最后<code>save</code>时会报错，显示<code>(error) ERR</code></p>
 <p>查看写入的计划任务的文件<code>/var/spool/cron/root</code></p>
