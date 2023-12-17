@@ -729,9 +729,9 @@ cp redis.conf /etc/redis.conf
 <h4 id="换成centos环境继续测试"><a href="#换成centos环境继续测试" class="headerlink" title="换成centos环境继续测试"></a>换成centos环境继续测试</h4><p>下面就把靶机换成centos7（192.168.1.134），重复上面的安装操作，在centos上开启redis服务器，再次尝试上述同样的操作。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702782868667-8e42b3d9-bbd2-44df-b821-3c8bea657324.png" alt="kali连接服务器并写入计划任务"></p>
 <p>然后在centos中查看是否成功写入计划任务：</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702783121822-bbc3e278-2372-4d63-8f43-6a2ed634b738.png" alt="查看写入的计划任务"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783121822-bbc3e278-2372-4d63-8f43-6a2ed634b738.png" alt="查看写入的计划任务"></p>
 <p>上面一行是我之前测试的没有成功，下面一行是我现在成功写入的。</p>
-<p>kali上<code>nc -lvvp 6666</code> 尝试连接：</p>
+<p>kali上 <code>nc -lvvp 6666</code> 监听6666端口：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783281278-8e882a8a-8126-4ccb-8b6b-2336ea3e3735.png" alt="成功反弹shell"></p>
 <p>可以看到成功反弹权限为root的shell！至此复现成功。</p>
 <h3 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><ol>
