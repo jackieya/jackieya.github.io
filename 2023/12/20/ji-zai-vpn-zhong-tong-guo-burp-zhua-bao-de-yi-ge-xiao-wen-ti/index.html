@@ -29,9 +29,9 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
-
+<meta name="generator" content="Hexo 4.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
@@ -516,7 +516,7 @@
 <pre><code>本地网络 --&gt; 客户端浏览器 --&gt;burpsuite代理 --&gt; 目标服务端
 </code></pre>
 <p>连接了vpn之后，数据流向如下：</p>
-<pre><code>vpn网络 --&gt; 客户端浏览器 --&gt;burpsuite网络 --&gt; 目标vpn网络 --&gt; 目标服务端
+<pre><code>vpn网络 --&gt; 客户端浏览器 --&gt;burpsuite代理 --&gt; 目标vpn网络 --&gt; 目标服务端
 </code></pre>
 <p>大概率是vpn从中拦截了burpsuite的发包，所以导致无法实现数据交互，会一直收不到返回包。</p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a href="https://github.com/idlefire/ew" target="_blank" rel="noopener">ew下载地址</a>。</p>
