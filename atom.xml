@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2023-12-17T09:30:05.623Z</updated>
+  <updated>2023-12-20T15:43:57.089Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记在vpn中通过burp抓包的一个小问题</title>
+    <link href="https://www.anch0r.top/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/"/>
+    <id>https://www.anch0r.top/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/</id>
+    <published>2023-12-20T14:43:49.000Z</published>
+    <updated>2023-12-20T15:43:57.089Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;​   </summary>
+        
+      
+    
+    
+    
+    <category term="小记" scheme="https://www.anch0r.top/categories/%E5%B0%8F%E8%AE%B0/"/>
+    
+    
+    <category term="小问题" scheme="https://www.anch0r.top/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>云渗透之AK/SK泄露利用</title>

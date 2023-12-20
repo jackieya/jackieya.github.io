@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>记在vpn中通过burp抓包的一个小问题</title>
+      <link href="/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/"/>
+      <url>/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/</url>
+      
+        <content type="html"><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220225336186.png" alt="连接深信服vpn"></p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232035102.png" alt="通过burp代理，无法正常访问系统"></p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232135277.png" alt="关闭burpsuite代理后才能正常访问网站"></p><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>正常数据流一般是：</p><pre><code>本地网络 --&gt; 客户端浏览器 --&gt;burpsuite代理 --&gt; 目标服务端</code></pre><p>连接了vpn之后，数据流向如下：</p><pre><code>vpn网络 --&gt; 客户端浏览器 --&gt;burpsuite网络 --&gt; 目标vpn网络 --&gt; 目标服务端</code></pre><p>大概率是vpn从中拦截了burpsuite的发包，所以导致无法实现数据交互，会一直收不到返回包。</p><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a href="https://github.com/idlefire/ew" target="_blank" rel="noopener">ew下载地址</a>。</p><pre class=" language-shell"><code class="language-shell">ew_for_Win.exe -s ssocksd -l 9999</code></pre><p>端口为9999</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233426994.png" alt="使用ew工具进行本地转发"></p><p>然后打开burp，在<code>User options</code>中添加SOCKS Proxy代理</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233938648.png" alt="burpsuite上设置好socks代理"></p><p>可以看到终于可以通过burp代理正常访问远程系统了</p><p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220234209314.png" alt="通过burp代理正常实现数据包交互"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 小记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 小问题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>云渗透之AK/SK泄露利用</title>
       <link href="/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/"/>
       <url>/2023/12/17/yun-shen-tou-zhi-ak-sk-xie-lu-li-yong/</url>
