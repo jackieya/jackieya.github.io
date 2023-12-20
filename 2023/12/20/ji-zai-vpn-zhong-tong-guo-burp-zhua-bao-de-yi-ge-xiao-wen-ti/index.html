@@ -513,10 +513,10 @@
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232035102.png" alt="通过burp代理，无法正常访问系统"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232135277.png" alt="关闭burpsuite代理后才能正常访问网站"></p>
 <h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>正常数据流一般是：</p>
-<pre><code>本地网络 --&gt; 客户端浏览器 --&gt;burpsuite代理 --&gt; 目标服务端
+<pre><code>本地网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标服务端
 </code></pre>
 <p>连接了vpn之后，数据流向如下：</p>
-<pre><code>vpn网络 --&gt; 客户端浏览器 --&gt;burpsuite代理 --&gt; 目标vpn网络 --&gt; 目标服务端
+<pre><code>vpn网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标vpn网络 --&gt; 目标服务端
 </code></pre>
 <p>大概率是vpn从中拦截了burpsuite的发包，所以导致无法实现数据交互，会一直收不到返回包。</p>
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a href="https://github.com/idlefire/ew" target="_blank" rel="noopener">ew下载地址</a>。</p>
