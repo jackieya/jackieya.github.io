@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2023-12-20T15:49:53.926Z</updated>
+  <updated>2023-12-23T16:05:55.402Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -17,18 +17,43 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Java反射机制</title>
+    <link href="https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/"/>
+    <id>https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/</id>
+    <published>2023-12-23T02:55:12.000Z</published>
+    <updated>2023-12-23T16:05:55.402Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
+  
+  <entry>
     <title>记在vpn中通过burp抓包的一个小问题</title>
     <link href="https://www.anch0r.top/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/"/>
     <id>https://www.anch0r.top/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/</id>
     <published>2023-12-20T14:43:49.000Z</published>
-    <updated>2023-12-20T15:49:53.926Z</updated>
+    <updated>2023-12-23T05:20:28.268Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;​   </summary>
+    <summary type="html">&lt;h2 id=&quot;0x01-问题&quot;&gt;&lt;a href=&quot;#0x01-问题&quot; class=&quot;headerlink&quot; title=&quot;0x01 问题&quot;&gt;&lt;/a&gt;0x01 问题&lt;/h2&gt;&lt;p&gt;​   </summary>
         
       
     
@@ -71,14 +96,14 @@
     <link href="https://www.anch0r.top/2023/12/16/ji-hua-ren-wu-xiang-jie/"/>
     <id>https://www.anch0r.top/2023/12/16/ji-hua-ren-wu-xiang-jie/</id>
     <published>2023-12-16T07:47:12.000Z</published>
-    <updated>2023-12-17T10:11:06.187Z</updated>
+    <updated>2023-12-23T05:20:11.745Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;计划任务详解&quot;&gt;&lt;a href=&quot;#计划任务详解&quot; class=&quot;headerlink&quot; title=&quot;计划任务详解&quot;&gt;&lt;/a&gt;计划任务详解&lt;/h1&gt;&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
+    <summary type="html">&lt;h1 id=&quot;计划任务详解&quot;&gt;&lt;a href=&quot;#计划任务详解&quot; class=&quot;headerlink&quot; title=&quot;计划任务详解&quot;&gt;&lt;/a&gt;计划任务详解&lt;/h1&gt;&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot;</summary>
         
       
     

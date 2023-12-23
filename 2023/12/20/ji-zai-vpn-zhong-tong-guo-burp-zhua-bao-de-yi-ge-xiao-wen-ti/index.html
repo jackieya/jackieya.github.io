@@ -469,14 +469,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-12-20
+                    2023-12-23
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    278
+                    281
                 </div>
                 
 
@@ -508,18 +508,18 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。</p>
+                <h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01 问题"></a>0x01 问题</h2><p>​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220225336186.png" alt="连接深信服vpn"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232035102.png" alt="通过burp代理，无法正常访问系统"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232135277.png" alt="关闭burpsuite代理后才能正常访问网站"></p>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>正常数据流一般是：</p>
+<h2 id="0x02-原因"><a href="#0x02-原因" class="headerlink" title="0x02 原因"></a>0x02 原因</h2><p>正常数据流一般是：</p>
 <pre><code>本地网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标服务端
 </code></pre>
 <p>连接了vpn之后，数据流向如下：</p>
 <pre><code>vpn网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标vpn网络 --&gt; 目标服务端
 </code></pre>
 <p>大概率是vpn从中拦截了burpsuite的发包，所以导致无法实现数据交互，会一直收不到返回包。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a href="https://github.com/idlefire/ew" target="_blank" rel="noopener">ew下载地址</a>。</p>
+<h2 id="0x03-解决方法"><a href="#0x03-解决方法" class="headerlink" title="0x03 解决方法"></a>0x03 解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a href="https://github.com/idlefire/ew" target="_blank" rel="noopener">ew下载地址</a>。</p>
 <pre class=" language-shell"><code class="language-shell">ew_for_Win.exe -s ssocksd -l 9999
 </code></pre>
 <p>端口为9999</p>
@@ -771,18 +771,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/">
+                <a href="/2023/12/23/java-fan-she-ji-zhi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="记在vpn中通过burp抓包的一个小问题">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Java反射机制">
                         
-                        <span class="card-title">记在vpn中通过burp抓包的一个小问题</span>
+                        <span class="card-title">Java反射机制</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -792,27 +791,26 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-20
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-12-23
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%B0%8F%E8%AE%B0/" class="post-category">
-                                    小记
+                            <a href="/categories/java%E5%AE%89%E5%85%A8/" class="post-category">
+                                    java安全
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/">
-                        <span class="chip bg-color">小问题</span>
+                    <a href="/tags/0-1-javaSec/">
+                        <span class="chip bg-color">0-1 javaSec</span>
                     </a>
                     
                 </div>
@@ -1101,7 +1099,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">13.7k</span>&nbsp;字
+                class="white-color">16.6k</span>&nbsp;字
             
             
             
