@@ -29,9 +29,9 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
-
+<meta name="generator" content="Hexo 4.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
@@ -508,7 +508,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>通过上一文的流程图我们可以知道，一切Java类在编译后都必须经过JVM加载才能运行，用来加载类的类就是类加载器（<code>ClassLoader</code>），也就是<code>forName</code>第二个重载方式中所要填写的第三个参数，类加载器负责将class字节码转换成内存的class类,除了系统自定义的三类加载器外，java运行用户编写自定义加载器来完成类的加载过程。java安全中常常需要远程加载恶意类文件来完成漏洞的利用，所以学习类加载器的编写也是很重要的。</p>
+                <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>通过上一文的流程图我们可以知道，一切Java类在编译后都必须经过JVM加载才能运行，用来加载类的类就是类加载器（<code>ClassLoader</code>），也就是<code>forName</code>第二个重载方式中所要填写的第三个参数，类加载器负责将class字节码转换成内存的class类,除了系统自定义的三类加载器外，java允许用户编写自定义加载器来完成类的加载过程。java安全中常常需要远程加载恶意类文件来完成漏洞的利用，所以学习类加载器的编写也是很重要的。</p>
 <blockquote>
 <p><em><strong>注：本文只是从安全角度去理解类加载器，并不涉及过深入的内容，如果想了解更加深入的内容，请移步至这本书：《深入理解java虚拟机》</strong></em>。</p>
 </blockquote>
@@ -520,8 +520,8 @@
 <li><code>AppClassLoader</code> 才是直接面向我们用户的加载器，它会加载 Classpath 环境变量里定义的路径中的 jar 包和目录。我们自己编写的代码以及使用的第三方 jar 包通常都是由它来加载的。</li>
 </ol>
 </blockquote>
-<p>正是通过这三个类加载器互相配合，完成了类的加载，当然加载过程十分负责，还涉及到比较重要的“双亲委派”机制，由于本文就是初步了解，就不深入理解底层原理了。 </p>
-<p>我们需要掌握的是是接下来的用户自定义的类加载器，可以通过继承java.lang.ClassLoader类的方式编写属于自己的类加载器。</p>
+<p>正是通过这三个类加载器互相配合，完成了类的加载，当然加载过程十分复杂，还涉及到比较重要的“双亲委派”机制，由于本文就是初步了解，就不深入理解底层原理了。 </p>
+<p>我们需要掌握的是接下来的用户自定义的类加载器，可以通过继承java.lang.ClassLoader类的方式编写属于自己的类加载器。</p>
 <h2 id="0x02-java-lang-ClassLoader类中的核心方法"><a href="#0x02-java-lang-ClassLoader类中的核心方法" class="headerlink" title="0x02 java.lang.ClassLoader类中的核心方法"></a>0x02 java.lang.ClassLoader类中的核心方法</h2><p>在提及用户自定义类加载器之前，我们先来研究研究这个比较关键的类，<code>ClassLoader</code>类, 后文写的类都要继承自它并且调用它里面的成员方法。</p>
 <p>在<code>rt.jar</code>包下的java.lang包下我们可以找到ClassLoader这个类的源码文件，下面我们将研究它的几个重要方法：</p>
 <h3 id="loadClass-String-boolean"><a href="#loadClass-String-boolean" class="headerlink" title="loadClass(String, boolean)"></a>loadClass(String, boolean)</h3><p>该方法是核心方法，也是最常用的，用来加载指定的类，返回结果是一个class对象。源码如下：</p>
