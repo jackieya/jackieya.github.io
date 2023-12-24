@@ -29,9 +29,9 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
@@ -511,13 +511,13 @@
                 <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>今天开始，有时间就记录java安全的一些内容。</p>
 <p>借用p神的一句话：Java安全可以从反序列化漏洞开始说起，反序列化漏洞⼜可以从反射开始说起。在很多java漏洞的利用方式中，我们都可以看到java反射的身影。</p>
 <p>第一篇笔记，就从java反射开始记录。本篇需要的前置知识是面向对象的一些基本概念。</p>
-<h2 id="0x01-什么是java反射"><a href="#0x01-什么是java反射" class="headerlink" title="0x01 什么是java反射"></a>0x01 什么是java反射</h2><p>java反射机制是一种间接操作目标对象的机制。在运行时，对于任意一个类，可以知道这个类的所有属性和方法，对于任意一个对象，都能够调用它的任意一个方法和属性，这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。通过使用反射我们不仅可以获取到任何类的成员方法(Methods)、成员变量(Fields)、构造方法(Constructors)等信息，还可以动态创建Java类实例、调用任意的类方法、修改任意的类成员变量值等。</p>
+<h2 id="0x01-什么是java反射"><a href="#0x01-什么是java反射" class="headerlink" title="0x01 什么是java反射"></a>0x01 什么是java反射</h2><p>java反射机制是一种间接操作目标对象的机制。在运行时，对于任意一个类，可以知道这个类的所有属性和方法，对于任意一个对象，都能够调用它的任意一个方法和属性，这种动态获取信息以及动态调用对象方法的功能称为Java语言的反射机制。通过使用反射我们不仅可以获取到任何类的成员方法(Methods)、成员变量(Fields)、构造方法(Constructors)等信息，还可以动态创建Java类实例、调用任意的类方法、修改任意的类成员变量值等。</p>
 <p>看到这个概念可能会感觉还是有些抽象，那先来讲一讲，java具体是怎么实现这个反射机制的。</p>
 <h2 id="0x02-java反射机制的实现"><a href="#0x02-java反射机制的实现" class="headerlink" title="0x02 java反射机制的实现"></a>0x02 java反射机制的实现</h2><p>面向对象中我们知道，一个类中有成员变量，方法、构造方法等信息，而java的反射就是将java类中的各种成分映射成一个个的java对象。</p>
 <p>Java中的java.lang下的Class类与java.lang.reflect类库一起对反射技术进行了全力的支持。在反射包(java.lang.reflect)中，我们常用的类主要Constructor、Method、Field类。通过Class类和这三个类，可以将一个类的各个部分封装成其他对象，从而实现反射机制。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223160023925.png" alt="java.lang包以及java.lang.reflect包"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223164222033.png" alt="java反射机制简单流程图"></p>
-<p>通过上面这个流程图简要说一下反射机制的流程。我们编写好一个User类的代码文件，然后用javac编译后形成User.class二进制文件，同时jvm内存会查找生成的class文件读入内存，再经过ClassLoader加载，会自动创建一个Class对象，里面拥有其获取成员变量Field，成员方法Method和构造方法Constructor等方法。最后就是我们通过new来创建对象。</p>
+<p>通过上面这个流程图简要说一下反射机制的流程。我们编写好一个User类的代码文件，然后用javac编译后形成User.class二进制文件，同时jvm内存会查找生成的class文件读入内存，再经过ClassLoader加载，会自动创建一个Class对象，里面拥有获取成员变量，成员方法和构造方法的方法。最后就是我们通过new来创建对象。</p>
 <p>从中我们可以知道，在生成class文件的时候，也创建了Class对象，该对象用于表示我们所编写的类的类型信息。可以这么理解，Class类是所有类的类，而所有类是java.lang.Class类的实例对象，也就是class对象。所以反射机制本身不复杂，就是获取一个类的class对象，然后再通过class对象调用Class类的成员方法获取其成员变量Field实例，成员方法Method实例以及构造器Constructor实例。而在一些漏洞利用场景中，所用的exp往往就是这样获取到一个成员方法，然后传入对应参数来调用它从而达到最终目的。所以，在java安全中，我们着重掌握Class类和Method类即可。</p>
 <p>我们下面就以这个User.java类为例，实现最终能够调用其中的成员函数效果。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
@@ -739,7 +739,7 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
 <p>执行Main函数,成功弹出计算器。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223235137881.png" alt="成功弹出计算器"></p>
 <p>假设reflection中的参入的参数可控，那么我们就可以像这样传入自己构造好的恶意类，达到命令执行效果。</p>
-<h2 id="0x05-小结"><a href="#0x05-小结" class="headerlink" title="0x05 小结"></a>0x05 小结</h2><p>本篇只是初步从java反射角度了解java的一些底层原理，原没有涉及到实际的利用场景。其实利用好java反射机制，可以很好的绕过安全机制，这就涉及更深的内容了，本篇暂时不涉及，留到以后的篇幅去探索。</p>
+<h2 id="0x05-小结"><a href="#0x05-小结" class="headerlink" title="0x05 小结"></a>0x05 小结</h2><p>本篇只是初步从java反射角度了解java的一些底层原理，远没有涉及到实际的利用场景。其实利用好java反射机制，可以很好的绕过安全机制，这就涉及更深的内容了，本篇暂时不涉及，留到以后的篇幅去探索。</p>
 <p><strong>参考文章：</strong></p>
 <p>《java安全漫谈》</p>
 <p><a href="https://xz.aliyun.com/t/9117#toc-17" target="_blank" rel="noopener">JAVA安全基础（二）– 反射机制</a></p>
