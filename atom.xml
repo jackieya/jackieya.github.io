@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2023-12-23T16:07:57.018Z</updated>
+  <updated>2023-12-24T10:10:21.277Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>java安全之ClassLoader</title>
+    <link href="https://www.anch0r.top/2023/12/24/java-an-quan-zhi-classloader/"/>
+    <id>https://www.anch0r.top/2023/12/24/java-an-quan-zhi-classloader/</id>
+    <published>2023-12-24T03:23:39.000Z</published>
+    <updated>2023-12-24T10:10:21.277Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Java反射机制</title>
     <link href="https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/"/>
     <id>https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/</id>
     <published>2023-12-23T02:55:12.000Z</published>
-    <updated>2023-12-23T16:07:57.018Z</updated>
+    <updated>2023-12-23T16:24:00.157Z</updated>
     
     
       
