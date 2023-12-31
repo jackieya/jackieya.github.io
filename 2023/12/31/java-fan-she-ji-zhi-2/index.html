@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Java反射机制, 博客">
+    <meta name="keywords" content="java反射机制2, 博客">
     <meta name="description" content="个人博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Java反射机制 | 杰同学的自留地</title>
+    <title>java反射机制2 | 杰同学的自留地</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -316,12 +316,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Java反射机制</h1>
+                    <h1 class="description center-align post-title">java反射机制2</h1>
                 </div>
             </div>
         </div>
@@ -462,7 +462,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-12-23
+                    2023-12-31
                 </div>
                 
 
@@ -508,168 +508,10 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>今天开始，有时间就记录java安全的一些内容。</p>
-<p>借用p神的一句话：Java安全可以从反序列化漏洞开始说起，反序列化漏洞⼜可以从反射开始说起。在很多java漏洞的利用方式中，我们都可以看到java反射的身影。</p>
-<p>第一篇笔记，就从java反射开始记录。本篇需要的前置知识是面向对象的一些基本概念。</p>
-<h2 id="0x01-什么是java反射"><a href="#0x01-什么是java反射" class="headerlink" title="0x01 什么是java反射"></a>0x01 什么是java反射</h2><p>java反射机制是一种间接操作目标对象的机制。在运行时，对于任意一个类，可以知道这个类的所有属性和方法，对于任意一个对象，都能够调用它的任意一个方法和属性，这种动态获取信息以及动态调用对象方法的功能称为Java语言的反射机制。通过使用反射我们不仅可以获取到任何类的成员方法(Methods)、成员变量(Fields)、构造方法(Constructors)等信息，还可以动态创建Java类实例、调用任意的类方法、修改任意的类成员变量值等。</p>
-<p>看到这个概念可能会感觉还是有些抽象，那先来讲一讲，java具体是怎么实现这个反射机制的。</p>
-<h2 id="0x02-java反射机制的实现"><a href="#0x02-java反射机制的实现" class="headerlink" title="0x02 java反射机制的实现"></a>0x02 java反射机制的实现</h2><p>面向对象中我们知道，一个类中有成员变量，方法、构造方法等信息，而java的反射就是将java类中的各种成分映射成一个个的java对象。</p>
-<p>Java中的java.lang下的Class类与java.lang.reflect类库一起对反射技术进行了全力的支持。在反射包(java.lang.reflect)中，我们常用的类主要Constructor、Method、Field类。通过Class类和这三个类，可以将一个类的各个部分封装成其他对象，从而实现反射机制。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223160023925.png" alt="java.lang包以及java.lang.reflect包"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223164222033.png" alt="java反射机制简单流程图"></p>
-<p>通过上面这个流程图简要说一下反射机制的流程。我们编写好一个User类的代码文件，然后用javac编译后形成User.class二进制文件，同时jvm内存会查找生成的class文件读入内存，再经过ClassLoader加载，会自动创建一个Class对象，里面拥有获取成员变量，成员方法和构造方法的方法。最后就是我们通过new来创建对象。</p>
-<p>从中我们可以知道，在生成class文件的时候，也创建了Class对象，该对象用于表示我们所编写的类的类型信息。可以这么理解，Class类是所有类的类，而所有类是java.lang.Class类的实例对象，也就是class对象。所以反射机制本身不复杂，就是获取一个类的class对象，然后再通过class对象调用Class类的成员方法获取其成员变量Field实例，成员方法Method实例以及构造器Constructor实例。而在一些漏洞利用场景中，所用的exp往往就是这样获取到一个成员方法，然后传入对应参数来调用它从而达到最终目的。所以，在java安全中，我们着重掌握Class类和Method类即可。</p>
-<p>我们下面就以这个User.java类为例，实现最终能够调用其中的成员函数效果。</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
-
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span><span class="token punctuation">{</span>
-    <span class="token keyword">private</span> String name<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> Integer age<span class="token punctuation">;</span>
-    <span class="token keyword">public</span> <span class="token function">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-    <span class="token keyword">public</span> <span class="token function">User</span><span class="token punctuation">(</span>String name<span class="token punctuation">,</span> Integer age<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">public</span> String <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> name<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setName</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">public</span> Integer <span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> age<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setAge</span><span class="token punctuation">(</span>Integer age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"User [name="</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">", age="</span> <span class="token operator">+</span> age <span class="token operator">+</span> <span class="token string">"]"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h3 id="通过java-lang-Class类获取class对象"><a href="#通过java-lang-Class类获取class对象" class="headerlink" title="通过java.lang.Class类获取class对象"></a>通过<code>java.lang.Class</code>类获取class对象</h3><p>上面说到，ClassLoader加载时（关于类加载器的内容下一篇讲），java虚拟机（jvm）会创建一个class对象，而获取一个class对象是反射中最关键的一个操作。在代码中获取class对象的方式的主要有三种：</p>
-<ul>
-<li>通过对象：<code>对象.getClass()</code>   如果上下⽂中存在某个类的实例 <code>obj</code> ，那么我们可以直接通过 <code>obj.getClass()</code> 来获取它的类</li>
-<li>通过全限定类名：<code>Class.forName(全限定类名)</code>   如果你知道某个类的名字，想获取到这个类，就可以使⽤<code>forName</code>这个静态方法来获取</li>
-<li>通过类名： <code>类名.class</code>   如果你已经加载了某个类，只是想获取到它的 <code>java.lang.Class</code> 对象，那么就直接拿它的class属性即可。这个⽅法其实不属于反射。</li>
-</ul>
-<blockquote>
-<p><strong>全限定类名：</strong>就是类名全称，带包路径的用点隔开，例如本文中用的User类的全限定类名：com.Anchor.User。</p>
-</blockquote>
-<p>其中相对常用或者说比较重要的就是<code>forName()</code>这个静态方法，我们可以在已知一些恶意类的类名的情况下，通过它来获取这些恶意类的class对象，下文还会提到这个<code>forName</code>方法。</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">//获取class实例的三种方式</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"根据类名:  \t"</span> <span class="token operator">+</span> User<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"根据对象:  \t"</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"根据全限定类名:\t"</span> <span class="token operator">+</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.Anchor.User"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>输出结果：</p>
-<pre class=" language-java"><code class="language-java">根据类名<span class="token operator">:</span>      <span class="token keyword">class</span> <span class="token class-name">com<span class="token punctuation">.</span>Anchor<span class="token punctuation">.</span>User</span>
-根据对象<span class="token operator">:</span>      <span class="token keyword">class</span> <span class="token class-name">com<span class="token punctuation">.</span>Anchor<span class="token punctuation">.</span>User</span>
-根据全限定类名<span class="token operator">:</span>    <span class="token keyword">class</span> <span class="token class-name">com<span class="token punctuation">.</span>Anchor<span class="token punctuation">.</span>User</span>
-</code></pre>
-<blockquote>
-<p>这里直接打印获得的class实例从而触发toString方法，不难看出Class类的toString方法默认返回的就是全限定类名。</p>
-</blockquote>
-<p>获得这个class对象后，我们又可以调用以下几个常用的Class类中的成员方法：</p>
-<p><code>class对象.getName()</code> 获取全限定类名</p>
-<p><code>class对象.getSimpleName()</code> 获取类名</p>
-<p><code>class对象.nweInstance()</code>获取该类的实例化对象</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-        Class <span class="token class-name">userClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.Anchor.User"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"获取全限定类名:\t"</span> <span class="token operator">+</span> userClass<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"获取类名:\t"</span> <span class="token operator">+</span> userClass<span class="token punctuation">.</span><span class="token function">getSimpleName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"实例化:\t"</span> <span class="token operator">+</span> userClass<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>输出结果：</p>
-<pre><code>获取全限定类名:    com.Anchor.User
-获取类名:    User
-实例化:    User [name=null, age=0]
-</code></pre>
-<p>当然Class类中不止有这几个成员方法，还有一个关键的getMethod方法，下面我们将结合Method类，达到调用成员方法的效果。</p>
-<h3 id="通过java-lang-reflect-Method类获取成员方法"><a href="#通过java-lang-reflect-Method类获取成员方法" class="headerlink" title="通过java.lang.reflect.Method类获取成员方法"></a>通过<code>java.lang.reflect.Method</code>类获取成员方法</h3><p>获取成员方法后调用方法，涉及两个动作，分别两用两个方法实现：</p>
-<ol>
-<li><p>Class类中的<code>getMethod()</code>方法  </p>
-<p> 返回一个 Method 对象，它反映此 Class 对象所表示的类或接口的指定公共成员方法（注意，是公共成员方法，只能获取public方法）。</p>
-</li>
-</ol>
-<blockquote>
-<p>用法:</p>
-<p><code>userClass.getMethod(要获取的成员方法名, 这个成员方法需要的参数类型)</code></p>
-</blockquote>
-<ol start="2">
-<li>Method类中的<code>invoke()</code>方法。</li>
-</ol>
-<blockquote>
-<p>用法：</p>
-<p><code>method.invoke(调用该方法的对象, 该方法需要传入的参数值)</code></p>
-</blockquote>
-<p>下面我们通过这两个方法实现将一个User实例的”name”属性的值设为”anchor”的操作：</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>Method<span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-        Class <span class="token class-name">userClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.Anchor.User"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//获得一个class实例</span>
-        Method method <span class="token operator">=</span> userClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"setName"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 通过class实例获得User类中的setName方法</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"获得的Method对象为:"</span> <span class="token operator">+</span> method<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>userClass<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"anch0r"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 实例化一个user对象并触发它的setName方法，传入的参数值为anch0r</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>为了体现调用setName方法的效果我们将User类中的setName方法改造如下：</p>
-<pre class=" language-java"><code class="language-java">    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setName</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-</code></pre>
-<p>输出结果：</p>
-<pre class=" language-java"><code class="language-java">获得的Method对象为<span class="token operator">:</span><span class="token keyword">public</span> <span class="token keyword">void</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">.</span>User<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span>java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>String<span class="token punctuation">)</span>
-anch0r
-</code></pre>
-<p>可以看到name的值在运行过程中被设置为anch0r，代表setName方法调用成功。</p>
-<p>Class类获取Method对象还有下面几个方法：</p>
-<table>
-<thead>
-<tr>
-<th>方法返回值</th>
-<th>方法名称</th>
-<th>方法说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Method[]</td>
-<td>getMethods()</td>
-<td>返回一个包含某些 Method 对象的数组，这些对象反映此 Class 对象所表示的类或接口（包括那些由该类或接口声明的以及从超类和超接口继承的那些的类或接口）的公共 member 方法。</td>
-</tr>
-<tr>
-<td>Method</td>
-<td>getDeclaredMethod(String name, Class&lt;?&gt;… parameterTypes)</td>
-<td>返回一个指定参数的Method对象，该对象反映此 Class 对象所表示的类或接口的指定已声明方法。</td>
-</tr>
-<tr>
-<td>Method[]</td>
-<td>getDeclaredMethods()</td>
-<td>返回 Method 对象的一个数组，这些对象反映此 Class 对象表示的类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。</td>
-</tr>
-</tbody></table>
-<h2 id="0x03-java反射的价值"><a href="#0x03-java反射的价值" class="headerlink" title="0x03 java反射的价值"></a>0x03 java反射的价值</h2><p>看到这里，也许你会疑惑，还是没有看到java反射的利用价值，光能调用成员函数有什么用？</p>
-<p>那就来个命令执行的演示。我们来通过反射Runtime类实现命令执行。</p>
-<p>上代码：</p>
+                <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>发现关于java反射还有很多内容需要补充，就接着<a href="https://anch0r.top/2023/12/23/java-fan-she-ji-zhi/" target="_blank" rel="noopener">java反射机制</a>进一步记录有关反射的内容。</p>
+<h2 id="0x01-关于newInstance-方法"><a href="#0x01-关于newInstance-方法" class="headerlink" title="0x01 关于newInstance()方法"></a>0x01 关于newInstance()方法</h2><p>通过上次的java反射学习，我们知道，通过调用获得来的class对象的newInstance()方法可以实例化一个对象，通过该实例化的对象，我们就可以成功调用对应类中的成员方法。</p>
+<p>但调用<code>newInstance()</code>方法是有条件的，<strong>前提是这个类有无参构造方法，并且构造方法是公有的</strong>，因为<code>newInstance()</code>作用就是调用类的公有的无参构造方法，进而实例化出一个对象。如果一个类没有公有的无参构造函数，那么调用<code>newInstance()</code>就会不成功。</p>
+<p>拿我这篇文章中的<a href="https://anch0r.top/2023/12/23/java-fan-she-ji-zhi/" target="_blank" rel="noopener">java反射机制</a>中的 “0x03 java反射价值”中的例子来说明。当时我是利用反射机制先获取<code>java.lang.Runtime</code>(这是我们命令执行构造payload最常用的类)的class对象，然后是获得<code>exec()</code>和<code>getRuntime()</code>这两个成员方法，利用<code>invoke</code>方法先调用<code>getRuntime()</code>方法从而获得一个Runtime对象，然后才调用Runtime对象的<code>exec()</code>执行命令：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>Method<span class="token punctuation">;</span>
@@ -684,67 +526,223 @@ anch0r
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>核心是通过forName将Runtime类的class对象加载到内存中然后通过getMethod调用exec方法，进行命令执行。中途还需要通过getRuntime方法获得一个Runtime类对象。</p>
-<p>成功执行命令，打开计算器</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223225322520.png" alt="成功打开计算器"></p>
-<h2 id="0x04-forName的两种重载"><a href="#0x04-forName的两种重载" class="headerlink" title="0x04 forName的两种重载"></a>0x04 forName的两种重载</h2><p>在平时，除了系统类，如果我们需要用一些类，除非有import导入，否则我们只能通过forName加载我们需要类的Class对象。</p>
-<p>Class.java文件中显示，forName有两种重载方式，</p>
-<p>第一种是用的最多的，参数只需要全限定类名即可</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> <span class="token function">forName</span><span class="token punctuation">(</span>String className<span class="token punctuation">)</span>
-</code></pre>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223231730569.png" alt="第一种forName重载方式"></p>
-<p>第二种</p>
-<pre><code>public static Class&lt;?&gt; forName(String name, boolean initialize, ClassLoader loader)
-</code></pre>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223231913552.png" alt="第二种forName重载方式"></p>
-<p>第二种重载方式涉及另外两个参数，initialize和loader，loader需要传入一个ClassLoader类的对象，即类加载器，这个留到之后一篇文章详解，本篇暂且不谈。initialize要传入布尔值，代表是否初始化。</p>
-<p>需要注意的是，第一种重载方式是第二种重载方式的一个特殊情况，即下面这两个forName是等价的：</p>
-<pre class=" language-java"><code class="language-java">Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>className<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//第一种重载方式</span>
-Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>className<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> currentLoader<span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">//第一种相当于第二种重载方式选择初始化</span>
-</code></pre>
-<p>那么这里的是否初始化到底代表什么？</p>
-<p>想到初始化，第一个想到的就是构造函数，那就是会执行相应的构造函数？然后并非如此。</p>
-<p>p神指出该初始化是告诉虚拟机是否执行”类的初始化“(类初始化是指类第一次加载到内存进程中要进行的操作)。</p>
-<p>类在初始化的时候会调用其中的<code>static{}</code>，即static块。那么我们可以通过将恶意代码放置在恶意类的static块中，通过<code>forName</code>加载该恶意类（选择第一种重载方式，默认“类初始化”），从而实现命令执行。</p>
-<p>我们设计主函数如下，其中定义一个可以获取类的class对象的函数<code>reflection</code></p>
+<p>看到这个过程，你可能会感觉到疑惑，为什么非要调用<code>getRuntime()</code>方法获得<code>Runtime</code>对象，而不考虑直接通过其中的<code>evilClass</code>的<code>newInstance()</code>来直接获得<code>Runtime对象</code>？</p>
+<p>确实，上面这么做是显得有些麻烦，但是实践证明，通过<code>newInstance()</code>方法是不可行的，比如我们改成下面这行代码：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
+
 
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">reflection</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-        Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-        <span class="token function">reflection</span><span class="token punctuation">(</span><span class="token string">"com.Anchor.Evil"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Class <span class="token class-name">evilClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.Runtime"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 得到Runtime的class对象</span>
+        evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"exec"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evilClass<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//newInstance()实例化出一个Runtime对象，调用其中的exec方法</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>然后构造恶意类 <code>Evil</code></p>
+<p>这样是变简洁了，但是当运行这段代码时会产生一个报错：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231133903399.png" alt="报错"></p>
+<p>报错中有<code>private</code>这个字眼，我们看看<code>rt.jar</code>包下的<code>java.lang.Runtime</code>类的源码，可以发现其中的无参构造函数是私有方法，很明显，newInstance是不能调用这样的私有无参构造函数的，这就是为什么运行后会报错。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token function">Runtime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231134145735.png" alt="Runtime的私有无参构造函数"></p>
+<p>不太了解java的人这时也许又会产生疑问，为什么会有私有的无参构造方法？真是不想让用户使用这个类才设计的吗？</p>
+<p>其实并不是，这涉及到常见的设计模式：“单例模式”。</p>
+<p>单例模式，说通俗点，就是想要保证一个类仅有一个实例，并且提供一个访问它的全局访问点，主要解决的问题就是程序中对一个类频繁的创造和销毁，导致效率下降。单例模式思路就是将构造函数设置成私有，然后设置一个静态方法来获取该构造方法，这样就不会频繁调用构造函数建立对象了，只需要一次借助对应的静态方法来调用构造函数创建单例。而我之前成功调用exec函数的方法就是用的这个静态方法来实现的。</p>
+<p>Runtime类很明显就是一个单例模式设计的类，它其中有一个静态函数<code>getRuntime()</code>就是用来获取Runtime对象的。(在上一张图中我们可以看到<code>getRuntime()</code>函数代码)所以，就有这样的思路，利用getMethod方法拿到getRuntime的Method对象，通过调用它从而获得Runtime对象。</p>
+<h2 id="0x02-Constructor类"><a href="#0x02-Constructor类" class="headerlink" title="0x02 Constructor类"></a>0x02 Constructor类</h2><p>看到上面的例子后，疑问又产生了，如果有这样一个类，它没有无参构造方法(或者是无参构造方法私有)，也没有单例模式中的静态方法，那么怎么通过反射机制来实现实例化操作呢？</p>
+<p>解决上面这个问题，这里得引入反射中一个大类，<code>Constructor</code>。在上一篇java反射中我只提及了<code>Class</code>类和<code>Method</code>类，当时以为<code>Constructor</code>类并不是很重要，就把它给遗漏了，没想到它在安全中还是有作用的。</p>
+<p>Constructor类存在于反射包(java.lang.reflect)中，反映的是Class 对象所表示的类的构造方法。在反射中，一个类的Constructor对象是可以通过Class类中的成员方法获得的，相关的方法如下：</p>
+<table>
+<thead>
+<tr>
+<th>方法返回值</th>
+<th>方法名称</th>
+<th>方法说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>static Class&lt;?&gt;</td>
+<td>forName(String className)</td>
+<td>返回与带有给定字符串名的类或接口相关联的 Class 对象。</td>
+</tr>
+<tr>
+<td>Constructor</td>
+<td>getConstructor(Class&lt;?&gt;… parameterTypes)</td>
+<td>返回指定参数类型、具有public访问权限的构造函数对象</td>
+</tr>
+<tr>
+<td>Constructor&lt;?&gt;[]</td>
+<td>getConstructors()</td>
+<td>返回所有具有public访问权限的构造函数的Constructor对象数组</td>
+</tr>
+<tr>
+<td>Constructor</td>
+<td>getDeclaredConstructor(Class&lt;?&gt;… parameterTypes)</td>
+<td>返回指定参数类型、所有声明的（包括private）构造函数对象</td>
+</tr>
+<tr>
+<td>Constructor&lt;?&gt;[]</td>
+<td>getDeclaredConstructors()</td>
+<td>返回所有声明的（包括private）构造函数对象</td>
+</tr>
+<tr>
+<td>T</td>
+<td>newInstance()</td>
+<td>调用无参构造器创建此 Class 对象所表示的类的一个新实例。</td>
+</tr>
+</tbody></table>
+<p>常用的是其中的<code>getConstructor</code>方法,和<code>getMethod</code>方法类似<code>getConstructor</code>接收的参数是构造函数列表类型，因为构造函数也支持重载，所以必须用参数列表类型才能唯一确定一个构造函数。通过<code>getConstructor</code>这些方法，我们不仅可以解决上面没有无参构造函数的问题，还可以任意调用自己需要的那个构造函数。</p>
+<p>我们先以上次的<code>User</code>类为例尝试调用其中的构造函数,一共是三个调用函数，分别是无参、只有一个参数以及有两个参数的构造函数，其中只有一个参数的构造函数是私有的。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
 
-<span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>Runtime<span class="token punctuation">;</span>
-<span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>Process<span class="token punctuation">;</span>
 
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Evil</span> <span class="token punctuation">{</span>
-    <span class="token keyword">static</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            Runtime rt <span class="token operator">=</span> Runtime<span class="token punctuation">.</span><span class="token function">getRuntime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            String command <span class="token operator">=</span> <span class="token string">"calc.exe"</span><span class="token punctuation">;</span>
-            Process pc <span class="token operator">=</span> rt<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>command<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            pc<span class="token punctuation">.</span><span class="token function">waitFor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token punctuation">}</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> String name<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> Integer age<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token function">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token function">User</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token function">User</span><span class="token punctuation">(</span>String name<span class="token punctuation">,</span> Integer age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> String <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setName</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> Integer <span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> age<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setAge</span><span class="token punctuation">(</span><span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"User [name="</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">", age="</span> <span class="token operator">+</span> age <span class="token operator">+</span> <span class="token string">"]"</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>执行Main函数,成功弹出计算器。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231223235137881.png" alt="成功弹出计算器"></p>
-<p>假设reflection中的参入的参数可控，那么我们就可以像这样传入自己构造好的恶意类，达到命令执行效果。</p>
-<h2 id="0x05-小结"><a href="#0x05-小结" class="headerlink" title="0x05 小结"></a>0x05 小结</h2><p>本篇只是初步从java反射角度了解java的一些底层原理，远没有涉及到实际的利用场景。其实利用好java反射机制，可以很好的绕过安全机制，这就涉及更深的内容了，本篇暂时不涉及，留到以后的篇幅去探索。</p>
+<p>测试的Main函数如下：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
+
+
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>Constructor<span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        Class <span class="token class-name">userClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.Anchor.User"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        User user0 <span class="token operator">=</span> <span class="token punctuation">(</span>User<span class="token punctuation">)</span> userClass<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//通过Class对象的newInstance方法调用无参构造函数</span>
+        Constructor cs1 <span class="token operator">=</span> userClass<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//通过getConstructor获得无参构造函数的Constructor对象</span>
+        User user1 <span class="token operator">=</span> <span class="token punctuation">(</span>User<span class="token punctuation">)</span> cs1<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//第一种是newInstance</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Class对象的newInstance方法:\t"</span> <span class="token operator">+</span> user0<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getConstructor[no parameters]:\t"</span> <span class="token operator">+</span> user1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"--------------------------------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 得到只有一个参数的构造函数的Constructor对象,使用getDeclaredConstructor方法，可以获得私有方法的Constructor对象</span>
+        Constructor cs2 <span class="token operator">=</span> userClass<span class="token punctuation">.</span><span class="token function">getDeclaredConstructor</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        cs2<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//由于是private必须设置可访问</span>
+        User user2 <span class="token operator">=</span> <span class="token punctuation">(</span>User<span class="token punctuation">)</span> cs2<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token string">"anch0r"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getDeclaredConstructor[one parameter]:\t"</span> <span class="token operator">+</span> user2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"--------------------------------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+        Constructor cs3 <span class="token operator">=</span> userClass<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> Integer<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//得到有两个参数的构造函数的Constructor对象</span>
+        User user3 <span class="token operator">=</span> <span class="token punctuation">(</span>User<span class="token punctuation">)</span> cs3<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token string">"anch0r2"</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getConstructor[two parameters]:\t"</span> <span class="token operator">+</span> user3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>最后运行结果为：</p>
+<pre><code>Class对象的newInstance方法:    User [name=null, age=null]
+getConstructor[no parameters]:    User [name=null, age=null]
+--------------------------------------------
+getDeclaredConstructor[one parameter]:    User [name=anch0r, age=null]
+--------------------------------------------
+getConstructor[two parameters]:    User [name=anch0r2, age=100]
+</code></pre>
+<p>接下来以两个例子来说明Constructor类和相关的一些方法引入的意义。</p>
+<h3 id="设置setAccessible-true-绕过访问权限"><a href="#设置setAccessible-true-绕过访问权限" class="headerlink" title="设置setAccessible(true)绕过访问权限"></a>设置setAccessible(true)绕过访问权限</h3><p>你也许注意到上面这个例子中的一个方法:<code>setAccessible(true)</code>。</p>
+<p>在程序中，调用这一方法，可以取消java语言访问控制的检查能力。我们通过<code>getDeclaredConstructor</code>获得一个私有构造函数的Method对象后，可以用<code>setAccessible(true)</code>来实现绕过私有权限的访问控制。而从上文我们知道，就是因为<code>java.lang.Runtime</code>类中的无参构造函数是私有的我们才没法通过Class对象的<code>newInstance</code>方法来实例化对象，现在我们有了一个可以绕过<code>private</code>的方式了，那么就来利用<code>setAccessible(true)</code>改造之前的命令执行代码：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
+
+
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>Constructor<span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        Class <span class="token class-name">evilClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.Runtime"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//老规矩，获取一个class对象</span>
+        Constructor cs <span class="token operator">=</span> evilClass<span class="token punctuation">.</span><span class="token function">getDeclaredConstructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//利用getDeclaredConstructor获取私有的无参构造函数的Constructor对象</span>
+        cs<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 取消java的访问控制的检查机制，绕过访问控制</span>
+        evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"exec"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>cs<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 通过无参构造函数的Constructor对象实例化，再借助getMethod获取exec的Method类，最后调用exec函数。</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>运行后成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231151233188.png" alt="成功弹出计算器"></p>
+<h3 id="调用java-lang-ProcessBuilder不同类型的构造函数实现命令执行"><a href="#调用java-lang-ProcessBuilder不同类型的构造函数实现命令执行" class="headerlink" title="调用java.lang.ProcessBuilder不同类型的构造函数实现命令执行"></a>调用<code>java.lang.ProcessBuilder</code>不同类型的构造函数实现命令执行</h3><p>在构造命令执行的payload时，除了<code>Runtime</code>类，<code>ProcessBuilder</code>类也是比较常用的，一般使用反射来获取其构造函数，然后调用其中的<code>start()</code> 方法来执行命令。</p>
+<p>我们先通过查看源码研究一下这个类的的构造函数：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231152715024.png" alt="ProcessBuilder类两种构造方法"></p>
+<p>可以看到该类构造函数有两个重载方式。</p>
+<h4 id="第一个重载"><a href="#第一个重载" class="headerlink" title="第一个重载"></a>第一个重载</h4><p>第一个重载需要传入的参数类型是列表类型<code>List</code>:</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">ProcessBuilder</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>String<span class="token operator">></span> command<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>command <span class="token operator">==</span> null<span class="token punctuation">)</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>command <span class="token operator">=</span> command<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<p>我们在使用<code>getConstructor</code>获得Constructor对象时，需要将传参类型修改为<code>List.class</code>,所以我们能够立刻写出下面这个payload：</p>
+<pre class=" language-java"><code class="language-java">Class <span class="token class-name">clazz</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.ProcessBuilder"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">(</span><span class="token punctuation">(</span>ProcessBuilder<span class="token punctuation">)</span>clazz<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>List<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span>Arrays<span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span><span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这里用<code>Arrays.asList</code>方法将字符串<code>"calc.exe"</code>转为了列表类型再传入到Constructor类的newInstance方法中，从而执行构造函数<code>public ProcessBuilder(List&lt;String&gt; command)</code>。</p>
+<p>这里虽然执行成功，但是有个缺点，使用了强制类型转换(也就是第二行前面的<code>(ProcessBuilder)</code>语法)，然而在一般情况下，表达式上下文是没有这种语法的。我们仍然需要用<code>java反射</code>改进这一步，避免使用强制类型转换，如下面这行代码：</p>
+<pre class=" language-java"><code class="language-java">Class <span class="token class-name">evilClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.ProcessBuilder"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"start"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evilClass<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>List<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span>Arrays<span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span><span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这里通过<code>getMethod("start")</code> 获取到<code>start</code>方法，然后 <code>invoke</code> 执行， <code>invoke</code> 的第一个参数就是<code>ProcessBuilder Object</code>了,就不需要再进行强制类型转换了。</p>
+<p>运行成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231154251434.png" alt="成功弹出计算器"></p>
+<h4 id="第二个重载"><a href="#第二个重载" class="headerlink" title="第二个重载"></a>第二个重载</h4><p>第二个重载需要传入的参数类型比较特殊，是可变长的参数</p>
+<pre class=" language-java"><code class="language-java">    <span class="token keyword">public</span> <span class="token function">ProcessBuilder</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> command<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>command <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span>command<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>String arg <span class="token operator">:</span> command<span class="token punctuation">)</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>command<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>b
+</code></pre>
+<blockquote>
+<p><strong>java可变长参数</strong>:</p>
+<p>java一般使用以使用 <code>...</code> 这样的语法来表示这个函数的参数个数是可变的,在编译时java会将可变长参数编译成一个数组类型，可以说下面这两种形式是等价的：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">hello</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> names<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">hello</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>names<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre>
+<p>对于hello这个函数，我们就可以传入一个字符串数组类型的数据，比如<code>String[] names = {"hello", "world"};</code></p>
+</blockquote>
+<p>如果我们要实现对这第二个构造函数的重载，就要给它传入可变长参数。我们可以直接将可变长参数当成数组，也就是说将字符串数组类型的class对象:<code>String[].class</code> 传给 getConstructor作为参数类型 ，从而获取 <code>ProcessBuilder </code>类这第二种重载的构造函数。</p>
+<p>具体代码如下：</p>
+<pre class=" language-java"><code class="language-java">Class <span class="token class-name">evilClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.ProcessBuilder"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"start"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evilClass<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token punctuation">{</span><span class="token string">"calc.exe"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>运行后成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231160103034.png" alt="成功弹出计算器"></p>
+<h2 id="0x03-小结"><a href="#0x03-小结" class="headerlink" title="0x03 小结"></a>0x03 小结</h2><p>这一篇主要是解决上一篇的一些疑惑，同时在引入了<code>Constructor</code>类概念后加入了一些新的玩法。</p>
 <p><strong>参考文章：</strong></p>
 <p>《java安全漫谈》</p>
 <p><a href="https://xz.aliyun.com/t/9117#toc-17" target="_blank" rel="noopener">JAVA安全基础（二）– 反射机制</a></p>
-<p><a href="https://pdai.tech/md/java/basic/java-basic-x-reflection.html#method%E7%B1%BB%E5%8F%8A%E5%85%B6%E7%94%A8%E6%B3%95" target="_blank" rel="noopener">Java 基础 - 反射机制详解</a></p>
 
                 
             </div>
@@ -771,7 +769,7 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/">https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/</a>
+                    <a href="https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/">https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -988,17 +986,18 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/12/24/java-an-quan-zhi-classloader/">
+                <a href="/2023/12/31/java-fan-she-ji-zhi-2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="java安全之ClassLoader">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="java反射机制2">
                         
-                        <span class="card-title">java安全之ClassLoader</span>
+                        <span class="card-title">java反射机制2</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1008,9 +1007,9 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-12-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-31
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1023,6 +1022,7 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1041,13 +1041,13 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/12/20/ji-zai-vpn-zhong-tong-guo-burp-zhua-bao-de-yi-ge-xiao-wen-ti/">
+                <a href="/2023/12/24/java-an-quan-zhi-classloader/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="记在vpn中通过burp抓包的一个小问题">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="java安全之ClassLoader">
                         
-                        <span class="card-title">记在vpn中通过burp抓包的一个小问题</span>
+                        <span class="card-title">java安全之ClassLoader</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1058,14 +1058,14 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-20
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-24
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%B0%8F%E8%AE%B0/" class="post-category">
-                                    小记
+                            <a href="/categories/java%E5%AE%89%E5%85%A8/" class="post-category">
+                                    java安全
                                 </a>
                             
                             
@@ -1075,8 +1075,8 @@ Class<span class="token punctuation">.</span><span class="token function">forNam
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/">
-                        <span class="chip bg-color">小问题</span>
+                    <a href="/tags/0-1-javaSec/">
+                        <span class="chip bg-color">0-1 javaSec</span>
                     </a>
                     
                 </div>

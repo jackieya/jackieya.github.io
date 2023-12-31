@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2023-12-24T13:12:10.001Z</updated>
+  <updated>2023-12-31T08:07:56.254Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>java反射机制2</title>
+    <link href="https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/"/>
+    <id>https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/</id>
+    <published>2023-12-31T04:40:14.000Z</published>
+    <updated>2023-12-31T08:07:56.254Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;发现关于java反射还有很多内容需要补充，就接着&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
   
   <entry>
     <title>java安全之ClassLoader</title>
@@ -46,7 +71,7 @@
     <link href="https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/"/>
     <id>https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/</id>
     <published>2023-12-23T02:55:12.000Z</published>
-    <updated>2023-12-24T13:23:07.517Z</updated>
+    <updated>2023-12-31T06:43:54.861Z</updated>
     
     
       
