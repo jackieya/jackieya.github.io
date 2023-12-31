@@ -526,7 +526,7 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>看到这个过程，你可能会感觉到疑惑，为什么非要调用<code>getRuntime()</code>方法获得<code>Runtime</code>对象，而不考虑直接通过其中的<code>evilClass</code>的<code>newInstance()</code>来直接获得<code>Runtime对象</code>？</p>
+<p>看到这个过程，你可能会感觉到疑惑，为什么非要调用<code>getRuntime()</code>方法获得<code>Runtime</code>对象，而不考虑直接通过其中的<code>evilClass</code>的<code>newInstance()</code>来直接获得<code>Runtime</code>对象？</p>
 <p>确实，上面这么做是显得有些麻烦，但是实践证明，通过<code>newInstance()</code>方法是不可行的，比如我们改成下面这行代码：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
 
@@ -591,7 +591,7 @@
 <td>调用无参构造器创建此 Class 对象所表示的类的一个新实例。</td>
 </tr>
 </tbody></table>
-<p>常用的是其中的<code>getConstructor</code>方法,和<code>getMethod</code>方法类似<code>getConstructor</code>接收的参数是构造函数列表类型，因为构造函数也支持重载，所以必须用参数列表类型才能唯一确定一个构造函数。通过<code>getConstructor</code>这些方法，我们不仅可以解决上面没有无参构造函数的问题，还可以任意调用自己需要的那个构造函数。</p>
+<p>常用的是其中的<code>getConstructor</code>方法，和<code>getMethod</code>方法类似<code>getConstructor</code>接收的参数是构造函数列表类型，因为构造函数也支持重载，所以必须用参数列表类型才能唯一确定一个构造函数。通过<code>getConstructor</code>这些方法，我们不仅可以解决上面没有无参构造函数的问题，还可以任意调用自己需要的那个构造函数。</p>
 <p>我们先以上次的<code>User</code>类为例尝试调用其中的构造函数,一共是三个调用函数，分别是无参、只有一个参数以及有两个参数的构造函数，其中只有一个参数的构造函数是私有的。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Anchor<span class="token punctuation">;</span>
 
@@ -667,12 +667,12 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>最后运行结果为：</p>
-<pre><code>Class对象的newInstance方法:    User [name=null, age=null]
-getConstructor[no parameters]:    User [name=null, age=null]
---------------------------------------------
-getDeclaredConstructor[one parameter]:    User [name=anch0r, age=null]
---------------------------------------------
-getConstructor[two parameters]:    User [name=anch0r2, age=100]
+<pre class=" language-java"><code class="language-java">Class对象的newInstance方法<span class="token operator">:</span>    User <span class="token punctuation">[</span>name<span class="token operator">=</span>null<span class="token punctuation">,</span> age<span class="token operator">=</span>null<span class="token punctuation">]</span>
+getConstructor<span class="token punctuation">[</span>no parameters<span class="token punctuation">]</span><span class="token operator">:</span>    User <span class="token punctuation">[</span>name<span class="token operator">=</span>null<span class="token punctuation">,</span> age<span class="token operator">=</span>null<span class="token punctuation">]</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>
+getDeclaredConstructor<span class="token punctuation">[</span>one parameter<span class="token punctuation">]</span><span class="token operator">:</span>    User <span class="token punctuation">[</span>name<span class="token operator">=</span>anch0r<span class="token punctuation">,</span> age<span class="token operator">=</span>null<span class="token punctuation">]</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>
+getConstructor<span class="token punctuation">[</span>two parameters<span class="token punctuation">]</span><span class="token operator">:</span>    User <span class="token punctuation">[</span>name<span class="token operator">=</span>anch0r2<span class="token punctuation">,</span> age<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">]</span>
 </code></pre>
 <p>接下来以两个例子来说明Constructor类和相关的一些方法引入的意义。</p>
 <h3 id="设置setAccessible-true-绕过访问权限"><a href="#设置setAccessible-true-绕过访问权限" class="headerlink" title="设置setAccessible(true)绕过访问权限"></a>设置setAccessible(true)绕过访问权限</h3><p>你也许注意到上面这个例子中的一个方法:<code>setAccessible(true)</code>。</p>
@@ -742,7 +742,7 @@ evilClass<span class="token punctuation">.</span><span class="token function">ge
 <h2 id="0x03-小结"><a href="#0x03-小结" class="headerlink" title="0x03 小结"></a>0x03 小结</h2><p>这一篇主要是解决上一篇的一些疑惑，同时在引入了<code>Constructor</code>类概念后加入了一些新的玩法。</p>
 <p><strong>参考文章：</strong></p>
 <p>《java安全漫谈》</p>
-<p><a href="https://xz.aliyun.com/t/9117#toc-17" target="_blank" rel="noopener">JAVA安全基础（二）– 反射机制</a></p>
+<p><a href="https://xz.aliyun.com/t/9117#toc-0" target="_blank" rel="noopener">JAVA安全基础（二）– 反射机制</a></p>
 
                 
             </div>
