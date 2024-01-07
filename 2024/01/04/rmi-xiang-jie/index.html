@@ -517,9 +517,9 @@
 </ul>
 <p>在很多java反序列化的漏洞的poc中我们都可以看到rmi协议的身影，一般都是利用它来访问一个远程的恶意java对象的。</p>
 <h2 id="0x02-RMI相关概念"><a href="#0x02-RMI相关概念" class="headerlink" title="0x02 RMI相关概念"></a>0x02 RMI相关概念</h2><p>从RMI设计角度来讲，基本分为三层架构模式来实现RMI，分别为RMI注册中心、RMI客户端和RMI服务端。</p>
-<p>**注册表(rmi registry):**是一种名称服务（name service），提供远程对象（remote object）注册，即名称（name）到远程对象的绑定和查询，是一种特殊的远程对象</p>
+<p><strong>注册表(rmi registry):</strong> 是一种名称服务（name service），提供远程对象（remote object）注册，即名称（name）到远程对象的绑定和查询，是一种特殊的远程对象</p>
 <p>说明白些就是以URL形式注册远程对象，并向客户端回复对远程对象的引用。</p>
-<p>**客户端（rmi registry）:**通过名称向 <code>RMI registry</code> 获取远程对象引用<code>remote object reference (stub)</code>，调用其方法，框架如下：</p>
+<p><strong>客户端（rmi registry）:</strong> 通过名称向 <code>RMI registry</code> 获取远程对象引用<code>remote object reference (stub)</code>，调用其方法，框架如下：</p>
 <p>存根/桩(Stub):远程对象在客户端上的代理;<br>远程引用层(Remote Reference Layer):解析并执行远程引用协议;<br>传输层(Transport):发送调用、传递远程方法参数、接收远程方法执行结果。</p>
 <p><strong>服务端（rmi server）:</strong> 创建远程对象，将其注册到 <code>RMI registry</code>，框架如下：</p>
 <p>骨架(Skeleton):读取客户端传递的方法参数，调用服务器方的实际对象方法， 并接收方法执行后的返回值;<br>远程引用层(Remote Reference Layer):处理远程引用后向骨架发送远程方法调用;<br>传输层(Transport):监听客户端的入站连接，接收并转发调用到远程引用层。</p>
