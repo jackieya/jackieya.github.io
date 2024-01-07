@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2023-12-31T08:16:06.456Z</updated>
+  <updated>2024-01-07T09:45:19.777Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -17,18 +17,18 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>java反射机制2</title>
-    <link href="https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/"/>
-    <id>https://www.anch0r.top/2023/12/31/java-fan-she-ji-zhi-2/</id>
-    <published>2023-12-31T04:40:14.000Z</published>
-    <updated>2023-12-31T08:16:06.456Z</updated>
+    <title>RMI详解</title>
+    <link href="https://www.anch0r.top/2024/01/04/rmi-xiang-jie/"/>
+    <id>https://www.anch0r.top/2024/01/04/rmi-xiang-jie/</id>
+    <published>2024-01-04T02:13:37.000Z</published>
+    <updated>2024-01-07T09:45:19.777Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;发现关于java反射还有很多内容需要补充，就接着&lt;a</summary>
+    <summary type="html">&lt;h2 id=&quot;0x01-简介&quot;&gt;&lt;a href=&quot;#0x01-简介&quot; class=&quot;headerlink&quot; title=&quot;0x01 简介&quot;&gt;&lt;/a&gt;0x01 简介&lt;/h2&gt;&lt;p&gt;RMI(Remote Method</summary>
         
       
     
@@ -240,6 +240,31 @@
     
     
     <category term="前言" scheme="https://www.anch0r.top/tags/%E5%89%8D%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>java反射机制2</title>
+    <link href="https://www.anch0r.top/2023/01/05/java-fan-she-ji-zhi-2/"/>
+    <id>https://www.anch0r.top/2023/01/05/java-fan-she-ji-zhi-2/</id>
+    <published>2023-01-05T04:40:14.000Z</published>
+    <updated>2024-01-07T08:38:42.759Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h2&gt;&lt;p&gt;发现关于java反射还有很多内容需要补充，就接着&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
     
   </entry>
   
