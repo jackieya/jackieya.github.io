@@ -809,9 +809,9 @@
 <blockquote>
 <p>高版本的jdk中，进行了如下修复：</p>
 <p>在8u121之后，在bind方法里面增加了一个checkAccess方法，该方法会检查是否为localhost，不是则会抛出下面这个异常：</p>
-<pre><code>catch (PrivilegedActionException var4) {
-    throw new AccessException(var0 + " disallowed; origin " + var2 + " is non-local host");
-}
+<pre class=" language-java"><code class="language-java"><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">PrivilegedActionException</span> var4<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AccessException</span><span class="token punctuation">(</span>var0 <span class="token operator">+</span> <span class="token string">" disallowed; origin "</span> <span class="token operator">+</span> var2 <span class="token operator">+</span> <span class="token string">" is non-local host"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>不过我们看源码就知道反序列化语句readObject其实在bind调用之前就执行了，并没有什么用。</p>
 <p>然后在8u141修改为在RegistryImpl_Skel中执行readObject之前就执行了checkAccess方法，这样bind，rebind，unbind就没失效了。</p>

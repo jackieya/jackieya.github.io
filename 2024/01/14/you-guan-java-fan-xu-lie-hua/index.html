@@ -686,7 +686,7 @@ public class User implements Serializable {
 </code></pre>
 <p>然后和前面一样的，先运行<code>SerializeDemo.java</code>进行序列化，然后运行<code>DeSerializeDemo.java</code>反序列化，成功执行命令，弹出计算器：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114173309135.png" alt="成功弹出计算器"></p>
-<h2 id="0x03-对反序列化的流程分析"><a href="#0x03-对反序列化的流程分析" class="headerlink" title="0x03 对反序列化的流程分析"></a>0x03 对反序列化的流程分析</h2><p>我们在<code>DeSerializeDemo</code>的<code>readObject</code>处打上端点，分析反序列化流程(以后用<code>类名#方法</code>形式代指跟进到那个类的方法中)：</p>
+<h2 id="0x03-对反序列化的流程分析"><a href="#0x03-对反序列化的流程分析" class="headerlink" title="0x03 对反序列化的流程分析"></a>0x03 对反序列化的流程分析</h2><p>我们在<code>DeSerializeDemo</code>的<code>readObject</code>处打上断点，分析反序列化流程(以后用<code>类名#方法</code>形式代指跟进到那个类的方法中)：</p>
 <p>首先跟进到<code>ObjectInputStream#readObject</code>方法中，</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114180304410.png" alt="ObjectInputStream#readObject"></p>
 <p>这里会调用<code>readObject</code>的另外一个重载方式：</p>
