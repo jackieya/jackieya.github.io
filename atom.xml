@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2024-01-07T10:27:15.459Z</updated>
+  <updated>2024-01-14T11:11:50.195Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -17,11 +17,61 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>RMI详解</title>
-    <link href="https://www.anch0r.top/2024/01/07/rmi-xiang-jie/"/>
-    <id>https://www.anch0r.top/2024/01/07/rmi-xiang-jie/</id>
+    <title>有关java反序列化</title>
+    <link href="https://www.anch0r.top/2024/01/14/you-guan-java-fan-xu-lie-hua/"/>
+    <id>https://www.anch0r.top/2024/01/14/you-guan-java-fan-xu-lie-hua/</id>
+    <published>2024-01-14T01:54:31.000Z</published>
+    <updated>2024-01-14T11:11:50.195Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>再谈RMI</title>
+    <link href="https://www.anch0r.top/2024/01/13/zai-tan-rmi/"/>
+    <id>https://www.anch0r.top/2024/01/13/zai-tan-rmi/</id>
+    <published>2024-01-13T09:39:17.000Z</published>
+    <updated>2024-01-14T07:50:30.328Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>浅谈RMI</title>
+    <link href="https://www.anch0r.top/2024/01/07/qian-tan-rmi/"/>
+    <id>https://www.anch0r.top/2024/01/07/qian-tan-rmi/</id>
     <published>2024-01-07T02:13:37.000Z</published>
-    <updated>2024-01-07T10:27:15.459Z</updated>
+    <updated>2024-01-13T13:21:33.803Z</updated>
     
     
       

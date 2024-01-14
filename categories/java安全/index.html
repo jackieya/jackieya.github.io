@@ -29,9 +29,9 @@
     <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
-
+<meta name="generator" content="Hexo 4.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="杰同学的自留地" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
@@ -413,11 +413,11 @@
                 </a>
                 
                 
-                <a href="/categories/java%E5%AE%89%E5%85%A8/" title="java安全: 4">
+                <a href="/categories/java%E5%AE%89%E5%85%A8/" title="java安全: 6">
                     <span class="chip center-align waves-effect waves-light
                              chip-active "
                             style="background-color: #F8F9F9;">java安全
-                        <span class="tag-length">4</span>
+                        <span class="tag-length">6</span>
                     </span>
                 </a>
                 
@@ -435,13 +435,107 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2024/01/07/rmi-xiang-jie/">
+                    <a href="/2024/01/14/you-guan-java-fan-xu-lie-hua/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="RMI详解">
+                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="有关java反序列化">
                             
-                            <span class="card-title">RMI详解</span>
+                            <span class="card-title">有关java反序列化</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                0x00 前言还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。
+0x01 什么是java的序列化和反序列化？正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-01-14
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/java%E5%AE%89%E5%85%A8/" class="post-category">
+                                    java安全
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/0-1-javaSec/">
+                            <span class="chip bg-color">0-1 javaSec</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2024/01/13/zai-tan-rmi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="再谈RMI">
+                            
+                            <span class="card-title">再谈RMI</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                0x00 前言前一篇关于RMI的文章写的稍微粗糙了些，写这一篇再巩固一下RMI的内容并做一些延伸。
+0x01 一些细节网上关于RMI服务端和客户端编写的文章方法很多，我上一篇是分为接口、服务端、客户端三个部分编写的，当时是将rmi regi
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-01-13
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/java%E5%AE%89%E5%85%A8/" class="post-category">
+                                    java安全
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/0-1-javaSec/">
+                            <span class="chip bg-color">0-1 javaSec</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2024/01/07/qian-tan-rmi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="浅谈RMI">
+                            
+                            <span class="card-title">浅谈RMI</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -697,7 +791,7 @@ RMI有些类似C语言中所用的远程过程调用RPC。
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">24.1k</span>&nbsp;字
+                class="white-color">30.5k</span>&nbsp;字
             
             
             
