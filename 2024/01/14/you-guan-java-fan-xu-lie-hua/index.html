@@ -686,7 +686,7 @@ public class User implements Serializable {
 </code></pre>
 <p>然后和前面一样的，先运行<code>SerializeDemo.java</code>进行序列化，然后运行<code>DeSerializeDemo.java</code>反序列化，成功执行命令，弹出计算器：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114173309135.png" alt="成功弹出计算器"></p>
-<h3 id="对反序列化的流程分析"><a href="#对反序列化的流程分析" class="headerlink" title="对反序列化的流程分析"></a>对反序列化的流程分析</h3><p>我们在<code>DeSerializeDemo</code>的<code>readObject</code>处打上端点，分析反序列化流程(以后用<code>类名#方法</code>形式代指跟进到那个类的方法中)：</p>
+<h2 id="0x03-对反序列化的流程分析"><a href="#0x03-对反序列化的流程分析" class="headerlink" title="0x03 对反序列化的流程分析"></a>0x03 对反序列化的流程分析</h2><p>我们在<code>DeSerializeDemo</code>的<code>readObject</code>处打上端点，分析反序列化流程(以后用<code>类名#方法</code>形式代指跟进到那个类的方法中)：</p>
 <p>首先跟进到<code>ObjectInputStream#readObject</code>方法中，</p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114180304410.png" alt="ObjectInputStream#readObject"></p>
 <p>这里会调用<code>readObject</code>的另外一个重载方式：</p>
@@ -990,13 +990,13 @@ public class User implements Serializable {
 <p>1.readObject进入readObject0，根据字节选择对应的方法，比如类就会进入readOrdinaryObject</p>
 <p>2.readOrdinaryObject中先获取类描述符，进入readClassDesc，根据字节选择对应的类描述符获取方法，其中会调用resolveClass反射实例化我们的目标类</p>
 <p>3.readOrdinaryObject再进入readSerialData，根据刚刚的类描述符去填充数据，其中如果目标类重写了readObject则调用，否则就使用默认的填充方法。</p>
-<h2 id="0x03-安全隐患"><a href="#0x03-安全隐患" class="headerlink" title="0x03 安全隐患"></a>0x03 安全隐患</h2><p>也许你会说，哪有程序员会写上面例子中的那种弱智的代码？确实很少有，但在真实应用中，一些危险操作往往藏得相对隐蔽，不会像我上面这样写的赤裸裸，不过最终的原理都是相同的。</p>
+<h2 id="0x04-安全隐患"><a href="#0x04-安全隐患" class="headerlink" title="0x04 安全隐患"></a>0x04 安全隐患</h2><p>也许你会说，哪有程序员会写上面例子中的那种弱智的代码？确实很少有，但在真实应用中，一些危险操作往往藏得相对隐蔽，不会像我上面这样写的赤裸裸，不过最终的原理都是相同的。</p>
 <p>在开发时产生的反序列化漏洞常见的有以下几种情况：</p>
 <ol>
 <li>重写ObjectInputStream对象的resolveClass方法（这是用来解析传入的类的方法）中的检测可被绕过。</li>
 <li>使用第三方的类进行黑名单控制。虽然Java的语言严谨性要比PHP强的多，但在大型应用中想要采用黑名单机制禁用掉所有危险的对象几乎是不可能的。因此，如果在审计过程中发现了采用黑名单进行过滤的代码，多半存在一两个‘漏网之鱼’可以利用。并且采取黑名单方式仅仅可能保证此刻的安全，若在后期添加了新的功能，就可能引入了新的漏洞利用方式。所以仅靠黑名单是无法保证序列化过程的安全的。</li>
 </ol>
-<h2 id="0x04-小结"><a href="#0x04-小结" class="headerlink" title="0x04 小结"></a>0x04 小结</h2><p>本篇只是了解了反序列化以及其具体的实现流程，作为一篇过渡文章，后面进一步学习一些利用链的相关内容。</p>
+<h2 id="0x05-小结"><a href="#0x05-小结" class="headerlink" title="0x05 小结"></a>0x05 小结</h2><p>本篇只是了解了反序列化以及其具体的实现流程，作为一篇过渡文章，后面进一步学习一些利用链的相关内容。</p>
 <p><em><strong>参考文章:</strong></em></p>
 <p><a href="https://xz.aliyun.com/t/2041?time__1311=n4+xnioDw4RnGODlEme0=3i==4Y5PNiQx&amp;alichlgref=https://www.google.com/" target="_blank" rel="noopener">Java反序列化漏洞从入门到深入</a></p>
 <p><a href="https://chenlvtang.top/2022/09/18/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90%E5%8F%8AresolveClass/" target="_blank" rel="noopener">Java反序列化流程分析及resolveClass</a></p>
@@ -1573,7 +1573,7 @@ public class User implements Serializable {
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">30.5k</span>&nbsp;字
+                class="white-color">30.6k</span>&nbsp;字
             
             
             
