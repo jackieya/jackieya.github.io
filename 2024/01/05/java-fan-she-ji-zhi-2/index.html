@@ -469,7 +469,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-01-12
+                    2024-01-15
                 </div>
                 
 
@@ -521,7 +521,7 @@
         Class <span class="token class-name">evilClass</span> <span class="token operator">=</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"java.lang.Runtime"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 得到Runtime的class对象</span>
         Method method <span class="token operator">=</span> evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"exec"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 从中获取exec方法的method实例</span>
         Method runtimeMethod <span class="token operator">=</span> evilClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"getRuntime"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//从中获取getRuntime方法的method实例</span>
-        Object evil <span class="token operator">=</span> runtimeMethod<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evilClass<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//调用getRuntime方法从而获得一个Runtime类对象</span>
+        Object evil <span class="token operator">=</span> runtimeMethod<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evilClass<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//调用getRuntime方法从而获得一个Runtime类对象（这里invoke传入的参数也可以是null）</span>
         method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>evil<span class="token punctuation">,</span> <span class="token string">"calc.exe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 调用exec方法，运行exec命令，打开一个计算机</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -1314,7 +1314,7 @@ evilClass<span class="token punctuation">.</span><span class="token function">ge
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">30.6k</span>&nbsp;字
+                class="white-color">33.4k</span>&nbsp;字
             
             
             

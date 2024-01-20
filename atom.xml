@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2024-01-14T11:23:35.018Z</updated>
+  <updated>2024-01-20T15:49:48.033Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>java动态代理机制</title>
+    <link href="https://www.anch0r.top/2024/01/16/java-dong-tai-dai-li-ji-zhi/"/>
+    <id>https://www.anch0r.top/2024/01/16/java-dong-tai-dai-li-ji-zhi/</id>
+    <published>2024-01-16T01:14:27.000Z</published>
+    <updated>2024-01-20T15:49:48.033Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
   
   <entry>
     <title>有关java反序列化</title>
@@ -46,7 +71,7 @@
     <link href="https://www.anch0r.top/2024/01/13/zai-tan-rmi/"/>
     <id>https://www.anch0r.top/2024/01/13/zai-tan-rmi/</id>
     <published>2024-01-13T09:39:17.000Z</published>
-    <updated>2024-01-14T11:18:20.784Z</updated>
+    <updated>2024-01-15T01:31:43.977Z</updated>
     
     
       
@@ -96,7 +121,7 @@
     <link href="https://www.anch0r.top/2024/01/05/java-fan-she-ji-zhi-2/"/>
     <id>https://www.anch0r.top/2024/01/05/java-fan-she-ji-zhi-2/</id>
     <published>2024-01-05T04:40:14.000Z</published>
-    <updated>2024-01-12T15:16:00.109Z</updated>
+    <updated>2024-01-15T01:18:49.236Z</updated>
     
     
       

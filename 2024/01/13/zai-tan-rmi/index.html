@@ -469,21 +469,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-01-14
+                    2024-01-15
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.9k
+                    3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    12 分
+                    13 分
                 </div>
                 
 
@@ -700,7 +700,8 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>前面处理一些约定好的数据，比如host、port以及要绑定的对象和对象名称，我们直接定位到invoke那一句，invoke这里会把请求发出去，这里会调用Skeleton代理即<code>sun.rmi.registry.RegistryImpl_Skel</code>类中的<code>dispatch</code>方法来处理请求，我们定位查看重要逻辑代码：</p>
+<p>前面处理一些约定好的数据，比如host、port以及要绑定的对象和对象名称，我们直接定位到invoke那一句，invoke这里会把请求发出去，这里会调用Skeleton代理即<code>sun.rmi.registry.RegistryImpl_Skel</code>类中的<code>dispatch</code>方法来处理请求，需要注意的是，在这里之后是无法通过断点进入到<code>sun.rmi.registry.RegistryImpl_Skel#dispatch</code>方法中的，看一篇文章说是在bind函数执行处<code>sun.rmi.registry.RegistryImpl#bind</code>下一个断点，直接运行就可以得到调用栈，再回去找就行了。</p>
+<p>我们定位查看重要逻辑代码：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">switch</span><span class="token punctuation">(</span>var3<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
                 <span class="token keyword">try</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">//bind方法</span>
@@ -736,7 +737,7 @@
                     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">MarshalException</span><span class="token punctuation">(</span><span class="token string">"error marshalling return"</span><span class="token punctuation">,</span> var92<span class="token punctuation">)</span><span class="token punctuation">;</span>
                 <span class="token punctuation">}</span>
             <span class="token keyword">case</span> <span class="token number">2</span><span class="token operator">:</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>  <span class="token comment" spellcheck="true">// look()方法</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>  <span class="token comment" spellcheck="true">// lookup()方法</span>
                     var10 <span class="token operator">=</span> var2<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                     <span class="token comment" spellcheck="true">// readObject反序列化触发</span>
                     var7 <span class="token operator">=</span> <span class="token punctuation">(</span>String<span class="token punctuation">)</span>var10<span class="token punctuation">.</span><span class="token function">readObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -804,7 +805,10 @@
                 <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">UnmarshalException</span><span class="token punctuation">(</span><span class="token string">"invalid method number"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
 </code></pre>
-<p>这里var3类型是int型，取值从0到4，依次对应bind/rebind/unbind/look/list等请求。从这个switch语句我们可以得知，Registry注册中心能够接收bind/rebind/unbind/look/list等请求，而在接收五类请求方法的时候，只有我们bind，rebind，unbind和look方法进行了反序列化数据调用readObject函数（再给自己挖个坑，后面补个java反序列化的内容），可能导致直接触发了反序列化漏洞产生。</p>
+<p>这里var3类型是int型，取值从0到4，依次对应bind/rebind/unbind/lookup/list等请求。从这个switch语句我们可以得知，Registry注册中心能够接收bind/rebind/unbind/lookup/list等请求，而在接收五类请求方法的时候，只有我们bind，rebind，unbind和lookup方法进行了反序列化数据调用readObject函数（再给自己挖个坑，后面补个java反序列化的内容），可能导致直接触发了反序列化漏洞产生。</p>
+<blockquote>
+<p>需要说明的是lookup是从rmi client角度攻击rmi registry， 而bind/rebind/unbind是从rmi server角度攻击rmi registry</p>
+</blockquote>
 <p>由于无法下载到对应的jdk版本，这里我无法演示，可以具体看看这个<a href="https://xz.aliyun.com/t/9261?time__1311=n4+xuDgD9DyDRGD07+D/jeFeWqO5OWlQ7eD&amp;alichlgref=https://xz.aliyun.com/u/24696#toc-10" target="_blank" rel="noopener">文章</a>是如何利用该处反序列化进行实际操作的。</p>
 <blockquote>
 <p>高版本的jdk中，进行了如下修复：</p>
@@ -1416,7 +1420,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">30.6k</span>&nbsp;字
+                class="white-color">33.4k</span>&nbsp;字
             
             
             
