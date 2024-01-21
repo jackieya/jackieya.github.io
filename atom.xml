@@ -6,7 +6,7 @@
   <link href="https://www.anch0r.top/atom.xml" rel="self"/>
   
   <link href="https://www.anch0r.top/"/>
-  <updated>2024-01-20T16:34:37.449Z</updated>
+  <updated>2024-01-21T09:18:21.977Z</updated>
   <id>https://www.anch0r.top/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Commons Collections 1 利用链</title>
+    <link href="https://www.anch0r.top/2024/01/21/commons-collections-1-li-yong-lian/"/>
+    <id>https://www.anch0r.top/2024/01/21/commons-collections-1-li-yong-lian/</id>
+    <published>2024-01-20T16:38:06.000Z</published>
+    <updated>2024-01-21T09:18:21.977Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00</summary>
+        
+      
+    
+    
+    
+    <category term="java安全" scheme="https://www.anch0r.top/categories/java%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="0-1 javaSec" scheme="https://www.anch0r.top/tags/0-1-javaSec/"/>
+    
+  </entry>
   
   <entry>
     <title>java动态代理机制</title>
@@ -167,11 +192,11 @@
   </entry>
   
   <entry>
-    <title>Java反射机制</title>
+    <title>java反射机制</title>
     <link href="https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/"/>
     <id>https://www.anch0r.top/2023/12/23/java-fan-she-ji-zhi/</id>
     <published>2023-12-23T02:55:12.000Z</published>
-    <updated>2023-12-31T08:16:14.501Z</updated>
+    <updated>2024-01-21T03:31:29.049Z</updated>
     
     
       
@@ -492,31 +517,6 @@
     
     
     <category term="NFS" scheme="https://www.anch0r.top/tags/NFS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DNSLog注入</title>
-    <link href="https://www.anch0r.top/2022/04/10/dnslog-zhu-ru/"/>
-    <id>https://www.anch0r.top/2022/04/10/dnslog-zhu-ru/</id>
-    <published>2022-04-10T15:22:20.000Z</published>
-    <updated>2023-12-17T07:21:33.691Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;0x01-什么是DNSlog注入&quot;&gt;&lt;a href=&quot;#0x01-什么是DNSlog注入&quot; class=&quot;headerlink&quot; title=&quot;0x01 什么是DNSlog注入&quot;&gt;&lt;/a&gt;0x01</summary>
-        
-      
-    
-    
-    
-    <category term="Web安全" scheme="https://www.anch0r.top/categories/Web%E5%AE%89%E5%85%A8/"/>
-    
-    
-    <category term="DNSLog" scheme="https://www.anch0r.top/tags/DNSLog/"/>
     
   </entry>
   
