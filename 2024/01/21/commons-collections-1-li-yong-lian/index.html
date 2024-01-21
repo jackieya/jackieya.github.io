@@ -993,7 +993,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>成功弹窗！</p>
-<h2 id="5-AnotationInvocationHandler类"><a href="#5-AnotationInvocationHandler类" class="headerlink" title="5. AnotationInvocationHandler类"></a>5. AnotationInvocationHandler类</h2><p><code>AnotationInvocationHandler</code>类不是<code>Commons Collections</code>包中的内容了，它是jdk包中自带的类，位于<code>sun.reflect.annotation.AnotationInvocationHandler</code>,这个类很完美，因为它有一个自己的<code>readObject</code>方法，就是说该类可以配合实现反序列化漏洞。</p>
+<h3 id="5-AnotationInvocationHandler类"><a href="#5-AnotationInvocationHandler类" class="headerlink" title="5. AnotationInvocationHandler类"></a>5. AnotationInvocationHandler类</h3><p><code>AnotationInvocationHandler</code>类不是<code>Commons Collections</code>包中的内容了，它是jdk包中自带的类，位于<code>sun.reflect.annotation.AnotationInvocationHandler</code>,这个类很完美，因为它有一个自己的<code>readObject</code>方法，就是说该类可以配合实现反序列化漏洞。</p>
 <p>我们就先来分析它的<code>readObject</code>方法的源码：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">readObject</span><span class="token punctuation">(</span>ObjectInputStream var1<span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> ClassNotFoundException <span class="token punctuation">{</span>
         var1<span class="token punctuation">.</span><span class="token function">defaultReadObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
