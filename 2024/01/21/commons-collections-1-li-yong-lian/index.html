@@ -1053,20 +1053,20 @@ var2 <span class="token operator">=</span> AnnotationType<span class="token punc
 <p>我们传入的这个type需要有<code>memberTypes</code>，且我们的<strong>map</strong>中的key必须要和<code>memberTypes</code>的key保持<strong>一致。</strong>跟踪<code>Annotation</code>这个<code>Class</code>，我们可以发现所有<code>Annotation</code>的<code>class。</code></p>
 <p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240121171552950.png" alt="所有的Annotation的class文件"></p>
 <p>这里我们可以简单分析一下：</p>
-<pre><code>@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface Target {
-    ElementType[] value();
-}
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span>ElementType<span class="token punctuation">.</span>ANNOTATION_TYPE<span class="token punctuation">)</span>
+<span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">Target</span> <span class="token punctuation">{</span>
+    ElementType<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>此处<code>Target</code>的<code>memberTypes</code>就是 <code>[value:ElementType]</code> =》 <strong>key-value</strong>的形式。</p>
-<pre><code>@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface Retention {
-    RetentionPolicy value();
-}
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span>ElementType<span class="token punctuation">.</span>ANNOTATION_TYPE<span class="token punctuation">)</span>
+<span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">Retention</span> <span class="token punctuation">{</span>
+    RetentionPolicy <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>此处<code>Retention</code>的<code>memberTypes</code>就是 <code>[value:RetentionPolicy]</code> =》 <strong>key-value</strong>的形式`。</p>
 <p>这些<code>Annotation</code>的元注解都可以通过<code>@</code>符号来调用，例如<code>@Target</code></p>
