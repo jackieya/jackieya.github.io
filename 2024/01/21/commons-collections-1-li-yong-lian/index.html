@@ -437,8 +437,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/0-1-javaSec/">
-                                <span class="chip bg-color">0-1 javaSec</span>
+                            <a href="/tags/%E5%88%A9%E7%94%A8%E9%93%BE/">
+                                <span class="chip bg-color">利用链</span>
                             </a>
                         
                     </div>
@@ -469,7 +469,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-01-21
+                    2024-01-23
                 </div>
                 
 
@@ -534,22 +534,18 @@
 <p>Transforming decorators that alter each object as it is added to the collection</p>
 <p>转化装饰器：修改每一个添加到collection中的object</p>
 </blockquote>
-<p>在Commons Collections包中实现了一个TransformedMap类(<code>org.apache.commons.collections.map.TransformedMap</code>)，该类是对Java标准数据结构Map接口的一个扩展，该类可以在一个元素被加入到集合内时，自动对该元素进行特定的修饰变换，具体的变换逻辑有Transformer类定义，Transformer在TransformedMap实例化时作为参数传入。</p>
+<p>在Commons Collections包中实现了一个TransformedMap类(<code>org.apache.commons.collections.map.TransformedMap</code>)，该类是对Java标准数据结构Map接口的一个扩展，该类可以在一个元素被加入到集合内时，自动对该元素进行特定的修饰变换，具体的变换逻辑由Transformer类定义，Transformer在TransformedMap实例化时作为参数传入。</p>
 <p><code>org.apache.commons.collections.Transformer</code>这个类可以满足固定的类型转化需求，其转化函数可以自定义实现，我们的漏洞触发函数就是在于这个点。</p>
 <p>包括TransfomedMap在内，我们在构造利用链时要用到如下Class：</p>
 <ol>
-<li><p>InvokerTransformer</p>
-</li>
-<li><p>ChainedTrasnformer</p>
-</li>
-<li><p>ConstantTransformer</p>
-</li>
-<li><p>TransformedMap</p>
-</li>
-<li><p>AnotationInvocationHandler</p>
-</li>
+<li>InvokerTransformer</li>
+<li>ChainedTrasnformer</li>
+<li>ConstantTransformer</li>
+<li>TransformedMap</li>
+<li>AnotationInvocationHandler</li>
 </ol>
-<p>我们按照顺序一一来看。</p>
+<p>我们现在的目的就是执行<code>Runtime.getRuntime().exec("calc");</code>语句</p>
+<p>那我们按照顺序一一来看。</p>
 <h3 id="1-InvokerTransformer"><a href="#1-InvokerTransformer" class="headerlink" title="1. InvokerTransformer"></a>1. InvokerTransformer</h3><p>该类位于<code>org.apache.commons.collections.functors</code>中，我们重点看其中的transform方法（只看重点部分）：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">transform</span><span class="token punctuation">(</span>Object input<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>input <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1137,6 +1133,7 @@ var2 <span class="token operator">=</span> AnnotationType<span class="token punc
 <h2 id="0x04-小结"><a href="#0x04-小结" class="headerlink" title="0x04 小结"></a>0x04 小结</h2><p>在学习利用链之前我总是在想，为啥大佬们要大费周章花很多心思来搞这么长的利用链？学完CC链的原理之后我明白了，在构造利用链时，他们肯定是在一步一步思索，怎么才能使漏洞的利用需要的条件更低，而接触范围更大等等，解决的办法也就是不断寻找其他突破口，去看其他的类，其他的方法来曲线救国，我想这也是我们在平常学习安全时所需要的能力，要学会不断去探索新的方法、新的可能性。</p>
 <p><em><strong>参考文章：</strong></em></p>
 <p>Java安全漫谈</p>
+<p> <a href="https://xz.aliyun.com/t/7031" target="_blank" rel="noopener">JAVA反序列化 - Commons-Collections组件</a></p>
 
                 
             </div>
@@ -1201,8 +1198,8 @@ var2 <span class="token operator">=</span> AnnotationType<span class="token punc
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/0-1-javaSec/">
-                                    <span class="chip bg-color">0-1 javaSec</span>
+                                <a href="/tags/%E5%88%A9%E7%94%A8%E9%93%BE/">
+                                    <span class="chip bg-color">利用链</span>
                                 </a>
                             
                         </div>
@@ -1420,8 +1417,8 @@ var2 <span class="token operator">=</span> AnnotationType<span class="token punc
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/0-1-javaSec/">
-                        <span class="chip bg-color">0-1 javaSec</span>
+                    <a href="/tags/%E5%88%A9%E7%94%A8%E9%93%BE/">
+                        <span class="chip bg-color">利用链</span>
                     </a>
                     
                 </div>
@@ -1740,19 +1737,11 @@ var2 <span class="token operator">=</span> AnnotationType<span class="token punc
 
 
 
-    <a href="mailto:2890961520@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
-        <i class="fas fa-envelope-open"></i>
-    </a>
 
 
 
 
 
-
-
-    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2890961520" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2890961520" data-position="top" data-delay="50">
-        <i class="fab fa-qq"></i>
-    </a>
 
 
 
