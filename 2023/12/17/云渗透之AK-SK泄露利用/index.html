@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="相关概念云概念   “云”的概念涉及到云计算，云计算的基本概念是将计算机处理和存储能力从本地环境（如个人电脑或本地服务器）转移到远程的服务器集群上，这些服务器通过互联网连接在一起。用户可以通过互联网访问这些服务器上的应用程序、数据和服务，而无需担心管理和维护底层的基础设施。 ​    在我看来，自己购买服务器或租用服务器，成本高、不安全，频繁面临ddos等攻击的风险，而云平台成本更低，可扩展性强，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云渗透之AK&#x2F;SK泄露利用">
+<meta property="og:url" content="https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="相关概念云概念   “云”的概念涉及到云计算，云计算的基本概念是将计算机处理和存储能力从本地环境（如个人电脑或本地服务器）转移到远程的服务器集群上，这些服务器通过互联网连接在一起。用户可以通过互联网访问这些服务器上的应用程序、数据和服务，而无需担心管理和维护底层的基础设施。 ​    在我看来，自己购买服务器或租用服务器，成本高、不安全，频繁面临ddos等攻击的风险，而云平台成本更低，可扩展性强，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793195694-80bf1b11-a860-462f-873d-ce5dc1458bb4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793996910-6d1b3a00-c7e0-4bba-a3f3-9d052ee36b37.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/fix2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794666313-d49d4e2d-4c9e-4d60-9b15-1290d5af0d63.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794576659-954c0b52-7ecc-4c2d-8362-16e78b066650.png">
+<meta property="article:published_time" content="2023-12-17T11:15:21.000Z">
+<meta property="article:modified_time" content="2023-12-17T09:30:06.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="云渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793195694-80bf1b11-a860-462f-873d-ce5dc1458bb4.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>云渗透之AK/SK泄露利用</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&text=云渗透之AK/SK泄露利用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&is_video=false&description=云渗透之AK/SK泄露利用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=云渗透之AK/SK泄露利用&body=Check out this article: https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&name=云渗透之AK/SK泄露利用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&t=云渗透之AK/SK泄露利用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">云概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E7%9A%84%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.2.</span> <span class="toc-text">云的相关术语</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RDS"><span class="toc-number">1.2.1.</span> <span class="toc-text">RDS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8-OSS%EF%BC%88%E7%90%86%E8%A7%A3%E4%B8%BA%E7%BD%91%E7%9B%98%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">对象存储 OSS（理解为网盘）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECS"><span class="toc-number">1.2.3.</span> <span class="toc-text">ECS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BB%84"><span class="toc-number">1.2.4.</span> <span class="toc-text">安全组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AK-SK"><span class="toc-number">1.2.5.</span> <span class="toc-text">AK&#x2F;SK</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">AK&#x2F;SK泄露利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.1.</span> <span class="toc-text">漏洞产生原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">2.2.</span> <span class="toc-text">利用工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">自动化利用工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">3.</span> <span class="toc-text">参考文章</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        云渗透之AK/SK泄露利用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-17T11:15:21.000Z" class="dt-published" itemprop="datePublished">2023-12-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web%E5%AE%89%E5%85%A8/">Web安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E4%BA%91%E6%B8%97%E9%80%8F/" rel="tag">云渗透</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="云概念"><a href="#云概念" class="headerlink" title="云概念"></a>云概念</h3><p>   “云”的概念涉及到云计算，云计算的基本概念是将计算机处理和存储能力从本地环境（如个人电脑或本地服务器）转移到远程的服务器集群上，这些服务器通过互联网连接在一起。用户可以通过互联网访问这些服务器上的应用程序、数据和服务，而无需担心管理和维护底层的基础设施。</p>
+<p>​    在我看来，自己购买服务器或租用服务器，成本高、不安全，频繁面临ddos等攻击的风险，而云平台成本更低，可扩展性强，安全性，方便管理，同时提供更好的数据备份和容灾能力，这也就是为什么越来越多的中小企业选择云平台的原因。</p>
+<p>​    说白了，就是将机子部署到云端。所以云端的渗透的思路本质上和常规渗透思路没有太大区别，也是基本的渗透测试流程，只是多了一些新的概念，除了常规的渗透测试方式，也多了些新的可以利用的漏洞。本文涉及的是AK/SK泄露利用，其实就是敏感配置信息泄露的后续利用方式。</p>
+<h3 id="云的相关术语"><a href="#云的相关术语" class="headerlink" title="云的相关术语"></a>云的相关术语</h3><h4 id="RDS"><a href="#RDS" class="headerlink" title="RDS"></a>RDS</h4><ul>
+<li>关系型数据库服务（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。</li>
+<li>RDS 采用即开即用方式，兼容 MySQL、 SQL Server 两种关系型数据库，并提供数据库在线扩容、备份回滚、性能监测 及分析功能。</li>
+<li>RDS 与云服务器搭配使用 I/O 性能倍增，内网互通避免网络瓶颈。</li>
+</ul>
+<h4 id="对象存储-OSS（理解为网盘）"><a href="#对象存储-OSS（理解为网盘）" class="headerlink" title="对象存储 OSS（理解为网盘）"></a>对象存储 OSS（理解为网盘）</h4><p>   OSS 是对象存储服务（Object Storage Service）的缩写，是阿里云（Alibaba Cloud）提供的一种高度可扩展的云存储服务。对象存储是一种用于存储和检索大量非结构化数据的技术，例如图片、视频、文档、备份文件等。</p>
+<p>OSS存在如下的访问控制机制：</p>
+<ul>
+<li><p>对 OSS 的资源访问分为拥有者访问、第三方用户访问。这里的拥有者指的是 Bucket 的拥有者，也称为开发者。</p>
+</li>
+<li><p>第三方用户是指访问 Bucket 里资源的用户。 访问又分为匿名访问和带签名访问。</p>
+</li>
+<li><p>对于 OSS 来说，如果请求中没有携带任何和身份相关的信息即为匿名访问。</p>
+</li>
+<li><p>带签名访问指的是按照 OSS API 文档中 规定的在请求头部或者在请求 URL 中携带签名的相关信息。</p>
+</li>
+<li><p>OSS 提供 Bucket 和 Object 的权限访问控制。</p>
+</li>
+</ul>
+<p>关于oss的相关概念，比如Bucket和Object，具体可以看阿里云的说明文档：<a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/oss/product-overview/terms-2">OSS产品中涉及的基本概念_对象存储 OSS(OSS)-阿里云帮助中心</a></p>
+<h4 id="ECS"><a href="#ECS" class="headerlink" title="ECS"></a>ECS</h4><ul>
+<li>云服务器（Elastic Compute Service，简称ECS）</li>
+</ul>
+<h4 id="安全组"><a href="#安全组" class="headerlink" title="安全组"></a>安全组</h4><ul>
+<li>安全组是一种虚拟防火墙，具备状态检测和数据包过滤功能，用于在云端划分安全域。</li>
+<li>同一安全组内的ECS实例之间默认内网网络互通。</li>
+</ul>
+<h4 id="AK-SK"><a href="#AK-SK" class="headerlink" title="AK/SK"></a>AK/SK</h4><p>   云主机通过使用Access Key Id / Secret Access Key加密的方法来验证某个请求的发送者身份。Access Key Id（AK）用于标示用户，Secret Access Key（SK）是用户用于加密认证字符串和云厂商用来验证认证字符串的密钥，其中SK必须保密。 AK/SK原理使用对称加解密。</p>
+<p>   云主机接收到用户的请求后，系统将使用AK对应的相同的SK和同样的认证机制生成认证字符串，并与用户请求中包含的认证字符串进行比对。如果认证字符串相同，系统认为用户拥有指定的操作权限，并执行相关操作；如果认证字符串不同，系统将忽略该操作并返回错误码。</p>
+<p>   大部分云厂商都支持AK/SK的认证方式</p>
+<p><strong>以阿里云为例：</strong></p>
+<p>​      阿里云用户可以在管理控制台里自行创建 Access Key，Access Key是由AccessKey ID 和 AccessKey Secret 组成（即AK和SK）。</p>
+<p>其中 ID 是公开的，用于标识用户身份，Secret 是秘密的，用于用户鉴别</p>
+<p>当用户向 OSS 发送请求时，需要首先将发送的请求按照 OSS 指定的格式生成签名字符串；然后使用 AccessKey Secret 对签名字符串进行加密（基于HMAC 算法）产生验证码（验证码带时间戳，以防止重放攻击）。OSS 收到请求以后，通过 AccessKey ID 找到对应的 AccessKey Secret，以同样的方法提取签名字符串和验证码，如果计算出来的验证码和提供的一样即认为该请求是有效的；否则，OSS 将拒绝处理这次请求，并返回 HTTP 403 错误。</p>
+<h2 id="AK-SK泄露利用"><a href="#AK-SK泄露利用" class="headerlink" title="AK/SK泄露利用"></a>AK/SK泄露利用</h2><h3 id="漏洞产生原因"><a href="#漏洞产生原因" class="headerlink" title="漏洞产生原因"></a>漏洞产生原因</h3><p>​       由于开发的不规范或者配置不当，以及一些其它漏洞，可能会导致AccessKey泄露，进而导致攻击者通过AKSK接管云主机。</p>
+<p><strong>常见的渗透场景如下:</strong></p>
+<ul>
+<li><strong>APK文件中存放Access Key；</strong></li>
+<li><strong>Web页面/JS文件等存在Access Key泄露</strong></li>
+<li><strong>Github查找目标关键字发现Access Key与AccessKey Secret；</strong></li>
+<li><strong>拥有WebShell低权限的情况下搜集阿里云Access Key利用；</strong></li>
+</ul>
+<h3 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h3><p>常见的利用工具如下：</p>
+<ul>
+<li>OSS Browser</li>
+<li>OSSUTIL</li>
+<li>IDEA中的Big Data Tools插件</li>
+<li>API Explorer</li>
+<li>第三方平台 (如行云管家)</li>
+</ul>
+<p>其中OSS Browser、OSSUTIL、Big Data Tools只能对于OSS进行操作，API调试或者第三方写好的工具可以操控ECS。</p>
+<p>连接oss时除了AK和SK，还需要OSS外网地址，格式一般如下：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://[Bucket名称].oss-区域.aliyuns.com  </span><br><span class="line">比如：https://xxxx.oss-cn-beijing.aliyuncs.com </span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>下面放一个真实案例：</p>
+<p>拿到一个web服务器的shell，在其中翻找一些有用的配置文件，找到某个 .propertiespei配置文件，里面发现如下内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793195694-80bf1b11-a860-462f-873d-ce5dc1458bb4.png" alt="配置文件泄露信息"></p>
+<p>刚开始看到oss的url地址后，只想到了用oss连接的相关工具，但是连接oss只能对oss进行操作，除了看有没有敏感信息，没有多大用处。后来才发现oss的key也是AKSK形式，可以直接通过连接AKSK接管对应的云主机的，所以直接尝试用行云管家连接, 附上地址：<a target="_blank" rel="noopener" href="https://yun.cloudbility.com/%E3%80%82">https://yun.cloudbility.com/。</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702793996910-6d1b3a00-c7e0-4bba-a3f3-9d052ee36b37.png" alt="指定云厂商"></p>
+<p>直接选择阿里云,点击下一步，输入Api凭证，即拿到的AK和SK，即可连接</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image.png" alt="输入Api凭证"></p>
+<p>可以看到能够接管如下很多主机实例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/fix2.png" alt="所有主机实例"></p>
+<p>添加后进入管理界面，尝试选择ssh连接云主机，发现还是需要密码的：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794666313-d49d4e2d-4c9e-4d60-9b15-1290d5af0d63.png" alt="ssh连接需要密码"></p>
+<p>但是可以进行重置操作系统密码和管理终端密码的操作（得确保取得客户授权后才能操作）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702794576659-954c0b52-7ecc-4c2d-8362-16e78b066650.png" alt="重置操作"></p>
+<p>除了用行云管家进行接管，还可以使用阿里云官方的api，达到执行命令的效果，具体可以参考下面这个链接：<a target="_blank" rel="noopener" href="https://api.aliyun.com/#/?product=Ecs">阿里云OpenAPI开发者门户</a>，之前测试时没有留下截图，这里就不再次尝试了。</p>
+<h3 id="自动化利用工具"><a href="#自动化利用工具" class="headerlink" title="自动化利用工具"></a>自动化利用工具</h3><p>在看其他人文章的时候，发现居然早就有佬已经写了阿里云api的利用工具，链接地址如下：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/iiiusky/alicloud-tools">GitHub - iiiusky/alicloud-tools: 阿里云ECS、策略组辅助小工具</a></p>
+<p>通过该工具，利用获得的AKSK即可自动化执行上述的所有操作，包括查看所有实例信息、执行命令等等操作。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://www.moonsec.com/1098.html">云渗透思路</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/337129.html">云主机AKSK泄露利用 - FreeBuf网络安全行业门户</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">云概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E7%9A%84%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.2.</span> <span class="toc-text">云的相关术语</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RDS"><span class="toc-number">1.2.1.</span> <span class="toc-text">RDS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8-OSS%EF%BC%88%E7%90%86%E8%A7%A3%E4%B8%BA%E7%BD%91%E7%9B%98%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">对象存储 OSS（理解为网盘）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECS"><span class="toc-number">1.2.3.</span> <span class="toc-text">ECS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BB%84"><span class="toc-number">1.2.4.</span> <span class="toc-text">安全组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AK-SK"><span class="toc-number">1.2.5.</span> <span class="toc-text">AK&#x2F;SK</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">AK&#x2F;SK泄露利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.1.</span> <span class="toc-text">漏洞产生原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">2.2.</span> <span class="toc-text">利用工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">自动化利用工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">3.</span> <span class="toc-text">参考文章</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&text=云渗透之AK/SK泄露利用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&is_video=false&description=云渗透之AK/SK泄露利用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=云渗透之AK/SK泄露利用&body=Check out this article: https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&title=云渗透之AK/SK泄露利用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&name=云渗透之AK/SK泄露利用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/&t=云渗透之AK/SK泄露利用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

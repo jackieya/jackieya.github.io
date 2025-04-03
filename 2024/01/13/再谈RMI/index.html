@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x00 前言前一篇关于RMI的文章写的稍微粗糙了些，写这一篇再巩固一下RMI的内容并做一些延伸。 0x01 一些细节网上关于RMI服务端和客户端编写的文章方法很多，我上一篇是分为接口、服务端、客户端三个部分编写的，当时是将rmi registry和rmi server都写到了服务端类中： 1234567891011121314151617181920212223242526package com">
+<meta property="og:type" content="article">
+<meta property="og:title" content="再谈RMI">
+<meta property="og:url" content="https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x00 前言前一篇关于RMI的文章写的稍微粗糙了些，写这一篇再巩固一下RMI的内容并做一些延伸。 0x01 一些细节网上关于RMI服务端和客户端编写的文章方法很多，我上一篇是分为接口、服务端、客户端三个部分编写的，当时是将rmi registry和rmi server都写到了服务端类中： 1234567891011121314151617181920212223242526package com">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-13T09:39:17.000Z">
+<meta property="article:modified_time" content="2024-01-15T01:31:44.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="0-1 javaSec">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>再谈RMI</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&text=再谈RMI"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&is_video=false&description=再谈RMI"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=再谈RMI&body=Check out this article: https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&name=再谈RMI&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&t=再谈RMI"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%B8%80%E4%BA%9B%E7%BB%86%E8%8A%82"><span class="toc-number">2.</span> <span class="toc-text">0x01 一些细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-RMI%E5%88%A9%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">0x02 RMI利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BBrmi-registry"><span class="toc-number">3.1.</span> <span class="toc-text">攻击rmi registry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x03 小结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        再谈RMI
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-13T09:39:17.000Z" class="dt-published" itemprop="datePublished">2024-01-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/0-1-javaSec/" rel="tag">0-1 javaSec</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>前一篇关于RMI的文章写的稍微粗糙了些，写这一篇再巩固一下RMI的内容并做一些延伸。</p>
+<h2 id="0x01-一些细节"><a href="#0x01-一些细节" class="headerlink" title="0x01 一些细节"></a>0x01 一些细节</h2><p>网上关于RMI服务端和客户端编写的文章方法很多，我上一篇是分为接口、服务端、客户端三个部分编写的，当时是将rmi registry和rmi server都写到了服务端类中：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RMIServer</span> <span class="keyword">implements</span> <span class="title class_">Hello</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> {</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="type">RMIServer</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RMIServer</span>();</span><br><span class="line">            <span class="type">Hello</span> <span class="variable">stub</span> <span class="operator">=</span> (Hello) UnicastRemoteObject.exportObject(obj, <span class="number">8888</span>);<span class="comment">//该语句执行后会运行一个 rmi server，监听本地8888端口等待client的请求</span></span><br><span class="line">            <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocateRegistry.createRegistry(<span class="number">1099</span>); <span class="comment">// 该语句执行后会创建并启动 rmi registry，监听在本地 1099 端口</span></span><br><span class="line">            <span class="comment">//exportObject() 方法返回结果为 remote object stub (代理对象，实现了与 Hello 接口同样的方法，包含 rmi server 的 host、port 信息)</span></span><br><span class="line">            registry.bind(<span class="string">"Hello"</span>, stub); <span class="comment">// 将 stub 注册到 registry，并与 name Hello 绑定</span></span><br><span class="line"></span><br><span class="line">        } <span class="keyword">catch</span> (Exception e) {</span><br><span class="line">            System.out.println(<span class="string">"Server Exception: "</span> + e.toString());</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sayHello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException {</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello, World"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因为是在本地环境下，为了避免麻烦，就直接写到了一起。但是在低版本的jdk中，注册中心rmi registry与rmi server是可以分离的，甚至可以是运行在不同的主机上。但官方文档中是这样说：</p>
+<blockquote>
+<p>出于安全原因，应用程序只能绑定或取消绑定到在同一主机上运行的注册中心。这样可以防止客户端删除或覆盖服务器的远程注册表中的条目。但是，查找操作是任意主机都可以进行的。</p>
+</blockquote>
+<p>也就是说不建议将rmi registry和rmi server分离到不同主机来运行，我们后文会提到为什么会有这样的安全考虑。</p>
+<p>另外该段代码是使用UnicastRemoteObject的exportObject方法来导出远程对象，并监听8888端口运行一个 rmi server。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Hello</span> <span class="variable">stub</span> <span class="operator">=</span> (Hello) UnicastRemoteObject.exportObject(obj, <span class="number">8888</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接着是通过<code>registry.bind("Hello", stub)</code>将”Hello”与stub的映射关系绑定到rmi registry上，这种绑定方式不需要书写完整的RMI URL，只需写对象名称”Hello”即可。</p>
+<p>这是我参考的<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html">官网</a>上的做法，但网上的大部分文章更多是利用下面的方式：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RMIServer2</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RemoteHello</span> <span class="keyword">extends</span> <span class="title class_">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title class_">Hello</span>{</span><br><span class="line">        <span class="keyword">protected</span> <span class="title function_">RemoteHello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException{</span><br><span class="line">            <span class="built_in">super</span>();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">sayHello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException{</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Hello, World"</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception{</span><br><span class="line">        <span class="type">RemoteHello</span> <span class="variable">rh</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RemoteHello</span>();</span><br><span class="line">        LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">        Naming.bind(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>, rh);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception{</span><br><span class="line">        <span class="type">RMIServer2</span> <span class="variable">rs2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RMIServer2</span>();</span><br><span class="line">        rs2.start();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里使用了<code>java.rmi.Naming</code>类，该类又叫做命名服务，提供了一种方便的方式来绑定和查找远程对象。可以看一下它的bind方法的源码，发现它是通过解析URI绑定远程对象，将URI拆分成主机、端口和远程对象名称，最后使用的仍是<code>Registry</code>类的<code>bind</code>来进行操作的：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">bind</span><span class="params">(String name, Remote obj)</span></span><br><span class="line">    <span class="keyword">throws</span> AlreadyBoundException,</span><br><span class="line">        java.net.MalformedURLException,</span><br><span class="line">        RemoteException</span><br><span class="line">{</span><br><span class="line">    <span class="type">ParsedNamingURL</span> <span class="variable">parsed</span> <span class="operator">=</span> parseURL(name);</span><br><span class="line">    <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> getRegistry(parsed);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (obj == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">"cannot bind to null"</span>);</span><br><span class="line"></span><br><span class="line">    registry.bind(parsed.name, obj);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们在<code>rmi client</code>中也可以使用<code>Naming</code>类的<code>lookup</code>方法来查找远程对象(可以看到client端简洁了许多)：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RMIClient</span> {</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception {</span><br><span class="line">        <span class="type">Hello</span> <span class="variable">hello</span> <span class="operator">=</span> (Hello)</span><br><span class="line">                Naming.lookup(<span class="string">"rmi://192.168.0.107:1099/Hello"</span>);</span><br><span class="line">        System.out.println(hello.sayHello());</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面说到，相比于直接使用Registry类, Naming类在绑定和查找操作时需要的是一个URL，需要说明的时，很多文章都指出该URL的形式一定要下面这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rmi://host:port/objName</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但其实并不是。首先，其中的<code>rmi:</code>是可以省略的，也就是可以写成这样：<code>//host:port/objName</code>(但不要少了前面的双斜杠，否则会报错)；其次，如果服务端或者客户端和RMI registry在同一主机上运行，那么<code>host</code>和<code>port</code>也可以省略，也就是直接远程对象名<code>objName</code>。</p>
+<blockquote>
+<p>另外，对于绑定方法，在<code>Naming</code>类和<code>Registry</code>类，除了<code>bind</code>还要<code>rebind</code>，两者区别如下：</p>
+<p><code>rebind</code>是指“重绑定”，如果“重绑定”时<code>rmi registry</code>已经有了这个服务name的存在，则之前所绑定的Remote Object将会被替换；而<code>bind</code>在执行时如果“绑定”时<code>rmi registry</code>已经有这个服务name的存在，则系统会抛出错误。</p>
+<p>所以除非有特别的业务要求，一般建议使用rebind方法进行Remote Object绑定。</p>
+</blockquote>
+<h2 id="0x02-RMI利用"><a href="#0x02-RMI利用" class="headerlink" title="0x02 RMI利用"></a>0x02 RMI利用</h2><p>讲了这么多，只是涉及了rmi具体通信原理以及如何实现，下面来从利用的层面讲讲。</p>
+<p>关于利用的方法，可以分别从攻击rmi registry、攻击rmi server、攻击rmi client角度来实现，由于篇幅和本人水平有限（对java反序列化的知识掌握不深），本文就略带介绍一下利用方式，具体实现在以后的文章中进行。</p>
+<h3 id="攻击rmi-registry"><a href="#攻击rmi-registry" class="headerlink" title="攻击rmi registry"></a>攻击rmi registry</h3><p>也许你也注意到上文中提到的，rmi server可以通过bind、rebind等方法申请在rmi registry上进行绑定注册，那么想想是否可以伪造成一个远程的rmi server注册一个恶意远程服务上去呢？</p>
+<p>前文也说过，在低版本的jdk本中（8u121），rmi registry和rmi server可以不在一台服务器上，此时是可以利用这种方法攻击注册中心的。但是通常情况下，我们遇到的场景都是高版本的jdk，此时这种攻击注册中心的方式就不太适用。</p>
+<p>由于我没能下载到低版本的jdk，部分源码片段我就截取了网上的文章进行说明。</p>
+<p>我们先来看前面贴上的<code>java.rmi.Naming#bind</code>方法的源码，其中它会将URL拆解后的结果作为参数放到<code>getRegistry</code>方法中从而得到一个<code>registry</code>:</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> getRegistry(parsed);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么查看这个<code>getRegistry</code>方法源码：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Registry <span class="title function_">getRegistry</span><span class="params">(ParsedNamingURL parsed)</span></span><br><span class="line">    <span class="keyword">throws</span> RemoteException</span><br><span class="line">{</span><br><span class="line">    <span class="keyword">return</span> LocateRegistry.getRegistry(parsed.host, parsed.port);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以看到这里归根到底调用的还是LocateRegistry类的getRegistry方法，继续跟踪进去：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Registry <span class="title function_">getRegistry</span><span class="params">(String host, <span class="type">int</span> port,</span></span><br><span class="line"><span class="params">                                       RMIClientSocketFactory csf)</span></span><br><span class="line">        <span class="keyword">throws</span> RemoteException</span><br><span class="line">{</span><br><span class="line">        <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (port &lt;= <span class="number">0</span>)</span><br><span class="line">            port = Registry.REGISTRY_PORT;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (host == <span class="literal">null</span> || host.length() == <span class="number">0</span>) {</span><br><span class="line">            <span class="comment">// If host is blank (as returned by "file:" URL in 1.0.2 used in</span></span><br><span class="line">            <span class="comment">// java.rmi.Naming), try to convert to real local host name so</span></span><br><span class="line">            <span class="comment">// that the RegistryImpl's checkAccess will not fail.</span></span><br><span class="line">            <span class="keyword">try</span> {</span><br><span class="line">                host = java.net.InetAddress.getLocalHost().getHostAddress();</span><br><span class="line">            } <span class="keyword">catch</span> (Exception e) {</span><br><span class="line">                <span class="comment">// If that failed, at least try "" (localhost) anyway...</span></span><br><span class="line">                host = <span class="string">""</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Create a proxy for the registry with the given host, port, and</span></span><br><span class="line"><span class="comment">         * client socket factory.  If the supplied client socket factory is</span></span><br><span class="line"><span class="comment">         * null, then the ref type is a UnicastRef, otherwise the ref type</span></span><br><span class="line"><span class="comment">         * is a UnicastRef2.  If the property</span></span><br><span class="line"><span class="comment">         * java.rmi.server.ignoreStubClasses is true, then the proxy</span></span><br><span class="line"><span class="comment">         * returned is an instance of a dynamic proxy class that implements</span></span><br><span class="line"><span class="comment">         * the Registry interface; otherwise the proxy returned is an</span></span><br><span class="line"><span class="comment">         * instance of the pregenerated stub class for RegistryImpl.</span></span><br><span class="line"><span class="comment">         **/</span></span><br><span class="line">        <span class="type">LiveRef</span> <span class="variable">liveRef</span> <span class="operator">=</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">LiveRef</span>(<span class="keyword">new</span> <span class="title class_">ObjID</span>(ObjID.REGISTRY_ID),</span><br><span class="line">                        <span class="keyword">new</span> <span class="title class_">TCPEndpoint</span>(host, port, csf, <span class="literal">null</span>),</span><br><span class="line">                        <span class="literal">false</span>);</span><br><span class="line">        <span class="type">RemoteRef</span> <span class="variable">ref</span> <span class="operator">=</span></span><br><span class="line">            (csf == <span class="literal">null</span>) ? <span class="keyword">new</span> <span class="title class_">UnicastRef</span>(liveRef) : <span class="keyword">new</span> <span class="title class_">UnicastRef2</span>(liveRef);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (Registry) Util.createProxy(RegistryImpl.class, ref, <span class="literal">false</span>);</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里getRegistry方法有好几种重载方式，前面所说的传入不同形式的URL，正好对应了这几种重载方式，我这里粘贴的是最终调用的这个核心的getRegistry方法。前面的if判断是处理port和host的，然后分别实例化了liveRef和RemoteRef对象，这一段过程应该是用过来处理网络通信相关的，不用管，直接定位最后的返回语句，调用了createProxy方法。关于这个方法，要涉及到动态代理的内容（给自己挖个坑，以后研究），它会根据传入的class对象，返回一个代理，也就是说，这里传入<code>RegistryImpl.class</code>后，得到的其实是一个RegistryImpl_Stub对象，即远程的Registry接口在本地的代理。</p>
+<p>我们再回到Naming类的bind方法中，接下来就是执行<code>registry.bind(parsed.name, obj);</code>语句，这里调用了<code>registry</code>的<code>bind方法</code>,其实是调用的RegistryImpl_Stub类中的bind方法，我们定位到该类的bind方法：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bind</span><span class="params">(String var1, Remote var2)</span> <span class="keyword">throws</span> AccessException, AlreadyBoundException, RemoteException {</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="type">StreamRemoteCall</span> <span class="variable">var3</span> <span class="operator">=</span> (StreamRemoteCall)<span class="built_in">this</span>.ref.newCall(<span class="built_in">this</span>, operations, <span class="number">0</span>, <span class="number">4905912898345647071L</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="type">ObjectOutput</span> <span class="variable">var4</span> <span class="operator">=</span> var3.getOutputStream();</span><br><span class="line">            var4.writeObject(var1);</span><br><span class="line">            var4.writeObject(var2);</span><br><span class="line">        } <span class="keyword">catch</span> (IOException var5) {</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling arguments"</span>, var5);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.ref.invoke(var3);</span><br><span class="line">        <span class="built_in">this</span>.ref.done(var3);</span><br><span class="line">    } <span class="keyword">catch</span> (RuntimeException var6) {</span><br><span class="line">        <span class="keyword">throw</span> var6;</span><br><span class="line">    } <span class="keyword">catch</span> (RemoteException var7) {</span><br><span class="line">        <span class="keyword">throw</span> var7;</span><br><span class="line">    } <span class="keyword">catch</span> (AlreadyBoundException var8) {</span><br><span class="line">        <span class="keyword">throw</span> var8;</span><br><span class="line">    } <span class="keyword">catch</span> (Exception var9) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnexpectedException</span>(<span class="string">"undeclared checked exception"</span>, var9);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>前面处理一些约定好的数据，比如host、port以及要绑定的对象和对象名称，我们直接定位到invoke那一句，invoke这里会把请求发出去，这里会调用Skeleton代理即<code>sun.rmi.registry.RegistryImpl_Skel</code>类中的<code>dispatch</code>方法来处理请求，需要注意的是，在这里之后是无法通过断点进入到<code>sun.rmi.registry.RegistryImpl_Skel#dispatch</code>方法中的，看一篇文章说是在bind函数执行处<code>sun.rmi.registry.RegistryImpl#bind</code>下一个断点，直接运行就可以得到调用栈，再回去找就行了。</p>
+<p>我们定位查看重要逻辑代码：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>(var3) {</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">try</span> { <span class="comment">//bind方法</span></span><br><span class="line">                    var11 = var2.getInputStream();</span><br><span class="line">                    <span class="comment">// readObject反序列化触发</span></span><br><span class="line">                    var7 = (String)var11.readObject();</span><br><span class="line">                    var8 = (Remote)var11.readObject();</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var94) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var94);</span><br><span class="line">                } <span class="keyword">catch</span> (ClassNotFoundException var95) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var95);</span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                    var2.releaseInputStream();</span><br><span class="line">                }</span><br><span class="line"></span><br><span class="line">                var6.bind(var7, var8);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    var2.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var93) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var93);</span><br><span class="line">                }</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>: <span class="comment">//list()方法</span></span><br><span class="line">                var2.releaseInputStream();</span><br><span class="line">                String[] var97 = var6.list();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    <span class="type">ObjectOutput</span> <span class="variable">var98</span> <span class="operator">=</span> var2.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    var98.writeObject(var97);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var92) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var92);</span><br><span class="line">                }</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">try</span> {  <span class="comment">// lookup()方法</span></span><br><span class="line">                    var10 = var2.getInputStream();</span><br><span class="line">                    <span class="comment">// readObject反序列化触发</span></span><br><span class="line">                    var7 = (String)var10.readObject();</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var89) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var89);</span><br><span class="line">                } <span class="keyword">catch</span> (ClassNotFoundException var90) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var90);</span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                    var2.releaseInputStream();</span><br><span class="line">                }</span><br><span class="line"></span><br><span class="line">                var8 = var6.lookup(var7);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    <span class="type">ObjectOutput</span> <span class="variable">var9</span> <span class="operator">=</span> var2.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    var9.writeObject(var8);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var88) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var88);</span><br><span class="line">                }</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="keyword">try</span> { <span class="comment">// rebind()方法</span></span><br><span class="line">                    var11 = var2.getInputStream();</span><br><span class="line">                    <span class="comment">//readObject反序列化触发</span></span><br><span class="line">                    var7 = (String)var11.readObject();</span><br><span class="line">                    var8 = (Remote)var11.readObject();</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var85) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var85);</span><br><span class="line">                } <span class="keyword">catch</span> (ClassNotFoundException var86) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var86);</span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                    var2.releaseInputStream();</span><br><span class="line">                }</span><br><span class="line"></span><br><span class="line">                var6.rebind(var7, var8);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    var2.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var84) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var84);</span><br><span class="line">                }</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">try</span> { <span class="comment">//unbind()方法</span></span><br><span class="line">                    var10 = var2.getInputStream();</span><br><span class="line">                    <span class="comment">//readObject反序列化触发</span></span><br><span class="line">                    var7 = (String)var10.readObject();</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var81) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var81);</span><br><span class="line">                } <span class="keyword">catch</span> (ClassNotFoundException var82) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var82);</span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                    var2.releaseInputStream();</span><br><span class="line">                }</span><br><span class="line"></span><br><span class="line">                var6.unbind(var7);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    var2.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var80) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var80);</span><br><span class="line">                }</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"invalid method number"</span>);</span><br><span class="line">            }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里var3类型是int型，取值从0到4，依次对应bind/rebind/unbind/lookup/list等请求。从这个switch语句我们可以得知，Registry注册中心能够接收bind/rebind/unbind/lookup/list等请求，而在接收五类请求方法的时候，只有我们bind，rebind，unbind和lookup方法进行了反序列化数据调用readObject函数（再给自己挖个坑，后面补个java反序列化的内容），可能导致直接触发了反序列化漏洞产生。</p>
+<blockquote>
+<p>需要说明的是lookup是从rmi client角度攻击rmi registry， 而bind/rebind/unbind是从rmi server角度攻击rmi registry</p>
+</blockquote>
+<p>由于无法下载到对应的jdk版本，这里我无法演示，可以具体看看这个<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9261?time__1311=n4+xuDgD9DyDRGD07+D/jeFeWqO5OWlQ7eD&amp;alichlgref=https://xz.aliyun.com/u/24696#toc-10">文章</a>是如何利用该处反序列化进行实际操作的。</p>
+<blockquote>
+<p>高版本的jdk中，进行了如下修复：</p>
+<p>在8u121之后，在bind方法里面增加了一个checkAccess方法，该方法会检查是否为localhost，不是则会抛出下面这个异常：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">catch</span> (PrivilegedActionException var4) {</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AccessException</span>(var0 + <span class="string">" disallowed; origin "</span> + var2 + <span class="string">" is non-local host"</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>不过我们看源码就知道反序列化语句readObject其实在bind调用之前就执行了，并没有什么用。</p>
+<p>然后在8u141修改为在RegistryImpl_Skel中执行readObject之前就执行了checkAccess方法，这样bind，rebind，unbind就没失效了。</p>
+<p>以我现在手上的java为例(java版本为1.8.0_391),<code>sun.rmi.registry.RegistryImpl_Skel</code>类的<code>dispatch</code>方法中的switch语句对应处理bind请求的片段如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                RegistryImpl.checkAccess(<span class="string">"Registry.bind"</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    var10 = (ObjectInputStream)var7.getInputStream();</span><br><span class="line">                    var8 = SharedSecrets.getJavaObjectInputStreamReadString().readString(var10);</span><br><span class="line">                    var81 = (Remote)var10.readObject();</span><br><span class="line">                } <span class="keyword">catch</span> (IOException | ClassNotFoundException | ClassCastException var78) {</span><br><span class="line">                    var7.discardPendingRefs();</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnmarshalException</span>(<span class="string">"error unmarshalling arguments"</span>, var78);</span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                    var7.releaseInputStream();</span><br><span class="line">                }</span><br><span class="line"></span><br><span class="line">                var6.bind(var8, var81);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> {</span><br><span class="line">                    var7.getResultStream(<span class="literal">true</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                } <span class="keyword">catch</span> (IOException var77) {</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MarshalException</span>(<span class="string">"error marshalling return"</span>, var77);</span><br><span class="line">                }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以看到第一句就调用了checkAccess进行了限制。</p>
+</blockquote>
+<h2 id="0x03-小结"><a href="#0x03-小结" class="headerlink" title="0x03 小结"></a>0x03 小结</h2><p>写这篇时我结合了网上的文章再看的源码，但是还是感觉其中的过程有些绕，对于rmi利用这块，有很多有待去学习。</p>
+<p><em><strong>参考文章:</strong></em></p>
+<p>《java安全漫谈》</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9261?time__1311=n4+xuDgD9DyDRGD07+D/jeFeWqO5OWlQ7eD&amp;alichlgref=https://xz.aliyun.com/u/24696#toc-10">RMI机制</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%B8%80%E4%BA%9B%E7%BB%86%E8%8A%82"><span class="toc-number">2.</span> <span class="toc-text">0x01 一些细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-RMI%E5%88%A9%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">0x02 RMI利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BBrmi-registry"><span class="toc-number">3.1.</span> <span class="toc-text">攻击rmi registry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x03 小结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&text=再谈RMI"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&is_video=false&description=再谈RMI"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=再谈RMI&body=Check out this article: https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&title=再谈RMI"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&name=再谈RMI&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/13/%E5%86%8D%E8%B0%88RMI/&t=再谈RMI"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

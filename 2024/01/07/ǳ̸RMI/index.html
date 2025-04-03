@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 简介RMI(Remote Method Invocation),即远程方法调用，在java中，一个JVM上的object可以通过RMI实现远程调用另外一个JVM的object方法。 RMI有些类似C语言中所用的远程过程调用RPC。RPC主要关注数据结构。将数据打包并传输是相对容易的，但对于Java而言，这还不够。在Java中，我们不仅仅使用数据结构，还使用包含数据和操作数据的方法的对象。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈RMI">
+<meta property="og:url" content="https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x01 简介RMI(Remote Method Invocation),即远程方法调用，在java中，一个JVM上的object可以通过RMI实现远程调用另外一个JVM的object方法。 RMI有些类似C语言中所用的远程过程调用RPC。RPC主要关注数据结构。将数据打包并传输是相对容易的，但对于Java而言，这还不够。在Java中，我们不仅仅使用数据结构，还使用包含数据和操作数据的方法的对象。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240107164327165.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240113172036581.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240107172912292.png">
+<meta property="article:published_time" content="2024-01-07T02:13:37.000Z">
+<meta property="article:modified_time" content="2024-01-23T01:45:34.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="0-1 javaSec">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240107164327165.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>浅谈RMI</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&text=浅谈RMI"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&t=浅谈RMI"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">0x01 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-RMI%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">0x02 RMI相关概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E4%B8%80%E4%B8%AARMI%E5%AE%9E%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">0x03 一个RMI实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%BC%96%E5%86%99"><span class="toc-number">3.1.</span> <span class="toc-text">接口编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI-Server%E7%BC%96%E5%86%99"><span class="toc-number">3.2.</span> <span class="toc-text">RMI Server编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI-Client%E7%AB%AF%E7%BC%96%E5%86%99"><span class="toc-number">3.3.</span> <span class="toc-text">RMI Client端编写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x04 小结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        浅谈RMI
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-07T02:13:37.000Z" class="dt-published" itemprop="datePublished">2024-01-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/0-1-javaSec/" rel="tag">0-1 javaSec</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x01-简介"><a href="#0x01-简介" class="headerlink" title="0x01 简介"></a>0x01 简介</h2><p>RMI(Remote Method Invocation),即远程方法调用，在java中，一个JVM上的object可以通过RMI实现远程调用另外一个JVM的object方法。</p>
+<p>RMI有些类似C语言中所用的远程过程调用RPC。RPC主要关注数据结构。将数据打包并传输是相对容易的，但对于Java而言，这还不够。在Java中，我们不仅仅使用数据结构，还使用包含数据和操作数据的方法的对象。我们不仅需要能够将对象的状态（数据）传输到网络中，还需要接收方能够在接收后与对象进行交互（使用其方法）。</p>
+<p>RMI 可以使用以下协议实现：</p>
+<ul>
+<li>Java Remote Method Protocol (JRMP)：专门为 RMI 设计的协议</li>
+<li>Internet Inter-ORB Protocol (IIOP) ：基于 <code>CORBA</code> 实现的跨语言协议</li>
+</ul>
+<p>在很多java反序列化的漏洞的poc中我们都可以看到rmi协议的身影，一般都是利用它来访问一个远程的恶意java对象的。</p>
+<h2 id="0x02-RMI相关概念"><a href="#0x02-RMI相关概念" class="headerlink" title="0x02 RMI相关概念"></a>0x02 RMI相关概念</h2><p>从RMI设计角度来讲，基本分为三层架构模式来实现RMI，分别为RMI注册中心、RMI客户端和RMI服务端。</p>
+<p><strong>注册表(rmi registry):</strong> 是一种名称服务（name service），提供远程对象（remote object）注册，即名称（name）到远程对象的绑定和查询，是一种特殊的远程对象</p>
+<p>说明白些就是以URL形式注册远程对象，并向客户端回复对远程对象的引用。</p>
+<p><strong>客户端（rmi registry）:</strong> 通过名称向 <code>RMI registry</code> 获取远程对象引用<code>remote object reference (stub)</code>，调用其方法，框架如下：</p>
+<p>存根/桩(Stub):远程对象在客户端上的代理;<br>远程引用层(Remote Reference Layer):解析并执行远程引用协议;<br>传输层(Transport):发送调用、传递远程方法参数、接收远程方法执行结果。</p>
+<p><strong>服务端（rmi server）:</strong> 创建远程对象，将其注册到 <code>RMI registry</code>，框架如下：</p>
+<p>骨架(Skeleton):读取客户端传递的方法参数，调用服务器方的实际对象方法， 并接收方法执行后的返回值;<br>远程引用层(Remote Reference Layer):处理远程引用后向骨架发送远程方法调用;<br>传输层(Transport):监听客户端的入站连接，接收并转发调用到远程引用层。</p>
+<p>官方文档的示例图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240107164327165.png" alt="RMI流程图"></p>
+<p>该图描述了一个使用RMI注册表获取远程对象引用的RMI分布式应用程序。服务器调用<code>RMI Registry</code>来将一个名称与一个远程对象关联（或绑定）。客户端在服务器的<code>RMI Registry</code>中通过名称查找远程对象，然后调用其方法。图示还显示了RMI系统在需要时使用现有的Web服务器从服务器到客户端以及从客户端到服务器加载类定义的过程。</p>
+<p><code>RMI server</code> 和<code>RMI registry</code>运行在一个主机的不同端口，<code>RMI registry</code>默认运行在1099端口上。</p>
+<p>RMI URL形式为：<code>rmi://hostname:port/remoteObjectName</code></p>
+<h2 id="0x03-一个RMI实例"><a href="#0x03-一个RMI实例" class="headerlink" title="0x03 一个RMI实例"></a>0x03 一个RMI实例</h2><p>下面在本地演示一个RMI通信：</p>
+<h3 id="接口编写"><a href="#接口编写" class="headerlink" title="接口编写"></a>接口编写</h3><p>Client端需要调用具体的远程方法，所以需要有服务端注册的远程对象类所实现的接口。如果是真实远程通信情况，服务端和客户端都要有该接口，我这里环境是本地。</p>
+<p>编写一个继承自java.rmi.Remote的接口Hello，其中要定义一个我们要调用的远程方法，比如这里的<code>sayHello()</code>,然后需要抛出 <code>RemoteException</code> 或其父类的异常:</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Hello</span> <span class="keyword">extends</span> <span class="title class_">Remote</span> {</span><br><span class="line">    String <span class="title function_">sayHello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException; <span class="comment">//定义要调用的远程方法，并抛出RemoteException异常</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>java.rmi.Remote接口是一个空接口，和Serializable接口一样，只作标记作用，接口中的每个方法都需要抛出RemoteException异常。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240113172036581.png" alt="java.rmi.Remote源码"></p>
+<h3 id="RMI-Server编写"><a href="#RMI-Server编写" class="headerlink" title="RMI Server编写"></a>RMI Server编写</h3><p>编写<strong>RMI Server</strong>类，该类要先实现刚刚编写的Hello接口，在主函数中创建并导出远程对象，然后将远程对象注册到RMI Registry上,具体细节可以看注释：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RMIServer</span> <span class="keyword">implements</span> <span class="title class_">Hello</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> {</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="type">RMIServer</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RMIServer</span>();</span><br><span class="line">            <span class="type">Hello</span> <span class="variable">stub</span> <span class="operator">=</span> (Hello) UnicastRemoteObject.exportObject(obj, <span class="number">8888</span>);<span class="comment">//该语句执行后会运行一个 rmi server，监听本地8888端口等待client的请求</span></span><br><span class="line">            <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocateRegistry.createRegistry(<span class="number">1099</span>); <span class="comment">// 该语句执行后会创建并启动 rmi registry，监听在本地 1099 端口</span></span><br><span class="line">            <span class="comment">//exportObject() 方法返回结果为 remote object stub (代理对象，实现了与 Hello 接口同样的方法，包含 rmi server 的 host、port 信息)</span></span><br><span class="line">            registry.bind(<span class="string">"Hello"</span>, stub); <span class="comment">// 将 stub 注册到 registry，并与 name Hello 绑定</span></span><br><span class="line"></span><br><span class="line">        } <span class="keyword">catch</span> (Exception e) {</span><br><span class="line">            System.out.println(<span class="string">"Server Exception: "</span> + e.toString());</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sayHello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException {</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello, World"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="RMI-Client端编写"><a href="#RMI-Client端编写" class="headerlink" title="RMI Client端编写"></a>RMI Client端编写</h3><p>编写RMI Client类，先通过<code>LocateRegistry.getRegistry</code>方法获取<code>RMI registry</code>,然后通过<code>registry.lookup</code>获取 <code>remote object stub</code>:</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RMIClient</span> {</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> {</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">host</span> <span class="operator">=</span> <span class="string">"localhost"</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> <span class="number">1099</span>; <span class="comment">//RMI registry绑定的端口</span></span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocateRegistry.getRegistry(host, port);</span><br><span class="line">            <span class="type">Hello</span> <span class="variable">stub</span> <span class="operator">=</span> (Hello) registry.lookup(<span class="string">"Hello"</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> stub.sayHello();</span><br><span class="line">            System.out.println(<span class="string">"response: "</span> + response);</span><br><span class="line">        } <span class="keyword">catch</span> (Exception e) {</span><br><span class="line">            System.err.println(<span class="string">"Client exception: "</span> + e.toString());</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后先运行RMIServer.java，再运行 RMIClient.java查看结果，可以看到成功调用sayHello方法：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240107172912292.png" alt="运行成功"></p>
+<blockquote>
+<p>本例中调用 <code>stub</code> 的 <code>sayHello()</code> 方法背后的流程：</p>
+<ol>
+<li><p><code>RMI client</code> 端通过 <code>stub</code> 中包含的 host、port 信息，与远程对象所在的 <code>RMI server</code> 建立连接 ，然后序列化调用数据</p>
+</li>
+<li><p><code>RMI server</code> 端接收调用请求，将调用转发给远程对象，然后序列化结果，返回给 <code>RMI client</code></p>
+</li>
+<li><p><code>RMI client</code> 端接收、反序列化结果</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="0x04-小结"><a href="#0x04-小结" class="headerlink" title="0x04 小结"></a>0x04 小结</h2><p>在远程方法调用过程中，远程对象需要先序列化，从本地 JVM 发送到远程 JVM，然后在远程 JVM 上反序列化，执行完后，将结果序列化，发送回本地JVM，因此这个过程可能会存在反序列化漏洞。</p>
+<p><strong>参考文章：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/rmi/overview.html">RMI Overview</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html">Getting Started Using Java RMI</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.oreilly.com/library/view/learning-java/1565927184/ch11s04.html">Remote Method Invocation (RMI)</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">0x01 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-RMI%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">0x02 RMI相关概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E4%B8%80%E4%B8%AARMI%E5%AE%9E%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">0x03 一个RMI实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E7%BC%96%E5%86%99"><span class="toc-number">3.1.</span> <span class="toc-text">接口编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI-Server%E7%BC%96%E5%86%99"><span class="toc-number">3.2.</span> <span class="toc-text">RMI Server编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI-Client%E7%AB%AF%E7%BC%96%E5%86%99"><span class="toc-number">3.3.</span> <span class="toc-text">RMI Client端编写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x04 小结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&text=浅谈RMI"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&t=浅谈RMI"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

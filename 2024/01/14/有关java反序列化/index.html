@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x00 前言还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。 0x01 什么是java的序列化和反序列化？正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只是java里面的概念，而我们正常通信传输的形式只能是二进制数据，如何将java对象变为可以传输的字节流就是关于序列化的问题了。而反序列化，则是当传输的数据到达另">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有关java反序列化">
+<meta property="og:url" content="https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x00 前言还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。 0x01 什么是java的序列化和反序列化？正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只是java里面的概念，而我们正常通信传输的形式只能是二进制数据，如何将java对象变为可以传输的字节流就是关于序列化的问题了。而反序列化，则是当传输的数据到达另">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114164510661.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114171009865.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114173309135.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114180304410.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114181756999.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114190832039.png">
+<meta property="article:published_time" content="2024-01-14T01:54:31.000Z">
+<meta property="article:modified_time" content="2024-01-14T11:23:36.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="0-1 javaSec">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114164510661.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>有关java反序列化</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/01/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%9C%BA%E5%88%B6/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/01/13/%E5%86%8D%E8%B0%88RMI/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%80%E4%B9%88%E6%98%AFjava%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">0x01 什么是java的序列化和反序列化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F"><span class="toc-number">3.</span> <span class="toc-text">0x02 漏洞产生</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%AF%B9%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">0x03 对反序列化的流程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%AE%89%E5%85%A8%E9%9A%90%E6%82%A3"><span class="toc-number">5.</span> <span class="toc-text">0x04 安全隐患</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">0x05 小结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        有关java反序列化
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-14T01:54:31.000Z" class="dt-published" itemprop="datePublished">2024-01-14</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/0-1-javaSec/" rel="tag">0-1 javaSec</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。</p>
+<h2 id="0x01-什么是java的序列化和反序列化？"><a href="#0x01-什么是java的序列化和反序列化？" class="headerlink" title="0x01 什么是java的序列化和反序列化？"></a>0x01 什么是java的序列化和反序列化？</h2><p>正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只是java里面的概念，而我们正常通信传输的形式只能是二进制数据，如何将java对象变为可以传输的字节流就是关于序列化的问题了。而反序列化，则是当传输的数据到达另一端后，如何把字节序列恢复java对象的过程。当然除了通信，序列化和反序列化也会被应用在对象的持久化存储中。</p>
+<p><strong>一个对象要想序列化成功，需要同时满足下面两个条件：</strong></p>
+<ol>
+<li>该类必须实现 java.io.Serializable 接口。</li>
+<li>该类的所有属性必须是可序列化的。如果有一个属性不是可序列化的，则该属性必须注明是短暂的。</li>
+</ol>
+<blockquote>
+<p>其中的”<strong>短暂</strong>“是指关键字 <code>transient</code>，它可以用来修饰类的成员变量（属性）。当一个属性被声明为 <code>transient</code> 时，该属性将被标记为短暂的，意味着在对象进行序列化时，该属性的值不会被持久化保存。这一点不是很重要，我们不必太过在意。</p>
+<p>另外，如果你想知道一个 Java 标准类是否是可序列化的，可以通过查看该类的文档,查看该类有没有实现 java.io.Serializable接口。</p>
+</blockquote>
+<p>我们先来一个简单的示例，还是以前使用的User类,该类实现<code>java.io.Serializable类</code>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import java.io.Serializable;</span><br><span class="line"></span><br><span class="line">public class User implements Serializable {</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer age;</span><br><span class="line"></span><br><span class="line">    public User() {</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    private User(String name) {</span><br><span class="line">        this.name = name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public User(String name, Integer age) {</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public String getName() {</span><br><span class="line">        return name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setName(String name) {</span><br><span class="line">        this.name = name;</span><br><span class="line">        System.out.println(this.getName());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public Integer getAge() {</span><br><span class="line">        return age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setAge(int age) {</span><br><span class="line">        this.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() {</span><br><span class="line">        return "User [name=" + name + ", age=" + age + "]";</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后来个<code>SerializeDemo</code>类将其序列化为二进制文件,首先要创建<code>OutputStream</code>对象，再将其封装在一个<code>ObjectOutputStream</code>对象内，接着只需调用<code>writeObject()</code>即可将对象序列化，并将其发送给<code>OutputStream</code>（对象是基于字节的，因此要使用<code>OutputStream</code>来继承层次结构）。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SerializeDemo</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> {</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setName(<span class="string">"anch0r"</span>);</span><br><span class="line">        user.setAge(<span class="number">123</span>);</span><br><span class="line">        <span class="keyword">try</span>{</span><br><span class="line">            <span class="comment">//打开一个文件输入流 FIleOutputStream</span></span><br><span class="line">            <span class="type">FileOutputStream</span> <span class="variable">fileOut</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">"G:\\Desktop:\\user1.db"</span>);</span><br><span class="line">            <span class="comment">//建立对象输入流,将这个FIleOutputStream封装到ObjectOutputStream中</span></span><br><span class="line">            <span class="type">ObjectOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(fileOut);</span><br><span class="line">            <span class="comment">//调用writeObject方法，序列化对象到文件user1.db中</span></span><br><span class="line">            out.writeObject(user);</span><br><span class="line">            out.close();</span><br><span class="line">            fileOut.close();</span><br><span class="line">            System.out.println(<span class="string">"Serialized data is saved successfully!"</span>);</span><br><span class="line">        }<span class="keyword">catch</span> (IOException i)</span><br><span class="line">        {</span><br><span class="line">            i.printStackTrace();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行后，在相应路径下生成了一个user1.db的二进制文件，将其拖入到编辑器中查看内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114164510661.png" alt="user1.db"></p>
+<p>我们从最右边的字符显示中可以依稀看到该序列化数据的一些信息，比如全限定类名 com.Anchor.User、属性名以及对应的数据类型等等，但这些都不是重点，注意看我左上角框出的那串十六进制数字:<code>ACED 0005</code>, <code>ACED</code>是魔术数字(STREAM_MAGIC)，而<code>0005</code>是版本号，代表这里使用了序列化协议,从这里可以判断保存的内容是否为序列化数据。（这是在黑盒挖掘反序列化漏洞很重要的一个特征）</p>
+<p>下面再编写个DeSerializeDemo将对象从字节序列中读到内存中，并打印相应的信息。对应地，这里首先要创建InputStream对象，再将其封装在一个ObjectInputStream对象内，接着只需调用readObject()即可将文件中的内容反序列化，要实例化一个user对象用来接收反序列化的结果。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeSerializeDemo</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> {</span><br><span class="line">        <span class="type">User</span> <span class="variable">user1</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span>{</span><br><span class="line">            <span class="type">FileInputStream</span> <span class="variable">fileIn</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">"G:\\Desktop\\user1.db"</span>);</span><br><span class="line">            <span class="type">ObjectInputStream</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(fileIn);</span><br><span class="line">            user1 = (User) in.readObject();</span><br><span class="line">            in.close();</span><br><span class="line">            fileIn.close();</span><br><span class="line">        }<span class="keyword">catch</span>(IOException i)</span><br><span class="line">        {</span><br><span class="line">            i.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        }<span class="keyword">catch</span>(ClassNotFoundException c){</span><br><span class="line">            System.out.println(<span class="string">"User class not found"</span>);</span><br><span class="line">            c.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        }</span><br><span class="line">        System.out.println(<span class="string">"Deserilized User ……"</span>);</span><br><span class="line">        System.out.println(user1);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行结果如下，成功打印出了user1这个实例的信息：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114171009865.png" alt="运行结果"></p>
+<h2 id="0x02-漏洞产生"><a href="#0x02-漏洞产生" class="headerlink" title="0x02 漏洞产生"></a>0x02 漏洞产生</h2><p>   看完上面这个简单的序列化和反序列化demo以后，我们确实是掌握如何实现了，但是具体的漏洞点又是怎么产生的呢？对于php，我们知道，它的反序列化会触发一些魔术方法，比如<code>__wakeup</code>,<code>__destruct</code>等等，这些函数中如果有一些命令执行的危险操作，就可能导致漏洞产生。那么java反序列化是通过什么来触发漏洞的？我们可以看看上面这个<code>DeSerializeDemo</code>类，执行反序列化的核心方法就是这个<code>readObject()</code>,对于这个函数方法，它并不是写死在ObjectInputStream类中的，它是支持自定义改写的，包括前面的writeObject方法也是可以改写。所以只要readObject这个方法编写不当，就会造成反序列化漏洞，这就是为啥上一篇文章中我分析到<code>readObject</code>方法那边就说存在反序列化漏洞了。</p>
+<p>   下面我们只需在User类中改写readObject方法，即可通过反序列化来执行一些命令：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> {</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">()</span> {</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">User</span><span class="params">(String name)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String name, Integer age)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        System.out.println(<span class="built_in">this</span>.getName());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> {</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"User [name="</span> + name + <span class="string">", age="</span> + age + <span class="string">"]"</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">//改写readObject()方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">readObject</span><span class="params">(ObjectInputStream inputStream)</span> <span class="keyword">throws</span> IOException,ClassNotFoundException{</span><br><span class="line">        <span class="comment">//执行默认的readObject()方法</span></span><br><span class="line">        inputStream.defaultReadObject();</span><br><span class="line">        <span class="comment">//执行命令</span></span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">"calc.exe"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后和前面一样的，先运行<code>SerializeDemo.java</code>进行序列化，然后运行<code>DeSerializeDemo.java</code>反序列化，成功执行命令，弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114173309135.png" alt="成功弹出计算器"></p>
+<h2 id="0x03-对反序列化的流程分析"><a href="#0x03-对反序列化的流程分析" class="headerlink" title="0x03 对反序列化的流程分析"></a>0x03 对反序列化的流程分析</h2><p>我们在<code>DeSerializeDemo</code>的<code>readObject</code>处打上断点，分析反序列化流程(以后用<code>类名#方法</code>形式代指跟进到那个类的方法中)：</p>
+<p>首先跟进到<code>ObjectInputStream#readObject</code>方法中，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114180304410.png" alt="ObjectInputStream#readObject"></p>
+<p>这里会调用<code>readObject</code>的另外一个重载方式：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Object <span class="title function_">readObject</span><span class="params">(Class&lt;?&gt; type)</span></span><br><span class="line">        <span class="keyword">throws</span> IOException, ClassNotFoundException</span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">if</span> (enableOverride) {</span><br><span class="line">            <span class="keyword">return</span> readObjectOverride();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (! (type == Object.class || type == String.class))</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AssertionError</span>(<span class="string">"internal error"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// if nested read, passHandle contains handle of enclosing object</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">outerHandle</span> <span class="operator">=</span> passHandle;</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> readObject0(type, <span class="literal">false</span>);</span><br><span class="line">            handles.markDependency(outerHandle, passHandle);</span><br><span class="line">            <span class="type">ClassNotFoundException</span> <span class="variable">ex</span> <span class="operator">=</span> handles.lookupException(passHandle);</span><br><span class="line">            <span class="keyword">if</span> (ex != <span class="literal">null</span>) {</span><br><span class="line">                <span class="keyword">throw</span> ex;</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (depth == <span class="number">0</span>) {</span><br><span class="line">                vlist.doCallbacks();</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">return</span> obj;</span><br><span class="line">        } <span class="keyword">finally</span> {</span><br><span class="line">            passHandle = outerHandle;</span><br><span class="line">            <span class="keyword">if</span> (closed &amp;&amp; depth == <span class="number">0</span>) {</span><br><span class="line">                clear();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对于第一行的<code>enableOverride</code>,它来自<code>ObjectInputStream</code>构造方法，当调用其无参构造函数时会设定为true，我们这里因为传了<code>fileInputStream</code>，所以为false，并不会进入。接下来可以看到Obj的获取来自<code>readObject0</code>，跟进<code>ObjectInputStream#readObject0</code>看看：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Object <span class="title function_">readObject0</span><span class="params">(<span class="type">boolean</span> unshared)</span> <span class="keyword">throws</span> IOException {</span><br><span class="line">	<span class="comment">// 略去源码中对读取模式的检查</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取一个字节</span></span><br><span class="line">    <span class="type">byte</span> tc;</span><br><span class="line">    <span class="keyword">while</span> ((tc = bin.peekByte()) == TC_RESET) {</span><br><span class="line">        bin.readByte();</span><br><span class="line">        handleReset();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    depth++;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="keyword">switch</span> (tc) {</span><br><span class="line">            <span class="keyword">case</span> TC_NULL:</span><br><span class="line">                <span class="keyword">return</span> readNull();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_REFERENCE:</span><br><span class="line">                <span class="keyword">return</span> readHandle(unshared);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_CLASS:</span><br><span class="line">                <span class="keyword">return</span> readClass(unshared);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_CLASSDESC:</span><br><span class="line">            <span class="keyword">case</span> TC_PROXYCLASSDESC:</span><br><span class="line">                <span class="keyword">return</span> readClassDesc(unshared);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_STRING:</span><br><span class="line">            <span class="keyword">case</span> TC_LONGSTRING:</span><br><span class="line">                <span class="keyword">return</span> checkResolve(readString(unshared));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_ARRAY:</span><br><span class="line">                <span class="keyword">return</span> checkResolve(readArray(unshared));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_ENUM:</span><br><span class="line">                <span class="keyword">return</span> checkResolve(readEnum(unshared));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_OBJECT:</span><br><span class="line">                <span class="keyword">return</span> checkResolve(readOrdinaryObject(unshared));</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_EXCEPTION:</span><br><span class="line">                <span class="type">IOException</span> <span class="variable">ex</span> <span class="operator">=</span> readFatalException();</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">WriteAbortedException</span>(<span class="string">"writing aborted"</span>, ex);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> TC_BLOCKDATA:</span><br><span class="line">            <span class="keyword">case</span> TC_BLOCKDATALONG:</span><br><span class="line">				<span class="comment">// 略</span></span><br><span class="line">            <span class="keyword">case</span> TC_ENDBLOCKDATA:</span><br><span class="line">				<span class="comment">// 略</span></span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StreamCorruptedException</span>(</span><br><span class="line">                    String.format(<span class="string">"invalid type code: %02X"</span>, tc));</span><br><span class="line">        }</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        depth--;</span><br><span class="line">        bin.setBlockDataMode(oldMode);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一部分会先读取一个字节，这个字节是我刚才说的序列化特征aced 0005之后的一个字节，我这里是0x73，十进制的115，之后便会根据这个值进入switch对应的分支：TC_OBJECT，在这之中会继续跟进到<code>ObjectInputStream#readOrdinaryObject</code>函数之中。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114181756999.png" alt="进入TC_OBJECT分支"></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Object <span class="title function_">readOrdinaryObject</span><span class="params">(<span class="type">boolean</span> unshared)</span></span><br><span class="line">        <span class="keyword">throws</span> IOException</span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">if</span> (bin.readByte() != TC_OBJECT) {</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">InternalError</span>();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="type">ObjectStreamClass</span> <span class="variable">desc</span> <span class="operator">=</span> readClassDesc(<span class="literal">false</span>);</span><br><span class="line">        desc.checkDeserialize();</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; cl = desc.forClass();</span><br><span class="line">        <span class="keyword">if</span> (cl == String.class || cl == Class.class</span><br><span class="line">                || cl == ObjectStreamClass.class) {</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">InvalidClassException</span>(<span class="string">"invalid class descriptor"</span>);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        Object obj;</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            obj = desc.isInstantiable() ? desc.newInstance() : <span class="literal">null</span>;</span><br><span class="line">        } <span class="keyword">catch</span> (Exception ex) {</span><br><span class="line">            <span class="keyword">throw</span> (IOException) <span class="keyword">new</span> <span class="title class_">InvalidClassException</span>(</span><br><span class="line">                desc.forClass().getName(),</span><br><span class="line">                <span class="string">"unable to create instance"</span>).initCause(ex);</span><br><span class="line">        }</span><br><span class="line">    	<span class="comment">//略</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (desc.isExternalizable()) {</span><br><span class="line">            readExternalData((Externalizable) obj, desc);</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            readSerialData(obj, desc);</span><br><span class="line">        }</span><br><span class="line">    	<span class="comment">//略</span></span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>ObjectInputStream#readOrdinaryObject</code>方法中的一些不重要的细节我就直接略过了，主要是看obj的来源。从中可以看到obj的实例化来自于desc，而desc来自<code>ObjectInputStream#readClassDesc</code>，所以先跟进到<code>ObjectInputStream#readClassDesc</code>方法中：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ObjectStreamClass <span class="title function_">readClassDesc</span><span class="params">(<span class="type">boolean</span> unshared)</span></span><br><span class="line">    <span class="keyword">throws</span> IOException</span><br><span class="line">{</span><br><span class="line">    <span class="type">byte</span> <span class="variable">tc</span> <span class="operator">=</span> bin.peekByte();</span><br><span class="line">    ObjectStreamClass descriptor;</span><br><span class="line">    <span class="keyword">switch</span> (tc) {</span><br><span class="line">        <span class="keyword">case</span> TC_NULL:</span><br><span class="line">            descriptor = (ObjectStreamClass) readNull();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> TC_REFERENCE:</span><br><span class="line">            descriptor = (ObjectStreamClass) readHandle(unshared);</span><br><span class="line">            <span class="comment">// Should only reference initialized class descriptors</span></span><br><span class="line">            descriptor.checkInitialized();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> TC_PROXYCLASSDESC:</span><br><span class="line">            descriptor = readProxyDesc(unshared);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> TC_CLASSDESC:</span><br><span class="line">            descriptor = readNonProxyDesc(unshared);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StreamCorruptedException</span>(</span><br><span class="line">                String.format(<span class="string">"invalid type code: %02X"</span>, tc));</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (descriptor != <span class="literal">null</span>) {</span><br><span class="line">        validateDescriptor(descriptor);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> descriptor;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里又是一个<code>switch</code>语句，由于我们这里是一个类，所以会进入<code>TC_CLASSDESC</code>，使用<code>readNonProxyDesc</code>获得类的描述信息（字段值之类的）。那就继续跟进到<code>ObjectInputStream#readNonProxyDesc</code>中：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ObjectStreamClass <span class="title function_">readNonProxyDesc</span><span class="params">(<span class="type">boolean</span> unshared)</span></span><br><span class="line">    <span class="keyword">throws</span> IOException</span><br><span class="line">{</span><br><span class="line">    <span class="comment">//略</span></span><br><span class="line"></span><br><span class="line">    <span class="type">ObjectStreamClass</span> <span class="variable">readDesc</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        readDesc = readClassDescriptor();</span><br><span class="line">    } <span class="keyword">catch</span> (ClassNotFoundException ex) {</span><br><span class="line">        <span class="keyword">throw</span> (IOException) <span class="keyword">new</span> <span class="title class_">InvalidClassException</span>(</span><br><span class="line">            <span class="string">"failed to read class descriptor"</span>).initCause(ex);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; cl = <span class="literal">null</span>;</span><br><span class="line">    <span class="type">ClassNotFoundException</span> <span class="variable">resolveEx</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    bin.setBlockDataMode(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">checksRequired</span> <span class="operator">=</span> isCustomSubclass();</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="keyword">if</span> ((cl = resolveClass(readDesc)) == <span class="literal">null</span>) {</span><br><span class="line">            resolveEx = <span class="keyword">new</span> <span class="title class_">ClassNotFoundException</span>(<span class="string">"null class"</span>);</span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (checksRequired) {</span><br><span class="line">            ReflectUtil.checkPackageAccess(cl);</span><br><span class="line">        }</span><br><span class="line">    } <span class="keyword">catch</span> (ClassNotFoundException ex) {</span><br><span class="line">        resolveEx = ex;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Call filterCheck on the class before reading anything else</span></span><br><span class="line">    filterCheck(cl, -<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    skipCustomData();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        totalObjectRefs++;</span><br><span class="line">        depth++;</span><br><span class="line">        desc.initNonProxy(readDesc, cl, resolveEx, readClassDesc(<span class="literal">false</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (cl != <span class="literal">null</span>) {</span><br><span class="line">            <span class="comment">// Check that serial filtering has been done on the local class descriptor's superclass,</span></span><br><span class="line">            <span class="comment">// in case it does not appear in the stream.</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// Find the next super descriptor that has a local class descriptor.</span></span><br><span class="line">            <span class="comment">// Descriptors for which there is no local class are ignored.</span></span><br><span class="line">            <span class="type">ObjectStreamClass</span> <span class="variable">superLocal</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">ObjectStreamClass</span> <span class="variable">sDesc</span> <span class="operator">=</span> desc.getSuperDesc(); sDesc != <span class="literal">null</span>; sDesc = sDesc.getSuperDesc()) {</span><br><span class="line">                <span class="keyword">if</span> ((superLocal = sDesc.getLocalDesc()) != <span class="literal">null</span>) {</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Scan local descriptor superclasses for a match with the local descriptor of the super found above.</span></span><br><span class="line">            <span class="comment">// For each super descriptor before the match, invoke the serial filter on the class.</span></span><br><span class="line">            <span class="comment">// The filter is invoked for each class that has not already been filtered</span></span><br><span class="line">            <span class="comment">// but would be filtered if the instance had been serialized by this Java runtime.</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">ObjectStreamClass</span> <span class="variable">lDesc</span> <span class="operator">=</span> desc.getLocalDesc().getSuperDesc();</span><br><span class="line">                 lDesc != <span class="literal">null</span> &amp;&amp; lDesc != superLocal;</span><br><span class="line">                 lDesc = lDesc.getSuperDesc()) {</span><br><span class="line">                filterCheck(lDesc.forClass(), -<span class="number">1</span>);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        depth--;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    handles.finish(descHandle);</span><br><span class="line">    passHandle = descHandle;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> desc;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里先是使用<code>readClassDescriptor()</code>获得了我们的字段信息，然后使用<code>ObjectInputStream#resolveClass</code>去解析。最后使用<code>initNonProxy</code>把刚刚的字段信息，装载成类描述符，然后返回。这里比较重要的部分是<code>ObjectInputStream#resolveClass()</code>这部分，跳过其他步骤跟进去看看：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass desc)</span><br><span class="line">        <span class="keyword">throws</span> IOException, ClassNotFoundException</span><br><span class="line">    {</span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> desc.getName();</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="keyword">return</span> Class.forName(name, <span class="literal">false</span>, latestUserDefinedLoader());</span><br><span class="line">        } <span class="keyword">catch</span> (ClassNotFoundException ex) {</span><br><span class="line">            Class&lt;?&gt; cl = primClasses.get(name);</span><br><span class="line">            <span class="keyword">if</span> (cl != <span class="literal">null</span>) {</span><br><span class="line">                <span class="keyword">return</span> cl;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="keyword">throw</span> ex;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看到<code>Class.forName</code>你就知道为什么说resolveClass这块比较重要了,这里利用了我之前文章中讲过的反射来调用我们的类，<strong>很多反序列化的防御都是在这里限制了白名单或者黑名单来控制了反序列化。</strong></p>
+<p>接下来继续往下跟进，直到回到<code>ObjectInputStream#readOrdinaryObject</code>中，接着就是进入到checkDeserialize()中检查是否可以反序列化：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">checkDeserialize</span><span class="params">()</span> <span class="keyword">throws</span> InvalidClassException {</span><br><span class="line">        requireInitialized();</span><br><span class="line">        <span class="keyword">if</span> (deserializeEx != <span class="literal">null</span>) {</span><br><span class="line">            <span class="keyword">throw</span> deserializeEx.newInvalidClassException();</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完成后我们继续跟进，一直来到<code>ObjectInputStream#readSerialData</code>方法中，代码如下所示：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">readSerialData</span><span class="params">(Object obj, ObjectStreamClass desc)</span></span><br><span class="line">    <span class="keyword">throws</span> IOException</span><br><span class="line">{</span><br><span class="line">    ObjectStreamClass.ClassDataSlot[] slots = desc.getClassDataLayout();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; slots.length; i++) {</span><br><span class="line">        <span class="type">ObjectStreamClass</span> <span class="variable">slotDesc</span> <span class="operator">=</span> slots[i].desc;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (slots[i].hasData) {</span><br><span class="line">            <span class="keyword">if</span> (obj == <span class="literal">null</span> || handles.lookupException(passHandle) != <span class="literal">null</span>) {</span><br><span class="line">                defaultReadFields(<span class="literal">null</span>, slotDesc); <span class="comment">// skip field values</span></span><br><span class="line">            } <span class="keyword">else</span> <span class="keyword">if</span> (slotDesc.hasReadObjectMethod()) { <span class="comment">// 判断是否有重写readObject</span></span><br><span class="line">         			<span class="comment">// 略</span></span><br><span class="line">                    bin.setBlockDataMode(<span class="literal">true</span>);</span><br><span class="line">                    slotDesc.invokeReadObject(obj, <span class="built_in">this</span>); <span class="comment">// 调用重写的readObject</span></span><br><span class="line">                } <span class="keyword">catch</span> (ClassNotFoundException ex) {</span><br><span class="line">					<span class="comment">// 略</span></span><br><span class="line">                } <span class="keyword">finally</span> {</span><br><span class="line">                <span class="comment">// 略</span></span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                defaultReadFields(obj, slotDesc); <span class="comment">// 这里</span></span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (slotDesc.hasWriteObjectData()) {</span><br><span class="line">                skipCustomData();</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                bin.setBlockDataMode(<span class="literal">false</span>);</span><br><span class="line">            }</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="keyword">if</span> (obj != <span class="literal">null</span> &amp;&amp;</span><br><span class="line">                slotDesc.hasReadObjectNoDataMethod() &amp;&amp;</span><br><span class="line">                handles.lookupException(passHandle) == <span class="literal">null</span>)</span><br><span class="line">            {</span><br><span class="line">                slotDesc.invokeReadObjectNoData(obj);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里会先判断是否有重写的<code>readObject</code>，如果有就调用<code>invokeReadObject</code>，其内部反射调用了我们重写的<code>readObject</code>（这时候就触发了我们实验代码中的RCE），没有就调用<code>defaultReadFields</code>进行数据填充（重写<code>readObject</code>中的<code>in.defaultReadObject</code>其实里面也是调用<code>defaultReadFields</code>）。经过这个函数反序列化基本结束，之后<code>readOrdinaryObject</code>返回Obj，<code>readObject</code>中再调用 vlist.doCallbacks()处理回调，结束反序列化流程，返回反序列化成功的Object:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20240114190832039.png" alt="vlist.doCallbacks()"></p>
+<p>总结一下整个序列化流程：</p>
+<p>1.readObject进入readObject0，根据字节选择对应的方法，比如类就会进入readOrdinaryObject</p>
+<p>2.readOrdinaryObject中先获取类描述符，进入readClassDesc，根据字节选择对应的类描述符获取方法，其中会调用resolveClass反射实例化我们的目标类</p>
+<p>3.readOrdinaryObject再进入readSerialData，根据刚刚的类描述符去填充数据，其中如果目标类重写了readObject则调用，否则就使用默认的填充方法。</p>
+<h2 id="0x04-安全隐患"><a href="#0x04-安全隐患" class="headerlink" title="0x04 安全隐患"></a>0x04 安全隐患</h2><p>也许你会说，哪有程序员会写上面例子中的那种弱智的代码？确实很少有，但在真实应用中，一些危险操作往往藏得相对隐蔽，不会像我上面这样写的赤裸裸，不过最终的原理都是相同的。</p>
+<p>在开发时产生的反序列化漏洞常见的有以下几种情况：</p>
+<ol>
+<li>重写ObjectInputStream对象的resolveClass方法（这是用来解析传入的类的方法）中的检测可被绕过。</li>
+<li>使用第三方的类进行黑名单控制。虽然Java的语言严谨性要比PHP强的多，但在大型应用中想要采用黑名单机制禁用掉所有危险的对象几乎是不可能的。因此，如果在审计过程中发现了采用黑名单进行过滤的代码，多半存在一两个‘漏网之鱼’可以利用。并且采取黑名单方式仅仅可能保证此刻的安全，若在后期添加了新的功能，就可能引入了新的漏洞利用方式。所以仅靠黑名单是无法保证序列化过程的安全的。</li>
+</ol>
+<h2 id="0x05-小结"><a href="#0x05-小结" class="headerlink" title="0x05 小结"></a>0x05 小结</h2><p>本篇只是了解了反序列化以及其具体的实现流程，作为一篇过渡文章，后面进一步学习一些利用链的相关内容。</p>
+<p><em><strong>参考文章:</strong></em></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2041?time__1311=n4+xnioDw4RnGODlEme0=3i==4Y5PNiQx&amp;alichlgref=https://www.google.com/">Java反序列化漏洞从入门到深入</a></p>
+<p><a target="_blank" rel="noopener" href="https://chenlvtang.top/2022/09/18/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90%E5%8F%8AresolveClass/">Java反序列化流程分析及resolveClass</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%80%E4%B9%88%E6%98%AFjava%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">0x01 什么是java的序列化和反序列化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F"><span class="toc-number">3.</span> <span class="toc-text">0x02 漏洞产生</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%AF%B9%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">0x03 对反序列化的流程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E5%AE%89%E5%85%A8%E9%9A%90%E6%82%A3"><span class="toc-number">5.</span> <span class="toc-text">0x04 安全隐患</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">0x05 小结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x00 前言发现关于java反射还有很多内容需要补充，就接着java反射机制进一步记录有关反射的内容。 0x01 关于newInstance()方法通过上次的java反射学习，我们知道，通过调用获得来的class对象的newInstance()方法可以实例化一个对象，通过该实例化的对象，我们就可以成功调用对应类中的成员方法。 但调用newInstance()方法是有条件的，前提是这个类有无参构造">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java反射机制2">
+<meta property="og:url" content="https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x00 前言发现关于java反射还有很多内容需要补充，就接着java反射机制进一步记录有关反射的内容。 0x01 关于newInstance()方法通过上次的java反射学习，我们知道，通过调用获得来的class对象的newInstance()方法可以实例化一个对象，通过该实例化的对象，我们就可以成功调用对应类中的成员方法。 但调用newInstance()方法是有条件的，前提是这个类有无参构造">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231133903399.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231134145735.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231151233188.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231152715024.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231154251434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231160103034.png">
+<meta property="article:published_time" content="2024-01-05T04:40:14.000Z">
+<meta property="article:modified_time" content="2024-01-23T01:43:28.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="0-1 javaSec">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231133903399.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>java反射机制2</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/12/24/java%E5%AE%89%E5%85%A8%E4%B9%8BClassLoader/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&text=java反射机制2"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&is_video=false&description=java反射机制2"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=java反射机制2&body=Check out this article: https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&name=java反射机制2&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&t=java反射机制2"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E5%85%B3%E4%BA%8EnewInstance-%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">0x01 关于newInstance()方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-Constructor%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">0x02 Constructor类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEsetAccessible-true-%E7%BB%95%E8%BF%87%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">3.1.</span> <span class="toc-text">设置setAccessible(true)绕过访问权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8java-lang-ProcessBuilder%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">3.2.</span> <span class="toc-text">调用java.lang.ProcessBuilder不同类型的构造函数实现命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%87%8D%E8%BD%BD"><span class="toc-number">3.2.1.</span> <span class="toc-text">第一个重载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E9%87%8D%E8%BD%BD"><span class="toc-number">3.2.2.</span> <span class="toc-text">第二个重载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x03 小结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        java反射机制2
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-05T04:40:14.000Z" class="dt-published" itemprop="datePublished">2024-01-05</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/0-1-javaSec/" rel="tag">0-1 javaSec</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>发现关于java反射还有很多内容需要补充，就接着<a target="_blank" rel="noopener" href="https://anch0r.top/2023/12/23/java-fan-she-ji-zhi/">java反射机制</a>进一步记录有关反射的内容。</p>
+<h2 id="0x01-关于newInstance-方法"><a href="#0x01-关于newInstance-方法" class="headerlink" title="0x01 关于newInstance()方法"></a>0x01 关于newInstance()方法</h2><p>通过上次的java反射学习，我们知道，通过调用获得来的class对象的newInstance()方法可以实例化一个对象，通过该实例化的对象，我们就可以成功调用对应类中的成员方法。</p>
+<p>但调用<code>newInstance()</code>方法是有条件的，<strong>前提是这个类有无参构造方法，并且构造方法是公有的</strong>，因为<code>newInstance()</code>作用就是调用类的公有的无参构造方法，进而实例化出一个对象。如果一个类没有公有的无参构造函数，那么调用<code>newInstance()</code>就会不成功。</p>
+<p>拿我这篇文章中的<a target="_blank" rel="noopener" href="https://anch0r.top/2023/12/23/java-fan-she-ji-zhi/">java反射机制</a>中的 “0x03 java反射价值”中的例子来说明。当时我是利用反射机制先获取<code>java.lang.Runtime</code>(这是我们命令执行构造payload最常用的类)的class对象，然后是获得<code>exec()</code>和<code>getRuntime()</code>这两个成员方法，利用<code>invoke</code>方法先调用<code>getRuntime()</code>方法从而获得一个Runtime对象，然后才调用Runtime对象的<code>exec()</code>执行命令：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception {</span><br><span class="line">        <span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.Runtime"</span>); <span class="comment">// 得到Runtime的class对象</span></span><br><span class="line">        <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> evilClass.getMethod(<span class="string">"exec"</span>, String.class); <span class="comment">// 从中获取exec方法的method实例</span></span><br><span class="line">        <span class="type">Method</span> <span class="variable">runtimeMethod</span> <span class="operator">=</span> evilClass.getMethod(<span class="string">"getRuntime"</span>); <span class="comment">//从中获取getRuntime方法的method实例</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">evil</span> <span class="operator">=</span> runtimeMethod.invoke(evilClass); <span class="comment">//调用getRuntime方法从而获得一个Runtime类对象（这里invoke传入的参数也可以是null）</span></span><br><span class="line">        method.invoke(evil, <span class="string">"calc.exe"</span>); <span class="comment">// 调用exec方法，运行exec命令，打开一个计算机</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看到这个过程，你可能会感觉到疑惑，为什么非要调用<code>getRuntime()</code>方法获得<code>Runtime</code>对象，而不考虑直接通过其中的<code>evilClass</code>的<code>newInstance()</code>来直接获得<code>Runtime</code>对象？</p>
+<p>确实，上面这么做是显得有些麻烦，但是实践证明，通过<code>newInstance()</code>方法是不可行的，比如我们改成下面这行代码：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception {</span><br><span class="line">        <span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.Runtime"</span>); <span class="comment">// 得到Runtime的class对象</span></span><br><span class="line">        evilClass.getMethod(<span class="string">"exec"</span>, String.class).invoke(evilClass.newInstance(), <span class="string">"calc.exe"</span>);</span><br><span class="line">        <span class="comment">//newInstance()实例化出一个Runtime对象，调用其中的exec方法</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样是变简洁了，但是当运行这段代码时会产生一个报错：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231133903399.png" alt="报错"></p>
+<p>报错中有<code>private</code>这个字眼，我们看看<code>rt.jar</code>包下的<code>java.lang.Runtime</code>类的源码，可以发现其中的无参构造函数是私有方法，很明显，newInstance是不能调用这样的私有无参构造函数的，这就是为什么运行后会报错。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="title function_">Runtime</span><span class="params">()</span> {}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231134145735.png" alt="Runtime的私有无参构造函数"></p>
+<p>不太了解java的人这时也许又会产生疑问，为什么会有私有的无参构造方法？真是不想让用户使用这个类才设计的吗？</p>
+<p>其实并不是，这涉及到常见的设计模式：“单例模式”。</p>
+<p>单例模式，说通俗点，就是想要保证一个类仅有一个实例，并且提供一个访问它的全局访问点，主要解决的问题就是程序中对一个类频繁的创造和销毁，导致效率下降。单例模式思路就是将构造函数设置成私有，然后设置一个静态方法来获取该构造方法，这样就不会频繁调用构造函数建立对象了，只需要一次借助对应的静态方法来调用构造函数创建单例。而我之前成功调用exec函数的方法就是用的这个静态方法来实现的。</p>
+<p>Runtime类很明显就是一个单例模式设计的类，它其中有一个静态函数<code>getRuntime()</code>就是用来获取Runtime对象的。(在上一张图中我们可以看到<code>getRuntime()</code>函数代码)所以，就有这样的思路，利用getMethod方法拿到getRuntime的Method对象，通过调用它从而获得Runtime对象。</p>
+<h2 id="0x02-Constructor类"><a href="#0x02-Constructor类" class="headerlink" title="0x02 Constructor类"></a>0x02 Constructor类</h2><p>看到上面的例子后，疑问又产生了，如果有这样一个类，它没有无参构造方法(或者是无参构造方法私有)，也没有单例模式中的静态方法，那么怎么通过反射机制来实现实例化操作呢？</p>
+<p>解决上面这个问题，这里得引入反射中一个大类，<code>Constructor</code>。在上一篇java反射中我只提及了<code>Class</code>类和<code>Method</code>类，当时以为<code>Constructor</code>类并不是很重要，就把它给遗漏了，没想到它在安全中还是有作用的。</p>
+<p>Constructor类存在于反射包(java.lang.reflect)中，反映的是Class 对象所表示的类的构造方法。在反射中，一个类的Constructor对象是可以通过Class类中的成员方法获得的，相关的方法如下：</p>
+<table>
+<thead>
+<tr>
+<th>方法返回值</th>
+<th>方法名称</th>
+<th>方法说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>static Class&lt;?&gt;</td>
+<td>forName(String className)</td>
+<td>返回与带有给定字符串名的类或接口相关联的 Class 对象。</td>
+</tr>
+<tr>
+<td>Constructor</td>
+<td>getConstructor(Class&lt;?&gt;… parameterTypes)</td>
+<td>返回指定参数类型、具有public访问权限的构造函数对象</td>
+</tr>
+<tr>
+<td>Constructor&lt;?&gt;[]</td>
+<td>getConstructors()</td>
+<td>返回所有具有public访问权限的构造函数的Constructor对象数组</td>
+</tr>
+<tr>
+<td>Constructor</td>
+<td>getDeclaredConstructor(Class&lt;?&gt;… parameterTypes)</td>
+<td>返回指定参数类型、所有声明的（包括private）构造函数对象</td>
+</tr>
+<tr>
+<td>Constructor&lt;?&gt;[]</td>
+<td>getDeclaredConstructors()</td>
+<td>返回所有声明的（包括private）构造函数对象</td>
+</tr>
+<tr>
+<td>T</td>
+<td>newInstance()</td>
+<td>调用无参构造器创建此 Class 对象所表示的类的一个新实例。</td>
+</tr>
+</tbody></table>
+<p>常用的是其中的<code>getConstructor</code>方法，和<code>getMethod</code>方法类似<code>getConstructor</code>接收的参数是构造函数列表类型，因为构造函数也支持重载，所以必须用参数列表类型才能唯一确定一个构造函数。通过<code>getConstructor</code>这些方法，我们不仅可以解决上面没有无参构造函数的问题，还可以任意调用自己需要的那个构造函数。</p>
+<p>我们先以上次的<code>User</code>类为例尝试调用其中的构造函数,一共是三个调用函数，分别是无参、只有一个参数以及有两个参数的构造函数，其中只有一个参数的构造函数是私有的。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> {</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">()</span> {</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">User</span><span class="params">(String name)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String name, Integer age)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> {</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        System.out.println(<span class="built_in">this</span>.getName());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> {</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> {</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"User [name="</span> + name + <span class="string">", age="</span> + age + <span class="string">"]"</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>测试的Main函数如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception {</span><br><span class="line">        <span class="type">Class</span> <span class="variable">userClass</span> <span class="operator">=</span> Class.forName(<span class="string">"com.Anchor.User"</span>);</span><br><span class="line">        <span class="type">User</span> <span class="variable">user0</span> <span class="operator">=</span> (User) userClass.newInstance(); <span class="comment">//通过Class对象的newInstance方法调用无参构造函数</span></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">cs1</span> <span class="operator">=</span> userClass.getConstructor(); <span class="comment">//通过getConstructor获得无参构造函数的Constructor对象</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user1</span> <span class="operator">=</span> (User) cs1.newInstance(); <span class="comment">//第一种是newInstance</span></span><br><span class="line">        System.out.println(<span class="string">"Class对象的newInstance方法:\t"</span> + user0);</span><br><span class="line">        System.out.println(<span class="string">"getConstructor[no parameters]:\t"</span> + user1);</span><br><span class="line">        System.out.println(<span class="string">"--------------------------------------------"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 得到只有一个参数的构造函数的Constructor对象,使用getDeclaredConstructor方法，可以获得私有方法的Constructor对象</span></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">cs2</span> <span class="operator">=</span> userClass.getDeclaredConstructor(String.class);</span><br><span class="line">        cs2.setAccessible(<span class="literal">true</span>); <span class="comment">//由于是private必须设置可访问</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user2</span> <span class="operator">=</span> (User) cs2.newInstance(<span class="string">"anch0r"</span>);</span><br><span class="line">        System.out.println(<span class="string">"getDeclaredConstructor[one parameter]:\t"</span> + user2);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"--------------------------------------------"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">cs3</span> <span class="operator">=</span> userClass.getConstructor(String.class, Integer.class); <span class="comment">//得到有两个参数的构造函数的Constructor对象</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user3</span> <span class="operator">=</span> (User) cs3.newInstance(<span class="string">"anch0r2"</span>, <span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">"getConstructor[two parameters]:\t"</span> + user3);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后运行结果为：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Class对象的newInstance方法:	User [name=<span class="literal">null</span>, age=<span class="literal">null</span>]</span><br><span class="line">getConstructor[no parameters]:	User [name=<span class="literal">null</span>, age=<span class="literal">null</span>]</span><br><span class="line">--------------------------------------------</span><br><span class="line">getDeclaredConstructor[one parameter]:	User [name=anch0r, age=<span class="literal">null</span>]</span><br><span class="line">--------------------------------------------</span><br><span class="line">getConstructor[two parameters]:	User [name=anch0r2, age=<span class="number">100</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>接下来以两个例子来说明Constructor类和相关的一些方法引入的意义。</p>
+<h3 id="设置setAccessible-true-绕过访问权限"><a href="#设置setAccessible-true-绕过访问权限" class="headerlink" title="设置setAccessible(true)绕过访问权限"></a>设置setAccessible(true)绕过访问权限</h3><p>你也许注意到上面这个例子中的一个方法:<code>setAccessible(true)</code>。</p>
+<p>在程序中，调用这一方法，可以取消java语言访问控制的检查能力。我们通过<code>getDeclaredConstructor</code>获得一个私有构造函数的Method对象后，可以用<code>setAccessible(true)</code>来实现绕过私有权限的访问控制。而从上文我们知道，就是因为<code>java.lang.Runtime</code>类中的无参构造函数是私有的我们才没法通过Class对象的<code>newInstance</code>方法来实例化对象，现在我们有了一个可以绕过<code>private</code>的方式了，那么就来利用<code>setAccessible(true)</code>改造之前的命令执行代码：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Anchor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> {</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception {</span><br><span class="line">        <span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.Runtime"</span>);<span class="comment">//老规矩，获取一个class对象</span></span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">cs</span> <span class="operator">=</span> evilClass.getDeclaredConstructor(); <span class="comment">//利用getDeclaredConstructor获取私有的无参构造函数的Constructor对象</span></span><br><span class="line">        cs.setAccessible(<span class="literal">true</span>); <span class="comment">// 取消java的访问控制的检查机制，绕过访问控制</span></span><br><span class="line">        evilClass.getMethod(<span class="string">"exec"</span>, String.class).invoke(cs.newInstance(), <span class="string">"calc.exe"</span>);</span><br><span class="line">        <span class="comment">// 通过无参构造函数的Constructor对象实例化，再借助getMethod获取exec的Method类，最后调用exec函数。</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行后成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231151233188.png" alt="成功弹出计算器"></p>
+<h3 id="调用java-lang-ProcessBuilder不同类型的构造函数实现命令执行"><a href="#调用java-lang-ProcessBuilder不同类型的构造函数实现命令执行" class="headerlink" title="调用java.lang.ProcessBuilder不同类型的构造函数实现命令执行"></a>调用<code>java.lang.ProcessBuilder</code>不同类型的构造函数实现命令执行</h3><p>在构造命令执行的payload时，除了<code>Runtime</code>类，<code>ProcessBuilder</code>类也是比较常用的，一般使用反射来获取其构造函数，然后调用其中的<code>start()</code> 方法来执行命令。</p>
+<p>我们先通过查看源码研究一下这个类的的构造函数：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231152715024.png" alt="ProcessBuilder类两种构造方法"></p>
+<p>可以看到该类构造函数有两个重载方式。</p>
+<h4 id="第一个重载"><a href="#第一个重载" class="headerlink" title="第一个重载"></a>第一个重载</h4><p>第一个重载需要传入的参数类型是列表类型<code>List</code>:</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ProcessBuilder</span><span class="params">(List&lt;String&gt; command)</span> {</span><br><span class="line">        <span class="keyword">if</span> (command == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>();</span><br><span class="line">        <span class="built_in">this</span>.command = command;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们在使用<code>getConstructor</code>获得Constructor对象时，需要将传参类型修改为<code>List.class</code>,所以我们能够立刻写出下面这个payload：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.ProcessBuilder"</span>);</span><br><span class="line">((ProcessBuilder)evilClass.getConstructor(List.class).newInstance(Arrays.asList(<span class="string">"calc.exe"</span>))).start();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里用<code>Arrays.asList</code>方法将字符串<code>"calc.exe"</code>转为了列表类型再传入到Constructor类的newInstance方法中，从而执行构造函数<code>public ProcessBuilder(List&lt;String&gt; command)</code>。</p>
+<p>这里虽然执行成功，但是有个缺点，使用了强制类型转换(也就是第二行前面的<code>(ProcessBuilder)</code>语法)，然而在一般情况下，表达式上下文是没有这种语法的。我们仍然需要用<code>java反射</code>改进这一步，避免使用强制类型转换，如下面这行代码：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.ProcessBuilder"</span>);   evilClass.getMethod(<span class="string">"start"</span>).invoke(evilClass.getConstructor(List.class).newInstance(Arrays.asList(<span class="string">"calc.exe"</span>)));</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里通过<code>getMethod("start")</code> 获取到<code>start</code>方法，然后 <code>invoke</code> 执行， <code>invoke</code> 的第一个参数就是<code>ProcessBuilder Object</code>了,就不需要再进行强制类型转换了。</p>
+<p>运行成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231154251434.png" alt="成功弹出计算器"></p>
+<h4 id="第二个重载"><a href="#第二个重载" class="headerlink" title="第二个重载"></a>第二个重载</h4><p>第二个重载需要传入的参数类型比较特殊，是可变长的参数</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ProcessBuilder</span><span class="params">(String... command)</span> {</span><br><span class="line">    <span class="built_in">this</span>.command = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(command.length);</span><br><span class="line">    <span class="keyword">for</span> (String arg : command)</span><br><span class="line">        <span class="built_in">this</span>.command.add(arg);</span><br><span class="line">}b</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p><strong>java可变长参数</strong>:</p>
+<p>java一般使用以使用 <code>...</code> 这样的语法来表示这个函数的参数个数是可变的,在编译时java会将可变长参数编译成一个数组类型，可以说下面这两种形式是等价的：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hello</span><span class="params">(String[] names)</span> {}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hello</span><span class="params">(String...names)</span> {}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对于hello这个函数，我们就可以传入一个字符串数组类型的数据，比如<code>String[] names = {"hello", "world"};</code></p>
+</blockquote>
+<p>如果我们要实现对这第二个构造函数的重载，就要给它传入可变长参数。我们可以直接将可变长参数当成数组，也就是说将字符串数组类型的class对象:<code>String[].class</code> 传给 getConstructor作为参数类型 ，从而获取 <code>ProcessBuilder </code>类这第二种重载的构造函数。</p>
+<p>具体代码如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">evilClass</span> <span class="operator">=</span> Class.forName(<span class="string">"java.lang.ProcessBuilder"</span>);</span><br><span class="line">evilClass.getMethod(<span class="string">"start"</span>).invoke(evilClass.getConstructor(String[].class).newInstance(<span class="keyword">new</span> <span class="title class_">String</span>[][]{{<span class="string">"calc.exe"</span>}}));</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行后成功弹出计算器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231231160103034.png" alt="成功弹出计算器"></p>
+<h2 id="0x03-小结"><a href="#0x03-小结" class="headerlink" title="0x03 小结"></a>0x03 小结</h2><p>这一篇主要是解决上一篇的一些疑惑，同时在引入了<code>Constructor</code>类概念后加入了一些新的玩法。</p>
+<p><strong>参考文章：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/phith0n/JavaThings">《java安全漫谈》</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9117#toc-0">JAVA安全基础（二）– 反射机制</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E5%85%B3%E4%BA%8EnewInstance-%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">0x01 关于newInstance()方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-Constructor%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">0x02 Constructor类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEsetAccessible-true-%E7%BB%95%E8%BF%87%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">3.1.</span> <span class="toc-text">设置setAccessible(true)绕过访问权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8java-lang-ProcessBuilder%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">3.2.</span> <span class="toc-text">调用java.lang.ProcessBuilder不同类型的构造函数实现命令执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%87%8D%E8%BD%BD"><span class="toc-number">3.2.1.</span> <span class="toc-text">第一个重载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E9%87%8D%E8%BD%BD"><span class="toc-number">3.2.2.</span> <span class="toc-text">第二个重载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E5%B0%8F%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">0x03 小结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&text=java反射机制2"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&is_video=false&description=java反射机制2"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=java反射机制2&body=Check out this article: https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&title=java反射机制2"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&name=java反射机制2&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/05/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B62/&t=java反射机制2"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

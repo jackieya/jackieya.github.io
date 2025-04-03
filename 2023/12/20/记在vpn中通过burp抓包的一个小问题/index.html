@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 问题​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。    0x02 原因正常数据流一般是： 1本地网络 --&amp;g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记在vpn中通过burp抓包的一个小问题">
+<meta property="og:url" content="https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x01 问题​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。    0x02 原因正常数据流一般是： 1本地网络 --&amp;g">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220225336186.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232035102.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232135277.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233426994.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233938648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220234209314.png">
+<meta property="article:published_time" content="2023-12-20T14:43:49.000Z">
+<meta property="article:modified_time" content="2025-04-02T13:49:24.355Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="小问题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220225336186.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>记在vpn中通过burp抓包的一个小问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/12/23/java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&text=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&is_video=false&description=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记在vpn中通过burp抓包的一个小问题&body=Check out this article: https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&name=记在vpn中通过burp抓包的一个小问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&t=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">0x01 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.</span> <span class="toc-text">0x02 原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">0x03 解决方法</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        记在vpn中通过burp抓包的一个小问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-20T14:43:49.000Z" class="dt-published" itemprop="datePublished">2023-12-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B0%8F%E8%AE%B0/">小记</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/" rel="tag">小问题</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01 问题"></a>0x01 问题</h2><p>​    一次对远程内网系统的渗透，通过深信服vpn连过去的，发现通过burpsuite代理抓包，根本无法实现数据交互，抓包放包后访问系统始终出现Burp Suite Professional error Connection refused 的报错页面，爆破登录框，也始终得不到返回包，将burp代理关闭才能正常访问系统。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220225336186.png" alt="连接深信服vpn"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232035102.png" alt="通过burp代理，无法正常访问系统"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220232135277.png" alt="关闭burpsuite代理后才能正常访问网站"></p>
+<h2 id="0x02-原因"><a href="#0x02-原因" class="headerlink" title="0x02 原因"></a>0x02 原因</h2><p>正常数据流一般是：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本地网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标服务端</span><br></pre></td></tr></tbody></table></figure>
+
+<p>连接了vpn之后，数据流向如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vpn网络 --&gt; 客户端浏览器 --&gt; burpsuite代理 --&gt; 目标vpn网络 --&gt; 目标服务端</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>大概率是vpn从中拦截了burpsuite的发包，所以导致无法实现数据交互，会一直收不到返回包。</p>
+<h2 id="0x03-解决方法"><a href="#0x03-解决方法" class="headerlink" title="0x03 解决方法"></a>0x03 解决方法</h2><p>我们只需要使用ew代理软件，开个socks服务进行本地转发即可，<a target="_blank" rel="noopener" href="https://github.com/idlefire/ew">ew下载地址</a>。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ew_for_Win.exe -s ssocksd -l 9999</span><br></pre></td></tr></tbody></table></figure>
+
+<p>端口为9999</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233426994.png" alt="使用ew工具进行本地转发"></p>
+<p>然后打开burp，在<code>User options</code>中添加SOCKS Proxy代理</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220233938648.png" alt="burpsuite上设置好socks代理"></p>
+<p>可以看到终于可以通过burp代理正常访问远程系统了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20231220234209314.png" alt="通过burp代理正常实现数据包交互"></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">0x01 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.</span> <span class="toc-text">0x02 原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">0x03 解决方法</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&text=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&is_video=false&description=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记在vpn中通过burp抓包的一个小问题&body=Check out this article: https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&title=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&name=记在vpn中通过burp抓包的一个小问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/20/%E8%AE%B0%E5%9C%A8vpn%E4%B8%AD%E9%80%9A%E8%BF%87burp%E6%8A%93%E5%8C%85%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98/&t=记在vpn中通过burp抓包的一个小问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

