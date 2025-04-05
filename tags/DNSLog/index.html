@@ -9,7 +9,7 @@
     <meta name="description" content="个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="杰同学的自留地">
-<meta property="og:url" content="https://www.anch0r.top/tags/DNSLog/index.html">
+<meta property="og:url" content="https://blog.anch0r.top/tags/DNSLog/index.html">
 <meta property="og:site_name" content="杰同学的自留地">
 <meta property="og:description" content="个人博客">
 <meta property="og:locale" content="zh_CN">
@@ -249,7 +249,8 @@
     requiredFields = requiredFields.length == 0 ? REQUIREDFIELDS : requiredFields;
 
     init({
-      serverURL: 'https://waline-eight-gamma.vercel.app', // Waline 的服务端地址
+      el: '#waline_thread',
+      serverURL: 'https://comment.anch0r.top', // Waline 的服务端地址
       path: '' == '' ? window.location.pathname : '', // 当前文章页路径，用于区分不同的文章页，以保证正确读取该文章页下的评论列表
       lang: 'zh-CN' == '' ? 'zh-CN' : 'zh-CN', // 多语言支持，未设置默认英文
       emoji: emoji,

@@ -9,7 +9,7 @@
     <meta name="description" content="0x00 前言还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。 0x01 什么是java的序列化和反序列化？正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只是java里面的概念，而我们正常通信传输的形式只能是二进制数据，如何将java对象变为可以传输的字节流就是关于序列化的问题了。而反序列化，则是当传输的数据到达另">
 <meta property="og:type" content="article">
 <meta property="og:title" content="有关java反序列化">
-<meta property="og:url" content="https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:url" content="https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
 <meta property="og:site_name" content="杰同学的自留地">
 <meta property="og:description" content="0x00 前言还是得先单独系统得学习学习java的反序列化的知识，不然研究很多东西还是会有些一头雾水。 0x01 什么是java的序列化和反序列化？正如前面学习rmi时我所提到的，jvm虚拟机之间需要传递的内容是一个个java对象，而对象只是java里面的概念，而我们正常通信传输的形式只能是二进制数据，如何将java对象变为可以传输的字节流就是关于序列化的问题了。而反序列化，则是当传输的数据到达另">
 <meta property="og:locale" content="zh_CN">
@@ -115,17 +115,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -304,17 +304,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&text=有关java反序列化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&is_video=false&description=有关java反序列化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=有关java反序列化&body=Check out this article: https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&title=有关java反序列化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&name=有关java反序列化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/14/%E6%9C%89%E5%85%B3java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/&t=有关java反序列化"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -466,7 +466,8 @@
     requiredFields = requiredFields.length == 0 ? REQUIREDFIELDS : requiredFields;
 
     init({
-      serverURL: 'https://waline-eight-gamma.vercel.app', // Waline 的服务端地址
+      el: '#waline_thread',
+      serverURL: 'https://comment.anch0r.top', // Waline 的服务端地址
       path: '' == '' ? window.location.pathname : '', // 当前文章页路径，用于区分不同的文章页，以保证正确读取该文章页下的评论列表
       lang: 'zh-CN' == '' ? 'zh-CN' : 'zh-CN', // 多语言支持，未设置默认英文
       emoji: emoji,

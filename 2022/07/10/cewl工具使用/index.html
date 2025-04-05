@@ -9,7 +9,7 @@
     <meta name="description" content="0x01 前言这几天在做DC靶场实战的时候，注意到这样一个工具—–cewl，因为很少碰到，想更深层次了解这个工具的原理和具体使用方法。 0x02 ceWL工具的介绍简单的说，ceWL（发音：cool）是一个自定义单词列表生成器，它是一个用ruby编写的应用程序，它会抓取指定的URL，知道指定的深度，并且返回单词列表，然后可以将返回的单词列表放入一些爆破工具中进行密码破解，比如约翰开膛手(John">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceWL工具介绍">
-<meta property="og:url" content="https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:url" content="https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="杰同学的自留地">
 <meta property="og:description" content="0x01 前言这几天在做DC靶场实战的时候，注意到这样一个工具—–cewl，因为很少碰到，想更深层次了解这个工具的原理和具体使用方法。 0x02 ceWL工具的介绍简单的说，ceWL（发音：cool）是一个自定义单词列表生成器，它是一个用ruby编写的应用程序，它会抓取指定的URL，知道指定的深度，并且返回单词列表，然后可以将返回的单词列表放入一些爆破工具中进行密码破解，比如约翰开膛手(John">
 <meta property="og:locale" content="zh_CN">
@@ -111,17 +111,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&text=ceWL工具介绍"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&is_video=false&description=ceWL工具介绍"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=ceWL工具介绍&body=Check out this article: https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&name=ceWL工具介绍&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&t=ceWL工具介绍"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&text=ceWL工具介绍"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&is_video=false&description=ceWL工具介绍"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ceWL工具介绍&body=Check out this article: https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&name=ceWL工具介绍&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&t=ceWL工具介绍"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -376,17 +376,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&text=ceWL工具介绍"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&is_video=false&description=ceWL工具介绍"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=ceWL工具介绍&body=Check out this article: https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&name=ceWL工具介绍&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&t=ceWL工具介绍"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&text=ceWL工具介绍"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&is_video=false&description=ceWL工具介绍"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ceWL工具介绍&body=Check out this article: https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&title=ceWL工具介绍"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&name=ceWL工具介绍&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2022/07/10/cewl%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/&t=ceWL工具介绍"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -538,7 +538,8 @@
     requiredFields = requiredFields.length == 0 ? REQUIREDFIELDS : requiredFields;
 
     init({
-      serverURL: 'https://waline-eight-gamma.vercel.app', // Waline 的服务端地址
+      el: '#waline_thread',
+      serverURL: 'https://comment.anch0r.top', // Waline 的服务端地址
       path: '' == '' ? window.location.pathname : '', // 当前文章页路径，用于区分不同的文章页，以保证正确读取该文章页下的评论列表
       lang: 'zh-CN' == '' ? 'zh-CN' : 'zh-CN', // 多语言支持，未设置默认英文
       emoji: emoji,
