@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="若依 cms 后台写入计划任务 RCE">
 <meta property="og:url" content="https://blog.anch0r.top/2023/12/14/%E8%8B%A5%E4%BE%9D-cms-%E5%90%8E%E5%8F%B0%E5%86%99%E5%85%A5%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1-RCE/index.html">
-<meta property="og:site_name" content="杰同学的自留地">
+<meta property="og:site_name" content="海蘑菇的自留地">
 <meta property="og:description" content="前言一次失败的 getshell。 本来一处资产通过弱口令 admin、admin123进入后台，但是没能发现后台是什么 cms 或者框架写的，尝试了一些上传点没成功后就继续测其他资产了，好在有高人指点，发现后台有一处可以写入定时任务，上网搜了相关文章，才发现这个后台是若依 cms ，有历史漏洞就是通过这处定时任务能够 rce。遗憾的是这个后台是个高版本的若依搭建的，最终没能成功利用，不过顺便写了">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/1702430541928-e54d8b72-f80a-4132-9d38-0cba3d692824.png">
