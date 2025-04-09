@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="背景这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址如下：https:&#x2F;&#x2F;github.com&#x2F;jackieya&#x2F;ViteVulScan">
+    <meta name="description" content="背景这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址贴在这里了,觉得不错的兄弟们可以麻烦给个 star 嘛，谢谢啦：https:&#x2F;&#x2F;gi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个针对 Vite 任意文件读取漏洞的扫描器">
 <meta property="og:url" content="https://blog.anch0r.top/2025/04/09/%E4%B8%80%E4%B8%AA%E9%92%88%E5%AF%B9Vite%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E7%9A%84%E6%89%AB%E6%8F%8F%E5%99%A8/index.html">
 <meta property="og:site_name" content="海蘑菇的自留地">
-<meta property="og:description" content="背景这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址如下：https:&#x2F;&#x2F;github.com&#x2F;jackieya&#x2F;ViteVulScan">
+<meta property="og:description" content="背景这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址贴在这里了,觉得不错的兄弟们可以麻烦给个 star 嘛，谢谢啦：https:&#x2F;&#x2F;gi">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-09T03:23:39.000Z">
-<meta property="article:modified_time" content="2025-04-09T13:48:23.828Z">
+<meta property="article:modified_time" content="2025-04-09T13:51:19.698Z">
 <meta property="article:author" content="anch0r">
 <meta property="article:tag" content="安全工具">
 <meta name="twitter:card" content="summary">
@@ -173,7 +173,7 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址如下：<a target="_blank" rel="noopener" href="https://github.com/jackieya/ViteVulScan%EF%BC%8C%E8%A7%89%E5%BE%97%E4%B8%8D%E9%94%99%E7%9A%84%E5%85%84%E5%BC%9F%E4%BB%AC%E5%8F%AF%E4%BB%A5%E9%BA%BB%E7%83%A6%E7%BB%99%E4%B8%AA">https://github.com/jackieya/ViteVulScan，觉得不错的兄弟们可以麻烦给个</a> star 嘛，谢谢啦！</p>
+    <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>这几天 Vite 这个前端框架突然因为爆出的任意文件读取漏洞CVE-2025-30208引起了广泛关注，研究了一下这个漏洞，发现不仅利用简单，而且受影响的范围非常广。这几天又正好学习了 go 语言，闲来无事就用 go 写了关于这个漏洞的扫描器。下面就直接把我写的这个工具的 README.md 贴出来了，工具地址贴在这里了,觉得不错的兄弟们可以麻烦给个 star 嘛，谢谢啦：<a target="_blank" rel="noopener" href="https://github.com/jackieya/ViteVulScan%EF%BC%8C">https://github.com/jackieya/ViteVulScan，</a></p>
 <h2 id="漏洞介绍"><a href="#漏洞介绍" class="headerlink" title="漏洞介绍"></a>漏洞介绍</h2><p>涉及3个漏洞：CVE-2025-30208/CVE-2025-31125/CVE-2025-31486，都是关于Vite开发服务器任意文件读取漏洞，这三个漏洞覆盖面大且利用简单不受限制。</p>
 <h3 id="漏洞POC："><a href="#漏洞POC：" class="headerlink" title="漏洞POC："></a>漏洞POC：</h3><p>CVE-2025-30208：</p>
 <blockquote>
