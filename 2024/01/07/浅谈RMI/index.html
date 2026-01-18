@@ -9,7 +9,7 @@
     <meta name="description" content="0x01 简介RMI(Remote Method Invocation),即远程方法调用，在java中，一个JVM上的object可以通过RMI实现远程调用另外一个JVM的object方法。 RMI有些类似C语言中所用的远程过程调用RPC。RPC主要关注数据结构。将数据打包并传输是相对容易的，但对于Java而言，这还不够。在Java中，我们不仅仅使用数据结构，还使用包含数据和操作数据的方法的对象。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅谈RMI">
-<meta property="og:url" content="https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/index.html">
+<meta property="og:url" content="https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/index.html">
 <meta property="og:site_name" content="海蘑菇的自留地">
 <meta property="og:description" content="0x01 简介RMI(Remote Method Invocation),即远程方法调用，在java中，一个JVM上的object可以通过RMI实现远程调用另外一个JVM的object方法。 RMI有些类似C语言中所用的远程过程调用RPC。RPC主要关注数据结构。将数据打包并传输是相对容易的，但对于Java而言，这还不够。在Java中，我们不仅仅使用数据结构，还使用包含数据和操作数据的方法的对象。">
 <meta property="og:locale" content="zh_CN">
@@ -112,17 +112,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&text=浅谈RMI"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&t=浅谈RMI"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&text=浅谈RMI"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&t=浅谈RMI"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -276,17 +276,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&text=浅谈RMI"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&title=浅谈RMI"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/07/%C7%B3%CC%B8RMI/&t=浅谈RMI"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&text=浅谈RMI"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&is_video=false&description=浅谈RMI"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅谈RMI&body=Check out this article: https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&title=浅谈RMI"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&name=浅谈RMI&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2024/01/07/%E6%B5%85%E8%B0%88RMI/&t=浅谈RMI"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

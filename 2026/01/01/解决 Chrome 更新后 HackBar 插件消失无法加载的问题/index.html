@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前言最近我突然发现自己经常用的渗透测试插件hackbar突然不能用了，具体情况是，在打开插件的情况下，F12后理应出现hackbar那一栏的，直接消失了。 卸载重新安装、github原项目上下载插件再安装……等等方法都试了，就是不行，最终换了个Edge浏览器就行了。 但是我还是习惯用Chrome了，每次都要打开Edge再渗透对我来说还是不舒适的，想彻底解决这个问题。 排查学网安的都知道，当遇到一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决 Chrome 更新后 HackBar 插件消失无法加载的问题">
+<meta property="og:url" content="https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="海蘑菇的自留地">
+<meta property="og:description" content="前言最近我突然发现自己经常用的渗透测试插件hackbar突然不能用了，具体情况是，在打开插件的情况下，F12后理应出现hackbar那一栏的，直接消失了。 卸载重新安装、github原项目上下载插件再安装……等等方法都试了，就是不行，最终换了个Edge浏览器就行了。 但是我还是习惯用Chrome了，每次都要打开Edge再渗透对我来说还是不舒适的，想彻底解决这个问题。 排查学网安的都知道，当遇到一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116155522880.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116160207595.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116161458235.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116164909690.png">
+<meta property="article:published_time" content="2025-12-31T16:38:06.000Z">
+<meta property="article:modified_time" content="2026-01-18T12:49:19.316Z">
+<meta property="article:author" content="anch0r">
+<meta property="article:tag" content="利用链">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116155522880.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>解决 Chrome 更新后 HackBar 插件消失无法加载的问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  <!-- Waline Comments -->
+  
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css"/>
+  
+<meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">categories</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/05/09/MiniL2025%20wp/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&text=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=解决 Chrome 更新后 HackBar 插件消失无法加载的问题&body=Check out this article: https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&name=解决 Chrome 更新后 HackBar 插件消失无法加载的问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&t=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">排查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        解决 Chrome 更新后 HackBar 插件消失无法加载的问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">anch0r</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-12-31T16:38:06.000Z" class="dt-published" itemprop="datePublished">2026-01-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java%E5%AE%89%E5%85%A8/">java安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%88%A9%E7%94%A8%E9%93%BE/" rel="tag">利用链</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近我突然发现自己经常用的渗透测试插件hackbar突然不能用了，具体情况是，在打开插件的情况下，F12后理应出现hackbar那一栏的，直接消失了。</p>
+<p>卸载重新安装、github原项目上下载插件再安装……等等方法都试了，就是不行，最终换了个Edge浏览器就行了。</p>
+<p>但是我还是习惯用Chrome了，每次都要打开Edge再渗透对我来说还是不舒适的，想彻底解决这个问题。</p>
+<h1 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h1><p>学网安的都知道，当遇到一个完全没碰到过的问题时，除了问身边大佬，唯一的办法就是上网搜了，不过很遗憾，关键词搜索后网上都没有相应的解决方案。</p>
+<p>我想拓展都是执行的JS代码，那就要看看具体的JS报错信息。hackbar需要打开一个网站才会工作，所以我们随便打开任意网站，然后再“F12”调出开发者工具。 Hackbar这种浏览器扩展是注入到DevTools里的一个脚本，而DevTools其实本身也是一个“网页”，也是由 HTML、CSS 和 JavaScript 写成的 Web 应用，所以我们要想调试Hackbar插件，就得再给DevTools开启DevTools，这样也许就可以看到hackbar执行过程中的一些报错信息。具体操作如下：</p>
+<p>确保开发者工具是独立窗口模式（如果是固定在网页底部的，点击右上角三个点 -&gt; Dock side(中文：停靠侧) -&gt; 选择最左边的“Undock into separate window”（中文：取消停靠至单独的窗口）图标）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116155522880.png" alt="image-20260116155522880"></p>
+<p>然后在这个独立的 F12 窗口上，再次按下<code> Ctrl + Shift + I</code> :</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116160207595.png" alt="image-20260116160207595"></p>
+<p>可以看到新弹出来的devtools中有了我们hackbar的报错内容，点击具体报错的位置：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116161458235.png" alt="image-20260116161458235"></p>
+<p>那么就是这里了。具体js代码我不是很懂，尤其一大坨，我直接报错信息+<code>devtools.js</code> 代码内容复制给gemini，让它进行了解答：</p>
+<p>核心原因如下：</p>
+<p>**事实：**HackBar 的源码是基于 <strong>WebExtension 标准</strong> 编写的。这个标准规定插件 API 的统一入口是 <strong><code>browser.*</code></strong> （例如 <code>browser.devtools</code>）。</p>
+<p><strong>冲突：</strong> 虽然 Chrome 支持 WebExtension 的大部分功能，但它作为“浏览器霸主”，一直坚持保留自己的私有命名空间 <strong><code>chrome.*</code></strong>。</p>
+<p><strong>结果：</strong> Chrome 的 JS 引擎里，默认根本不存在 <code>browser</code> 这个对象。</p>
+<ul>
+<li>Firefox：<code>window.browser</code> ✅</li>
+<li>Chrome：<code>window.chrome</code> ✅，<code>window.browser</code> ❌ (<strong>undefined</strong>)</li>
+</ul>
+<p>这就是为什么看到报错 <code>Cannot read properties of undefined</code> —— 代码在找 <code>browser</code>，但 Chrome 说“查无此人”。</p>
+<p>既然 Chrome 没有 <code>browser</code> 对象，开发者为了偷懒（一套代码跑两个浏览器），引入了一个 <strong>Polyfill 库</strong>。它的作用是在 Chrome 里手动造一个 <code>browser</code> 对象，把 <code>chrome</code> 的功能映射过去。 问题应该就是在hackbar使用的这个<code>Polyfill</code> 库比较老旧，导致出现了一些不兼容的问题。</p>
+<p>所以本质就是chrome更新导致hackbar使用的依赖库出现了一些不兼容问题，导致无法使用。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>具体原因也无法仔细排查下去了，接下来gemini推荐我的解决方案是让我修改了拓展的几处代码。</p>
+<p>最好是从<a target="_blank" rel="noopener" href="https://github.com/0140454/hackbar/releases/tag/v1.2.8">github</a> 上下载拓展文件包，在这个上面修改。</p>
+<p>首先是devtools.js，源文件代码改成如下：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) {</span><br><span class="line">    <span class="string">'use strict'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 移除了所有 browser-polyfill 的代码，直接使用 Chrome 原生 API</span></span><br><span class="line">    <span class="comment">// 2. 这里的 chrome.devtools.panels.create 是 F12 面板的标准接口</span></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        chrome.<span class="property">devtools</span>.<span class="property">panels</span>.<span class="title function_">create</span>(</span><br><span class="line">            <span class="string">"HackBar"</span>,      <span class="comment">// 面板显示的名称</span></span><br><span class="line">            <span class="string">"icon.png"</span>,     <span class="comment">// 图标</span></span><br><span class="line">            <span class="string">"main.html"</span>,    <span class="comment">// 面板加载的 HTML 页面</span></span><br><span class="line">            <span class="keyword">function</span>(<span class="params">panel</span>) {</span><br><span class="line">                <span class="comment">// 回调函数，创建成功后执行，这里留空即可</span></span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">"HackBar 面板创建成功"</span>); </span><br><span class="line">            }</span><br><span class="line">        );</span><br><span class="line">    } <span class="keyword">catch</span> (e) {</span><br><span class="line">        <span class="comment">// 如果报错，会在控制台打印出来，方便调试</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">"HackBar 创建失败:"</span>, e);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">})();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>其次是main.js，加上一行代码：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">browser</span> = chrome;<span class="comment">// 文件开头加上这行代码</span></span><br><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) {</span><br><span class="line">  <span class="string">'use strict'</span>;</span><br><span class="line">..............</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后chrome中在开发者模式中将我们修改好的这个hackbar拓展项目加载进来就可以了，然后就会发现熟悉的hackbar又回来了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jackieya/imgHosting/pic/image-20260116164909690.png" alt="image-20260116164909690"></p>
+
+  </div>
+</article>
+<!-- themes\cactus\layout\_partial\comments.ejs -->
+
+
+
+
+    <div class="blog-post-comments">
+        <div id="waline_thread"></div>
+    </div>
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">categories</a></li>
+        
+          <li><a href="/tags/">tags</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">排查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">解决方案</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&text=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=解决 Chrome 更新后 HackBar 插件消失无法加载的问题&body=Check out this article: https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&title=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&name=解决 Chrome 更新后 HackBar 插件消失无法加载的问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.anch0r.top/2026/01/01/%E8%A7%A3%E5%86%B3%20Chrome%20%E6%9B%B4%E6%96%B0%E5%90%8E%20HackBar%20%E6%8F%92%E4%BB%B6%E6%B6%88%E5%A4%B1%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E7%9A%84%E9%97%AE%E9%A2%98/&t=解决 Chrome 更新后 HackBar 插件消失无法加载的问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    anch0r
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">首页</a></li><!--
+    --><!--
+      --><li><a href="/archives/">归档</a></li><!--
+    --><!--
+      --><li><a href="/categories/">categories</a></li><!--
+    --><!--
+      --><li><a href="/tags/">tags</a></li><!--
+    --><!--
+      --><li><a href="/about/">关于</a></li><!--
+    --><!--
+      --><li><a href="/search/">搜索</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?9ff526edfca1e553fd58a8876eb755c9";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+
+<!-- Waline Comments -->
+
+  <script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v2/dist/waline.mjs';
+
+    var EMOJI = ['//unpkg.com/@waline/emojis@1.2.0/weibo']
+    var META = ['nick', 'mail', 'link'];
+    var REQUIREDFIELDS = ['nick', 'mail', 'link'];
+
+    var emoji = '//unpkg.com/@waline/emojis@1.2.0/qq'.split(',').filter(function(item){
+      return item !== ''; // filter()返回满足不为空item
+    });
+    emoji = emoji.length == 0 ? EMOJI : emoji;
+
+    var meta = 'nick,mail'.split(',').filter(function(item){
+      return META.indexOf(item) > -1; // filter()返回满足META.indexOf(item) > -1为true的item
+    });
+    meta = meta.length == 0 ? META : meta;
+
+    var requiredFields = 'nick,mail'.split(',').filter(function(item){
+      return REQUIREDFIELDS.indexOf(item) > -1; // filter()返回满足META.indexOf(item) > -1为true的item
+    });
+    requiredFields = requiredFields.length == 0 ? REQUIREDFIELDS : requiredFields;
+
+    init({
+      el: '#waline_thread',
+      serverURL: 'https://comment.anch0r.top', // Waline 的服务端地址
+      path: '' == '' ? window.location.pathname : '', // 当前文章页路径，用于区分不同的文章页，以保证正确读取该文章页下的评论列表
+      lang: 'zh-CN' == '' ? 'zh-CN' : 'zh-CN', // 多语言支持，未设置默认英文
+      emoji: emoji,
+      dark: 'true', // 暗黑模式适配
+      commentSorting: '' == '' ? 'latest' : '', // 评论列表排序方式
+      meta: meta, // 评论者相关属性
+      requiredFields: requiredFields, // 设置必填项，默认匿名
+      login: '', // 登录模式状态
+      wordLimit: '', // 评论字数限制
+      pageSize: '10' == '' ? 10 : '10', // 评论列表分页，每页条数
+      imageUploader: '', // 自定义图片上传方法
+      highlighter: '', // 代码高亮
+      placeholder: '',
+      avatar: 'mm',
+      visitor: 'false',
+      comment_count: 'true',
+    });
+  </script>
+
+
+
+</body>
+</html>
